@@ -82,6 +82,35 @@ func TestVPSRemove(t *testing.T) {
 	}
 }
 
+func TestGetConstructorPlanID(t *testing.T) {
+	var gotMethod string
+	var gotParams map[string]int
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string         `json:"method"`
+			Params map[string]int `json:"params"`
+		}
+		body, _ := io.ReadAll(r.Body)
+		_ = json.Unmarshal(body, &req)
+		gotMethod, gotParams = req.Method, req.Params
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":1234}`))
+	})
+
+	id, err := c.VPS.GetConstructorPlanID(context.Background(), 2, 6, 15, 1)
+	if err != nil {
+		t.Fatalf("GetConstructorPlanID: %v", err)
+	}
+	if id != 1234 {
+		t.Errorf("id = %d, want 1234", id)
+	}
+	if gotMethod != "getConstructorPlanId" {
+		t.Errorf("method = %q, want getConstructorPlanId", gotMethod)
+	}
+	if gotParams["cpu_cores"] != 2 || gotParams["ram"] != 6 || gotParams["volume_disk"] != 15 || gotParams["category_id"] != 1 {
+		t.Errorf("params = %+v, want cpu_cores=2 ram=6 volume_disk=15 category_id=1", gotParams)
+	}
+}
+
 // fixtureServer serves the bytes of testdata/<file> for any request.
 func fixtureServer(t *testing.T, file string) *Client {
 	t.Helper()
