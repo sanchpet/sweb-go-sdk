@@ -95,3 +95,14 @@ func (s *VPSService) Create(ctx context.Context, req CreateVPSRequest) (json.Raw
 	err := s.c.call(ctx, vpsEndpoint, "create", req, &out)
 	return out, err
 }
+
+// Remove deletes a VPS (method "remove"). billingID is the service identifier
+// (format "login_vps_N"), as returned in VPS.BillingID by List.
+//
+// This is destructive — it cancels the VPS. The result shape is left raw
+// pending a recorded response.
+func (s *VPSService) Remove(ctx context.Context, billingID string) (json.RawMessage, error) {
+	var out json.RawMessage
+	err := s.c.call(ctx, vpsEndpoint, "remove", map[string]string{"billingId": billingID}, &out)
+	return out, err
+}

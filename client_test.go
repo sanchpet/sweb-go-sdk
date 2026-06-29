@@ -2,6 +2,7 @@ package sweb
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -9,6 +10,31 @@ import (
 	"path/filepath"
 	"testing"
 )
+
+func TestVPSRemove(t *testing.T) {
+	var gotMethod, gotBillingID string
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+			Params struct {
+				BillingID string `json:"billingId"`
+			} `json:"params"`
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod, gotBillingID = req.Method, req.Params.BillingID
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":1}`))
+	})
+
+	if _, err := c.VPS.Remove(context.Background(), "login_vps_6"); err != nil {
+		t.Fatalf("Remove: %v", err)
+	}
+	if gotMethod != "remove" {
+		t.Errorf("method = %q, want remove", gotMethod)
+	}
+	if gotBillingID != "login_vps_6" {
+		t.Errorf("billingId = %q, want login_vps_6", gotBillingID)
+	}
+}
 
 // fixtureServer serves the bytes of testdata/<file> for any request.
 func fixtureServer(t *testing.T, file string) *Client {
