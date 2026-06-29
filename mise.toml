@@ -1,0 +1,20 @@
+[tools]
+go = "1.26"
+golangci-lint = "2"
+pre-commit = "latest"
+
+[tasks.test]
+description = "Run the test suite"
+run = "go test ./..."
+
+[tasks.lint]
+description = "Run golangci-lint"
+run = "golangci-lint run"
+
+[tasks.fmt]
+description = "Format Go sources"
+run = "gofmt -w ."
+
+[tasks.ci]
+description = "Everything CI runs"
+depends = ["lint", "test"]

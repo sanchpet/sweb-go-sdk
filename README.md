@@ -1,5 +1,10 @@
 # sweb-go-sdk
 
+[![CI](https://github.com/sanchpet/sweb-go-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/sanchpet/sweb-go-sdk/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/sanchpet/sweb-go-sdk.svg)](https://pkg.go.dev/github.com/sanchpet/sweb-go-sdk)
+[![Go Report Card](https://goreportcard.com/badge/github.com/sanchpet/sweb-go-sdk)](https://goreportcard.com/report/github.com/sanchpet/sweb-go-sdk)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A Go client for the [SpaceWeb](https://sweb.ru) (sweb.ru) hosting API.
 
 The API speaks JSON-RPC 2.0 over HTTPS. This SDK wraps the transport (envelope,

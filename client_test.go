@@ -17,7 +17,7 @@ func fixtureServer(t *testing.T, file string) *Client {
 	if err != nil {
 		t.Fatalf("read fixture: %v", err)
 	}
-	return serve(t, func(w http.ResponseWriter, r *http.Request) { _, _ = w.Write(body) })
+	return serve(t, func(w http.ResponseWriter, _ *http.Request) { _, _ = w.Write(body) })
 }
 
 func serve(t *testing.T, h http.HandlerFunc) *Client {
@@ -116,7 +116,7 @@ func TestAvailableConfig(t *testing.T) {
 }
 
 func TestNon200IsError(t *testing.T) {
-	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write([]byte(`upstream exploded`))
 	})
