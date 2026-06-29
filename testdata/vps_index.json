@@ -1,0 +1,46 @@
+{
+  "jsonrpc": "2.0",
+  "version": "1.0",
+  "id": "1",
+  "result": [
+    {
+      "billingId": "0",
+      "name": "example-node",
+      "uid": "vps-example-0001",
+      "plan_id": "4",
+      "plan_name": "VPS-Test",
+      "plan_price": 500,
+      "cpu": 2,
+      "ram": 2048,
+      "disk": "ssd",
+      "diskGb": 40,
+      "active": 1,
+      "is_running": 1,
+      "current_action": "none",
+      "os_distribution": "Debian 12",
+      "os_distr_id": 32,
+      "category": "vps",
+      "mac": "00:00:00:00:00:00",
+      "ip": "203.0.113.10",
+      "ext_ips": ["203.0.113.10"],
+      "ordered_ip_count": 1,
+      "datacenter": "Test DC",
+      "datacenter_id": "1",
+      "password_access": false,
+      "ssh_keys": [{"id": "1", "name": "laptop"}],
+      "features": {
+        "allowBackups": true,
+        "allowLocalNetwork": true,
+        "allowCustomImage": false,
+        "allowDdosProtection": true,
+        "maxIpCount": 4,
+        "allowConfigurator": true,
+        "allowAccess": true,
+        "allowDiskConnection": true,
+        "allowAutoBackups": true,
+        "allowClone": true
+      },
+      "ts_create": "2026-01-01 00:00:00"
+    }
+  ]
+}

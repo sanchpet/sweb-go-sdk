@@ -1,0 +1,46 @@
+{
+  "jsonrpc": "2.0",
+  "version": "1.0",
+  "id": "2",
+  "result": {
+    "vpsPlans": [
+      {
+        "id": 4,
+        "name": "VPS-Test",
+        "price_per_month": 500,
+        "category": "vps",
+        "cpu_cores": "2",
+        "ram": "2048",
+        "disk_type": "ssd",
+        "volume_disk": "40",
+        "datacenters": [1],
+        "sold_out": false
+      }
+    ],
+    "selectOs": [
+      {
+        "id": "32",
+        "name": "Debian",
+        "version": "12",
+        "os_distribution_id": "32",
+        "plan_id": "4"
+      }
+    ],
+    "osPanel": [
+      {
+        "distributive": "debian-12",
+        "os": "Debian 12",
+        "panel": "none",
+        "availablePlanIds": [4],
+        "minRam": 1024,
+        "minStorage": 10
+      }
+    ],
+    "datacenters": [
+      {"id": "1", "name": "Test DC", "location": "Saint Petersburg", "site_name": "spb"}
+    ],
+    "categories": [
+      {"id": "1", "slug": "vps", "name": "VPS"}
+    ]
+  }
+}
