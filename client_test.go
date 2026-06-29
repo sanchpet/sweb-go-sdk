@@ -4,12 +4,58 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"testing"
 )
+
+func TestAutoRefreshOnSessionExpired(t *testing.T) {
+	var indexCalls int
+	var refreshed string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+		}
+		body, _ := io.ReadAll(r.Body)
+		_ = json.Unmarshal(body, &req)
+
+		switch req.Method {
+		case "getToken":
+			_, _ = w.Write([]byte(`{"result":"fresh-token"}`))
+		case "index":
+			indexCalls++
+			if indexCalls == 1 {
+				_, _ = w.Write([]byte(`{"error":{"code":-32603,"message":"Время сеанса истекло.","data":[]}}`))
+				return
+			}
+			if got := r.Header.Get("Authorization"); got != "Bearer fresh-token" {
+				t.Errorf("retry Authorization = %q, want Bearer fresh-token", got)
+			}
+			_, _ = w.Write([]byte(`{"result":[]}`))
+		}
+	}))
+	t.Cleanup(srv.Close)
+
+	c := New(
+		WithBaseURL(srv.URL), WithHTTPClient(srv.Client()),
+		WithToken("stale-token"),
+		WithCredentials("user", "pass"),
+		WithOnTokenRefresh(func(tok string) { refreshed = tok }),
+	)
+
+	if _, err := c.VPS.List(context.Background()); err != nil {
+		t.Fatalf("List: %v", err)
+	}
+	if indexCalls != 2 {
+		t.Errorf("index calls = %d, want 2 (expired + retry)", indexCalls)
+	}
+	if refreshed != "fresh-token" || c.Token() != "fresh-token" {
+		t.Errorf("refresh: callback=%q token=%q, want fresh-token", refreshed, c.Token())
+	}
+}
 
 func TestVPSRemove(t *testing.T) {
 	var gotMethod, gotBillingID string
