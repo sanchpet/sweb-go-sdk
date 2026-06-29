@@ -3,6 +3,9 @@ package sweb
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"strconv"
+	"strings"
 )
 
 // VPSService groups VPS operations. All calls hit the /vps endpoint with a
@@ -105,4 +108,28 @@ func (s *VPSService) Remove(ctx context.Context, billingID string) (json.RawMess
 	var out json.RawMessage
 	err := s.c.call(ctx, vpsEndpoint, "remove", map[string]string{"billingId": billingID}, &out)
 	return out, err
+}
+
+// GetConstructorPlanID resolves a custom ("configurator") plan ID for the given
+// resources via the "getConstructorPlanId" method. ram and disk are in GB;
+// categoryID is a catalog category id (see AvailableConfig.Categories). This is
+// read-only — it neither creates nor bills; feed the result to Create as the
+// VPSPlanID.
+func (s *VPSService) GetConstructorPlanID(ctx context.Context, cpuCores, ramGB, diskGB, categoryID int) (int, error) {
+	var raw json.RawMessage
+	err := s.c.call(ctx, vpsEndpoint, "getConstructorPlanId", map[string]int{
+		"cpu_cores":   cpuCores,
+		"ram":         ramGB,
+		"volume_disk": diskGB,
+		"category_id": categoryID,
+	}, &raw)
+	if err != nil {
+		return 0, err
+	}
+	// The API may return the id as a bare number or a quoted string.
+	id, convErr := strconv.Atoi(strings.Trim(string(raw), `" `))
+	if convErr != nil {
+		return 0, fmt.Errorf("sweb: unexpected getConstructorPlanId result %s: %w", raw, convErr)
+	}
+	return id, nil
 }
