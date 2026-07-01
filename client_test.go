@@ -158,7 +158,6 @@ func TestVPSChangePlanFailure(t *testing.T) {
 }
 
 func TestGetConstructorPlanID(t *testing.T) {
-	var gotMethod string
 	var gotParams map[string]int
 	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -167,8 +166,13 @@ func TestGetConstructorPlanID(t *testing.T) {
 		}
 		body, _ := io.ReadAll(r.Body)
 		_ = json.Unmarshal(body, &req)
-		gotMethod, gotParams = req.Method, req.Params
-		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":1234}`))
+		switch req.Method {
+		case "getConstructorPlanId":
+			gotParams = req.Params
+			_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":1234}`))
+		case "getAvailableConfig": // sold-out guard: plan 1234 present and orderable
+			_, _ = w.Write([]byte(`{"result":{"vpsPlans":[{"id":1234,"name":"OK","sold_out":false}]}}`))
+		}
 	})
 
 	id, err := c.VPS.GetConstructorPlanID(context.Background(), 2, 6, 15, 1)
@@ -178,11 +182,31 @@ func TestGetConstructorPlanID(t *testing.T) {
 	if id != 1234 {
 		t.Errorf("id = %d, want 1234", id)
 	}
-	if gotMethod != "getConstructorPlanId" {
-		t.Errorf("method = %q, want getConstructorPlanId", gotMethod)
-	}
 	if gotParams["cpu_cores"] != 2 || gotParams["ram"] != 6 || gotParams["volume_disk"] != 15 || gotParams["category_id"] != 1 {
 		t.Errorf("params = %+v, want cpu_cores=2 ram=6 volume_disk=15 category_id=1", gotParams)
+	}
+}
+
+// The resolver can map out-of-range inputs onto a sold-out plan (e.g. 1/1/10 →
+// the "Промо" plan); GetConstructorPlanID must surface that instead of returning
+// an id that would fail create with "-32500 Тариф распродан".
+func TestGetConstructorPlanIDSoldOut(t *testing.T) {
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+		}
+		body, _ := io.ReadAll(r.Body)
+		_ = json.Unmarshal(body, &req)
+		switch req.Method {
+		case "getConstructorPlanId":
+			_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":216}`))
+		case "getAvailableConfig":
+			_, _ = w.Write([]byte(`{"result":{"vpsPlans":[{"id":216,"name":"Облако Промо","sold_out":true}]}}`))
+		}
+	})
+
+	if _, err := c.VPS.GetConstructorPlanID(context.Background(), 1, 1, 10, 1); err == nil {
+		t.Fatal("want error when the configurator resolves to a sold-out plan")
 	}
 }
 

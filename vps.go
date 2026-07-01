@@ -193,6 +193,19 @@ func (s *VPSService) GetConstructorPlanID(ctx context.Context, cpuCores, ramGB, 
 	if convErr != nil {
 		return 0, fmt.Errorf("sweb: unexpected getConstructorPlanId result %s: %w", raw, convErr)
 	}
+	// Guard: SpaceWeb's resolver can map an out-of-range configuration onto a
+	// sold-out / archived plan (e.g. 1cpu/1GB/10GB → the "Промо" plan), which then
+	// fails create with a cryptic "-32500 Тариф распродан". If the resolved id is a
+	// KNOWN sold-out plan, surface it here. Best-effort: the catalog lists stock
+	// plans, so a genuine configurator plan is absent from it and left alone, and a
+	// catalog fetch error doesn't block resolution (create would still surface it).
+	if cfg, cerr := s.AvailableConfig(ctx); cerr == nil {
+		for _, p := range cfg.VPSPlans {
+			if p.ID == id && p.SoldOut {
+				return 0, fmt.Errorf("sweb: configurator %dcpu/%dGB/%dGB resolved to plan %d (%q), which is sold out — the requested resources are likely below the orderable configurator range", cpuCores, ramGB, diskGB, id, p.Name)
+			}
+		}
+	}
 	return id, nil
 }
 
