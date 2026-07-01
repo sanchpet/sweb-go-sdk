@@ -120,14 +120,14 @@ func TestVPSChangePlan(t *testing.T) {
 	var gotMethod string
 	var gotParams struct {
 		BillingID string `json:"billingId"`
-		VPSPlanID int    `json:"vpsPlanId"`
+		VPSPlanID int    `json:"planId"`
 	}
 	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
 			Method string `json:"method"`
 			Params struct {
 				BillingID string `json:"billingId"`
-				VPSPlanID int    `json:"vpsPlanId"`
+				VPSPlanID int    `json:"planId"`
 			} `json:"params"`
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
@@ -142,7 +142,7 @@ func TestVPSChangePlan(t *testing.T) {
 	if gotMethod != "changePlan" {
 		t.Errorf("method = %q, want changePlan", gotMethod)
 	}
-	// The wire param is "vpsPlanId" (not the docs' "planId").
+	// The wire param is "planId" (the docs' EXAMPLE wrongly shows "vpsPlanId").
 	if gotParams.BillingID != "login_vps_1" || gotParams.VPSPlanID != 4 {
 		t.Errorf("params = %q/%d, want login_vps_1/4", gotParams.BillingID, gotParams.VPSPlanID)
 	}
