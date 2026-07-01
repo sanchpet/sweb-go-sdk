@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // VPSService groups VPS operations. All calls hit the /vps endpoint with a
@@ -252,4 +253,54 @@ func (s *VPSService) GetFirstOrderInfo(ctx context.Context) (*FirstOrderInfo, er
 		return nil, nil
 	}
 	return &out[0].Result, nil
+}
+
+// WaitForIdle polls the VPS until its current_action is empty. SpaceWeb runs a
+// resize / provisioning as a SEQUENCE of async actions (e.g. Modify → ExtIpAdd —
+// an IP re-issue runs even when no extra IP was ordered), and is_running stays 1
+// throughout — so "settled" means current_action is idle, NOT is_running == 1.
+//
+// poll is the interval between checks (default 10s). onPhase, if non-nil, is
+// called each poll with the current action (trimmed; "" once idle) — a CLI can
+// render it as progress. Honors ctx for cancellation / timeout; wrap ctx with a
+// deadline to bound the wait.
+func (s *VPSService) WaitForIdle(ctx context.Context, billingID string, poll time.Duration, onPhase func(action string)) (*VPS, error) {
+	if poll <= 0 {
+		poll = 10 * time.Second
+	}
+	ticker := time.NewTicker(poll)
+	defer ticker.Stop()
+
+	for {
+		if list, err := s.List(ctx); err == nil {
+			var node *VPS
+			for i := range list {
+				if list[i].BillingID == billingID {
+					node = &list[i]
+					break
+				}
+			}
+			if node == nil {
+				return nil, fmt.Errorf("sweb: VPS %q not found while waiting", billingID)
+			}
+			if onPhase != nil {
+				onPhase(strings.TrimSpace(node.CurrentAction))
+			}
+			if isIdle(node.CurrentAction) {
+				return node, nil
+			}
+		}
+
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		case <-ticker.C:
+		}
+	}
+}
+
+// isIdle reports whether a current_action value means "no operation in flight".
+func isIdle(action string) bool {
+	a := strings.TrimSpace(action)
+	return a == "" || strings.EqualFold(a, "none")
 }

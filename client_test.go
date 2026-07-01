@@ -4,12 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 )
 
 func TestAutoRefreshOnSessionExpired(t *testing.T) {
@@ -154,6 +156,50 @@ func TestVPSChangePlanFailure(t *testing.T) {
 	})
 	if err := c.VPS.ChangePlan(context.Background(), "login_vps_1", 4); err == nil {
 		t.Fatal("ChangePlan: want error on result 0, got nil")
+	}
+}
+
+func TestWaitForIdle(t *testing.T) {
+	var calls int
+	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
+		calls++
+		action := "" // idle from the 3rd poll on
+		switch calls {
+		case 1:
+			action = "Modify"
+		case 2:
+			action = "ExtIpAdd"
+		}
+		_, _ = fmt.Fprintf(w, `{"result":[{"billingId":"login_vps_1","current_action":%q,"is_running":1}]}`, action)
+	})
+
+	var phases []string
+	node, err := c.VPS.WaitForIdle(context.Background(), "login_vps_1", time.Millisecond, func(a string) {
+		phases = append(phases, a)
+	})
+	if err != nil {
+		t.Fatalf("WaitForIdle: %v", err)
+	}
+	if node.CurrentAction != "" {
+		t.Errorf("current_action = %q, want empty (idle)", node.CurrentAction)
+	}
+	// Must poll through the whole action sequence, not stop at the first change.
+	if calls < 3 {
+		t.Errorf("polled %d times, want >= 3 (Modify → ExtIpAdd → idle)", calls)
+	}
+	if len(phases) < 3 || phases[0] != "Modify" || phases[1] != "ExtIpAdd" {
+		t.Errorf("phases = %v, want [Modify ExtIpAdd ...]", phases)
+	}
+}
+
+func TestWaitForIdleTimeout(t *testing.T) {
+	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = w.Write([]byte(`{"result":[{"billingId":"login_vps_1","current_action":"Modify","is_running":1}]}`))
+	})
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Millisecond)
+	defer cancel()
+	if _, err := c.VPS.WaitForIdle(ctx, "login_vps_1", time.Millisecond, nil); err == nil {
+		t.Fatal("WaitForIdle: want timeout error, got nil")
 	}
 }
 
