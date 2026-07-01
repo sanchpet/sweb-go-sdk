@@ -1,0 +1,28 @@
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "result": [
+    {
+      "jsonrpc": "2.0",
+      "version": "1.263.20250326113457",
+      "id": "req-0001",
+      "result": {
+        "plan": "CLOUD PROMO на год",
+        "os": "Ubuntu 24.04 LTS",
+        "panel": "Без ПО",
+        "cpu_cores": "1",
+        "ram": "1024",
+        "volume_disk": "10 ГБ",
+        "price_per_month": 139,
+        "pay_period": 12,
+        "price_for_period_with_stock": 1668,
+        "price_per_month_with_stock": 139,
+        "promocode": null,
+        "clearAvailable": false,
+        "plan_is_constructor": false,
+        "ipCount": 1,
+        "protectedIps": [1, 2]
+      }
+    }
+  ]
+}
