@@ -110,6 +110,18 @@ func (s *VPSService) Remove(ctx context.Context, billingID string) (json.RawMess
 	return out, err
 }
 
+// Rename changes a VPS's user-facing name/alias (method "rename"). billingID is
+// the service identifier ("login_vps_N"); alias is the new name. This is an
+// in-place label change — it does not reprovision or bill. The API returns 1 on
+// success; a JSON-RPC error surfaces as *Error.
+func (s *VPSService) Rename(ctx context.Context, billingID, alias string) error {
+	var out json.RawMessage
+	return s.c.call(ctx, vpsEndpoint, "rename", map[string]string{
+		"billingId": billingID,
+		"alias":     alias,
+	}, &out)
+}
+
 // GetConstructorPlanID resolves a custom ("configurator") plan ID for the given
 // resources via the "getConstructorPlanId" method. ram and disk are in GB;
 // categoryID is a catalog category id (see AvailableConfig.Categories). This is

@@ -82,6 +82,40 @@ func TestVPSRemove(t *testing.T) {
 	}
 }
 
+func TestVPSRename(t *testing.T) {
+	var gotMethod string
+	var gotParams struct {
+		BillingID string `json:"billingId"`
+		Alias     string `json:"alias"`
+	}
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+			Params struct {
+				BillingID string `json:"billingId"`
+				Alias     string `json:"alias"`
+			} `json:"params"`
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod = req.Method
+		gotParams.BillingID, gotParams.Alias = req.Params.BillingID, req.Params.Alias
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":1}`))
+	})
+
+	if err := c.VPS.Rename(context.Background(), "login_vps_6", "infra-01"); err != nil {
+		t.Fatalf("Rename: %v", err)
+	}
+	if gotMethod != "rename" {
+		t.Errorf("method = %q, want rename", gotMethod)
+	}
+	if gotParams.BillingID != "login_vps_6" {
+		t.Errorf("billingId = %q, want login_vps_6", gotParams.BillingID)
+	}
+	if gotParams.Alias != "infra-01" {
+		t.Errorf("alias = %q, want infra-01", gotParams.Alias)
+	}
+}
+
 func TestGetConstructorPlanID(t *testing.T) {
 	var gotMethod string
 	var gotParams map[string]int
