@@ -1,0 +1,19 @@
+name: release-please
+
+# release-please maintains the version + CHANGELOG.md from Conventional Commits.
+# On push to main it opens/updates a "release PR"; merging that PR tags the
+# release and (for a library) creates the GitHub Release. No manual tagging.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      # Manifest mode: reads release-please-config.json + .release-please-manifest.json.
+      - uses: googleapis/release-please-action@v4

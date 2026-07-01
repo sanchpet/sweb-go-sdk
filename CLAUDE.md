@@ -31,6 +31,12 @@ pre-commit install && pre-commit run -a
 - Commits: small and focused; end every commit with `Signed-off-by:` (`--signoff`)
   and, since this is a personal repo, a `Co-Authored-By: Claude` trailer.
 - **Branch + PR**; do not self-merge — merging is the owner's call.
+- **Conventional Commits + release-please (BLOCKING):** commit / PR-title format is
+  `<type>[scope]: <desc>` (`feat`→minor, `fix`→patch, `!` or `BREAKING CHANGE`→major).
+  PRs are squash-merged, so the **PR title is the release commit** — CI enforces its
+  format (`pr-title` workflow). Versioning and `CHANGELOG.md` are automated by
+  **release-please** — never `git tag` or edit the changelog by hand; merge the
+  release PR it opens. See `CONTRIBUTING.md`.
 
 ## Security / opsec (BLOCKING)
 
