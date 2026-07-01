@@ -116,6 +116,47 @@ func TestVPSRename(t *testing.T) {
 	}
 }
 
+func TestVPSChangePlan(t *testing.T) {
+	var gotMethod string
+	var gotParams struct {
+		BillingID string `json:"billingId"`
+		VPSPlanID int    `json:"vpsPlanId"`
+	}
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+			Params struct {
+				BillingID string `json:"billingId"`
+				VPSPlanID int    `json:"vpsPlanId"`
+			} `json:"params"`
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod = req.Method
+		gotParams.BillingID, gotParams.VPSPlanID = req.Params.BillingID, req.Params.VPSPlanID
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":1}`))
+	})
+
+	if err := c.VPS.ChangePlan(context.Background(), "login_vps_1", 4); err != nil {
+		t.Fatalf("ChangePlan: %v", err)
+	}
+	if gotMethod != "changePlan" {
+		t.Errorf("method = %q, want changePlan", gotMethod)
+	}
+	// The wire param is "vpsPlanId" (not the docs' "planId").
+	if gotParams.BillingID != "login_vps_1" || gotParams.VPSPlanID != 4 {
+		t.Errorf("params = %q/%d, want login_vps_1/4", gotParams.BillingID, gotParams.VPSPlanID)
+	}
+}
+
+func TestVPSChangePlanFailure(t *testing.T) {
+	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":0}`))
+	})
+	if err := c.VPS.ChangePlan(context.Background(), "login_vps_1", 4); err == nil {
+		t.Fatal("ChangePlan: want error on result 0, got nil")
+	}
+}
+
 func TestGetConstructorPlanID(t *testing.T) {
 	var gotMethod string
 	var gotParams map[string]int

@@ -149,6 +149,29 @@ func (s *VPSService) Rename(ctx context.Context, billingID, alias string) error 
 	}, &out)
 }
 
+// ChangePlan changes a VPS's tariff plan in place (method "changePlan") — a
+// resize without reprovisioning. billingID is the service id ("login_vps_N");
+// vpsPlanID is a plan id (from AvailableConfig, or GetConstructorPlanID for a
+// custom configuration). The API returns 1 on success, 0 on failure (surfaced
+// here as an error).
+//
+// NOTE: the request parameter is "vpsPlanId" (as in Create), not "planId" as the
+// docs' parameter table says. NOTE: the resize is asynchronous — poll List /
+// current_action until it settles before treating the node as ready.
+func (s *VPSService) ChangePlan(ctx context.Context, billingID string, vpsPlanID int) error {
+	var out int
+	if err := s.c.call(ctx, vpsEndpoint, "changePlan", map[string]any{
+		"billingId": billingID,
+		"vpsPlanId": vpsPlanID,
+	}, &out); err != nil {
+		return err
+	}
+	if out != 1 {
+		return fmt.Errorf("sweb: changePlan returned %d, want 1 (0 = failure)", out)
+	}
+	return nil
+}
+
 // GetConstructorPlanID resolves a custom ("configurator") plan ID for the given
 // resources via the "getConstructorPlanId" method. ram and disk are in GB;
 // categoryID is a catalog category id (see AvailableConfig.Categories). This is
