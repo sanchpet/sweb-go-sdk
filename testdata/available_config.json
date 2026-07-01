@@ -7,7 +7,7 @@
       {
         "id": 4,
         "name": "VPS-Test",
-        "price_per_month": 500,
+        "price_per_month": 500.5,
         "category": "vps",
         "cpu_cores": "2",
         "ram": "2048",

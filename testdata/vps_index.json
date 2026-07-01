@@ -9,7 +9,7 @@
       "uid": "vps-example-0001",
       "plan_id": "4",
       "plan_name": "VPS-Test",
-      "plan_price": 500,
+      "plan_price": 0.9,
       "cpu": 2,
       "ram": 2048,
       "disk": "ssd",
