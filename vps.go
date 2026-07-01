@@ -172,3 +172,47 @@ func (s *VPSService) GetConstructorPlanID(ctx context.Context, cpuCores, ramGB, 
 	}
 	return id, nil
 }
+
+// FirstOrderInfo describes the account's promotional first VPS order (method
+// "getFirstOrderInfo"), used by the onboarding / clear-first-order flow.
+//
+// Doc caveats reconciled against a real response: cpu_cores/ram come as quoted
+// strings; pay_period is a month COUNT (not a price, despite the doc); and the
+// two *_with_stock descriptions are swapped in the docs — field names + values
+// are authoritative.
+type FirstOrderInfo struct {
+	Plan                    string    `json:"plan"`
+	OS                      string    `json:"os"`
+	Panel                   string    `json:"panel"`
+	CPUCores                FlexInt   `json:"cpu_cores"`
+	RAM                     FlexInt   `json:"ram"`         // MB
+	VolumeDisk              string    `json:"volume_disk"` // localized, e.g. "10 ГБ"
+	PricePerMonth           FlexFloat `json:"price_per_month"`
+	PayPeriod               FlexInt   `json:"pay_period"` // months
+	PriceForPeriodWithStock FlexFloat `json:"price_for_period_with_stock"`
+	PricePerMonthWithStock  FlexFloat `json:"price_per_month_with_stock"`
+	Promocode               string    `json:"promocode"` // empty when null
+	ClearAvailable          bool      `json:"clearAvailable"`
+	PlanIsConstructor       bool      `json:"plan_is_constructor"`
+	IPCount                 FlexInt   `json:"ipCount"`
+	ProtectedIPs            []FlexInt `json:"protectedIps"`
+}
+
+// GetFirstOrderInfo returns the account's first-order info (method
+// "getFirstOrderInfo"), or nil if there is no first order.
+//
+// The API double-wraps the payload: the outer result is a one-element array
+// whose element is itself a JSON-RPC envelope, so the object lives at
+// result[0].result. This unwraps it.
+func (s *VPSService) GetFirstOrderInfo(ctx context.Context) (*FirstOrderInfo, error) {
+	var out []struct {
+		Result FirstOrderInfo `json:"result"`
+	}
+	if err := s.c.call(ctx, vpsEndpoint, "getFirstOrderInfo", nil, &out); err != nil {
+		return nil, err
+	}
+	if len(out) == 0 {
+		return nil, nil
+	}
+	return &out[0].Result, nil
+}

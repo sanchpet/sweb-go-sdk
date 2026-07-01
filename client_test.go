@@ -271,6 +271,34 @@ func TestAvailableConfig(t *testing.T) {
 	}
 }
 
+func TestGetFirstOrderInfo(t *testing.T) {
+	c := fixtureServer(t, "first_order_info.json")
+
+	info, err := c.VPS.GetFirstOrderInfo(context.Background())
+	if err != nil {
+		t.Fatalf("GetFirstOrderInfo: %v", err)
+	}
+	if info == nil {
+		t.Fatal("info = nil, want unwrapped object")
+	}
+	// Unwrapped from the nested JSON-RPC envelope (result[0].result); cpu_cores
+	// and ram arrive as quoted strings.
+	if info.Plan != "CLOUD PROMO на год" || info.CPUCores != 1 || info.RAM != 1024 {
+		t.Errorf("plan/cpu/ram = %q/%d/%d", info.Plan, info.CPUCores, info.RAM)
+	}
+	// Authoritative by name+value (doc swaps the *_with_stock descriptions):
+	// pay_period is months, price_for_period is the period total.
+	if info.PayPeriod != 12 || info.PriceForPeriodWithStock != 1668 || info.PricePerMonthWithStock != 139 {
+		t.Errorf("period/prices = %d/%v/%v", info.PayPeriod, info.PriceForPeriodWithStock, info.PricePerMonthWithStock)
+	}
+	if info.Promocode != "" || info.ClearAvailable {
+		t.Errorf("promocode/clear = %q/%t", info.Promocode, info.ClearAvailable)
+	}
+	if len(info.ProtectedIPs) != 2 || info.ProtectedIPs[0] != 1 || info.ProtectedIPs[1] != 2 {
+		t.Errorf("protectedIps = %v", info.ProtectedIPs)
+	}
+}
+
 func TestNon200IsError(t *testing.T) {
 	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
