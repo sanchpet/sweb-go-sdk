@@ -34,37 +34,64 @@ type VPSFeatures struct {
 	AllowClone          bool `json:"allowClone"`
 }
 
+// ISPInfo is control-panel (ISP license) info attached to a VPS ("isp" in the
+// index response).
+type ISPInfo struct {
+	LicenseType  string    `json:"license_type"`
+	IP           string    `json:"ip"`
+	ActiveUntil  string    `json:"active_until"`
+	Price        FlexFloat `json:"price"`
+	Link         string    `json:"link"`
+	IsBlocked    FlexInt   `json:"is_blocked"`
+	CreationTime string    `json:"creation_time"`
+}
+
 // VPS is a VPS instance as returned by List (method "index").
-// Field set confirmed against a real API response (Evidence phase). Some rarely
-// used / always-null fields (local_*, isp, protected_ips, parent_plan_id) are
-// omitted; add them when a use arises.
+//
+// Types are reconciled against a real API response: SpaceWeb returns many
+// numeric fields either as numbers or quoted strings (FlexInt/FlexFloat handle
+// both), and nullable fields (parent_plan_id, local_*) as JSON null.
 type VPS struct {
-	BillingID      string      `json:"billingId"`
-	Name           string      `json:"name"` // user-facing alias
-	UID            string      `json:"uid"`  // stable unique id
-	PlanID         string      `json:"plan_id"`
-	PlanName       string      `json:"plan_name"`
-	PlanPrice      float64     `json:"plan_price"` // money: API returns fractional prices
-	CPU            int         `json:"cpu"`
-	RAM            int         `json:"ram"`
-	Disk           string      `json:"disk"`
+	BillingID      string            `json:"billingId"`
+	Name           string            `json:"name"` // user-facing alias
+	UID            string            `json:"uid"`  // stable unique id
+	PlanID         FlexInt           `json:"plan_id"`
+	PlanName       string            `json:"plan_name"`
+	ParentPlanID   FlexInt           `json:"parent_plan_id"` // nullable
+	PlanPrice      FlexFloat         `json:"plan_price"`     // money, may be fractional
+	CPU            FlexInt           `json:"cpu"`
+	RAM            FlexInt           `json:"ram"`  // MB; API may quote it ("1024")
+	Disk           string            `json:"disk"` // localized human size, e.g. "10 ГБ"
+	BlockUI        FlexInt           `json:"blockUi"`
+	Active         FlexInt           `json:"active"`
+	OSDistribution string            `json:"os_distribution"`
+	OSDistrID      FlexInt           `json:"os_distr_id"`
+	Category       string            `json:"category"`
+	TSCreate       string            `json:"ts_create"`
+	MAC            string            `json:"mac"`
+	IP             string            `json:"ip"`
+	LocalIP        string            `json:"local_ip"`  // nullable
+	LocalMAC       string            `json:"local_mac"` // nullable
+	LocalMask      string            `json:"local_mask"`
+	CurrentAction  string            `json:"current_action"`
+	IsRunning      FlexInt           `json:"is_running"`
+	ISP            []ISPInfo         `json:"isp"`
+	ExtIPs         []json.RawMessage `json:"ext_ips"` // TODO: type once a populated example exists (doc: array of IP objects)
+	IsTest         FlexInt           `json:"is_test"`
+	IsNew          bool              `json:"is_new"`
+	Datacenter     string            `json:"datacenter"`
+	OrderedIPCount FlexInt           `json:"ordered_ip_count"`
+	ProtectedIPs   []string          `json:"protected_ips"`
+
+	// Not part of the documented index response — present in an earlier recorded
+	// response and still consumed by the Terraform provider's computed mapping
+	// (disk size, datacenter id). Kept until the provider reconcile (variant B);
+	// index does not populate these, so they decode to zero here.
 	DiskGB         int         `json:"diskGb"`
-	Active         int         `json:"active"`
-	IsRunning      int         `json:"is_running"`
-	CurrentAction  string      `json:"current_action"`
-	OSDistribution string      `json:"os_distribution"`
-	OSDistrID      int         `json:"os_distr_id"`
-	Category       string      `json:"category"`
-	MAC            string      `json:"mac"`
-	IP             string      `json:"ip"`
-	ExtIPs         []string    `json:"ext_ips"`
-	OrderedIPCount int         `json:"ordered_ip_count"`
-	Datacenter     string      `json:"datacenter"`
 	DatacenterID   string      `json:"datacenter_id"`
 	PasswordAccess bool        `json:"password_access"`
 	SSHKeys        []SSHKeyRef `json:"ssh_keys"`
 	Features       VPSFeatures `json:"features"`
-	TSCreate       string      `json:"ts_create"`
 }
 
 // List returns all VPS instances (method "index").

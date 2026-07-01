@@ -215,22 +215,34 @@ func TestVPSList(t *testing.T) {
 	if v.Name != "example-node" || v.UID != "vps-example-0001" {
 		t.Errorf("name/uid = %q/%q", v.Name, v.UID)
 	}
-	if v.CPU != 2 || v.RAM != 2048 || v.DiskGB != 40 {
-		t.Errorf("specs cpu/ram/disk = %d/%d/%d", v.CPU, v.RAM, v.DiskGB)
+	// Numeric-ish fields SpaceWeb quotes inconsistently — FlexInt/FlexFloat decode
+	// both forms. Regression guards: ram "1024" and plan_id "4" (strings) and
+	// plan_price 0.9 (fractional) would each crash a plain int field.
+	if v.CPU != 2 || v.RAM != 1024 || v.PlanID != 4 {
+		t.Errorf("cpu/ram/plan_id = %d/%d/%d", v.CPU, v.RAM, v.PlanID)
 	}
-	// plan_price is money — the API returns fractional values; must decode as float
-	// (regression: an int field failed on 0.9 → "cannot unmarshal number 0.9 into int").
 	if v.PlanPrice != 0.9 {
 		t.Errorf("plan_price = %v, want 0.9", v.PlanPrice)
 	}
-	if v.IP != "203.0.113.10" || len(v.ExtIPs) != 1 {
-		t.Errorf("ip/extips = %q/%v", v.IP, v.ExtIPs)
+	if v.Disk != "10 ГБ" || v.Datacenter != "Moscow" || v.OrderedIPCount != 2 {
+		t.Errorf("disk/datacenter/ordered = %q/%q/%d", v.Disk, v.Datacenter, v.OrderedIPCount)
 	}
-	if len(v.SSHKeys) != 1 || v.SSHKeys[0].Name != "laptop" {
-		t.Errorf("ssh_keys = %+v", v.SSHKeys)
+	// ext_ips is crash-safe raw pending a populated example; empty here.
+	if v.IP != "203.0.113.10" || len(v.ExtIPs) != 0 {
+		t.Errorf("ip/ext_ips = %q/%v", v.IP, v.ExtIPs)
 	}
-	if !v.Features.AllowBackups || v.Features.MaxIPCount != 4 {
-		t.Errorf("features = %+v", v.Features)
+	if len(v.ISP) != 1 || v.ISP[0].LicenseType != "LEMP" {
+		t.Errorf("isp = %+v", v.ISP)
+	}
+	if len(v.ProtectedIPs) != 1 || v.ProtectedIPs[0] != "203.0.113.53" {
+		t.Errorf("protected_ips = %v", v.ProtectedIPs)
+	}
+	// parent_plan_id / local_* are null in the response → zero values, no error.
+	if v.ParentPlanID != 0 || v.LocalIP != "" {
+		t.Errorf("nullable parent_plan_id/local_ip = %d/%q", v.ParentPlanID, v.LocalIP)
+	}
+	if v.BlockUI != 1 || v.IsRunning != 0 || v.IsTest != 0 || v.IsNew {
+		t.Errorf("flags block/run/test/new = %d/%d/%d/%t", v.BlockUI, v.IsRunning, v.IsTest, v.IsNew)
 	}
 }
 
