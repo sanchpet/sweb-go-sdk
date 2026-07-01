@@ -155,14 +155,15 @@ func (s *VPSService) Rename(ctx context.Context, billingID, alias string) error 
 // custom configuration). The API returns 1 on success, 0 on failure (surfaced
 // here as an error).
 //
-// NOTE: the request parameter is "vpsPlanId" (as in Create), not "planId" as the
-// docs' parameter table says. NOTE: the resize is asynchronous — poll List /
-// current_action until it settles before treating the node as ready.
+// NOTE: the parameter is "planId" (per the docs' parameter table). The docs'
+// EXAMPLE instead shows "vpsPlanId" (as in Create), but the API rejects that with
+// -32602 "Invalid method parameter(s)" — confirmed live. NOTE: the resize is
+// asynchronous — poll List / current_action until it settles.
 func (s *VPSService) ChangePlan(ctx context.Context, billingID string, vpsPlanID int) error {
 	var out int
 	if err := s.c.call(ctx, vpsEndpoint, "changePlan", map[string]any{
 		"billingId": billingID,
-		"vpsPlanId": vpsPlanID,
+		"planId":    vpsPlanID,
 	}, &out); err != nil {
 		return err
 	}
