@@ -44,7 +44,7 @@ type VPS struct {
 	UID            string      `json:"uid"`  // stable unique id
 	PlanID         string      `json:"plan_id"`
 	PlanName       string      `json:"plan_name"`
-	PlanPrice      int         `json:"plan_price"`
+	PlanPrice      float64     `json:"plan_price"` // money: API returns fractional prices
 	CPU            int         `json:"cpu"`
 	RAM            int         `json:"ram"`
 	Disk           string      `json:"disk"`

@@ -17,16 +17,16 @@ type AvailableConfig struct {
 // VPSPlan is a purchasable VPS plan. Note SpaceWeb returns several numeric-ish
 // fields (cpu_cores, ram, volume_disk) as strings.
 type VPSPlan struct {
-	ID            int    `json:"id"`
-	Name          string `json:"name"`
-	PricePerMonth int    `json:"price_per_month"`
-	Category      string `json:"category"`
-	CPUCores      string `json:"cpu_cores"`
-	RAM           string `json:"ram"`
-	DiskType      string `json:"disk_type"`
-	VolumeDisk    string `json:"volume_disk"`
-	Datacenters   []int  `json:"datacenters"`
-	SoldOut       bool   `json:"sold_out"`
+	ID            int     `json:"id"`
+	Name          string  `json:"name"`
+	PricePerMonth float64 `json:"price_per_month"` // money: API returns fractional prices
+	Category      string  `json:"category"`
+	CPUCores      string  `json:"cpu_cores"`
+	RAM           string  `json:"ram"`
+	DiskType      string  `json:"disk_type"`
+	VolumeDisk    string  `json:"volume_disk"`
+	Datacenters   []int   `json:"datacenters"`
+	SoldOut       bool    `json:"sold_out"`
 }
 
 // OSOption is a selectable OS image.

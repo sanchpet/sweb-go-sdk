@@ -218,6 +218,11 @@ func TestVPSList(t *testing.T) {
 	if v.CPU != 2 || v.RAM != 2048 || v.DiskGB != 40 {
 		t.Errorf("specs cpu/ram/disk = %d/%d/%d", v.CPU, v.RAM, v.DiskGB)
 	}
+	// plan_price is money — the API returns fractional values; must decode as float
+	// (regression: an int field failed on 0.9 → "cannot unmarshal number 0.9 into int").
+	if v.PlanPrice != 0.9 {
+		t.Errorf("plan_price = %v, want 0.9", v.PlanPrice)
+	}
 	if v.IP != "203.0.113.10" || len(v.ExtIPs) != 1 {
 		t.Errorf("ip/extips = %q/%v", v.IP, v.ExtIPs)
 	}
@@ -238,6 +243,10 @@ func TestAvailableConfig(t *testing.T) {
 	}
 	if len(cfg.VPSPlans) != 1 || cfg.VPSPlans[0].ID != 4 || cfg.VPSPlans[0].CPUCores != "2" {
 		t.Errorf("vpsPlans = %+v", cfg.VPSPlans)
+	}
+	// price_per_month is money — same fractional-decode contract as plan_price.
+	if cfg.VPSPlans[0].PricePerMonth != 500.5 {
+		t.Errorf("price_per_month = %v, want 500.5", cfg.VPSPlans[0].PricePerMonth)
 	}
 	if len(cfg.Datacenters) != 1 || cfg.Datacenters[0].Location != "Saint Petersburg" {
 		t.Errorf("datacenters = %+v", cfg.Datacenters)
