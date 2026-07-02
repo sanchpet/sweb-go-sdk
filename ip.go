@@ -22,12 +22,12 @@ type LocalIP struct {
 
 // IPAddress is a public IP bound to (or orderable for) a VPS.
 type IPAddress struct {
-	IP         string  `json:"ip"`
-	Gateway    string  `json:"gateway"`
-	Netmask    string  `json:"netmask"`
-	Datacenter FlexInt `json:"datacenter"`
-	PTR        string  `json:"ptr"`
-	Price      FlexInt `json:"price"`
+	IP         string    `json:"ip"`
+	Gateway    string    `json:"gateway"`
+	Netmask    string    `json:"netmask"`
+	Datacenter FlexInt   `json:"datacenter"`
+	PTR        string    `json:"ptr"`
+	Price      FlexFloat `json:"price"` // money: the API returns fractional prices (e.g. 142.06)
 }
 
 // IPInfo is the per-VPS IP inventory returned by the "index" method: public IPs,
