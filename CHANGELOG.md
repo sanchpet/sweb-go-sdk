@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/sanchpet/sweb-go-sdk/compare/v0.8.0...v0.8.1) (2026-07-02)
+
+
+### Bug Fixes
+
+* decode IP price as FlexFloat (API returns fractional money) ([#19](https://github.com/sanchpet/sweb-go-sdk/issues/19)) ([220d5ac](https://github.com/sanchpet/sweb-go-sdk/commit/220d5ac8a5f50c5de472a959cd98f1bb4d20b46d))
+
 ## [0.8.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.7.0...v0.8.0) (2026-07-02)
 
 
