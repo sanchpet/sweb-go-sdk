@@ -58,9 +58,9 @@ func TestAddLocalFailure(t *testing.T) {
 
 func TestIPInfoLocalIP(t *testing.T) {
 	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		// A public IP with a FRACTIONAL price (142.06 — the API returns money as a
-		// float, docs say int); local_ip populated; ordered_ip_count as a quoted string.
-		_, _ = w.Write([]byte(`{"result":{"ips":[{"ip":"77.222.43.225","gateway":"77.222.43.1","netmask":"77.222.43.0/24","datacenter":1,"ptr":"x","price":142.06}],"protected_ips":[],"local_ip":[{"ip":"10.0.0.24","mac":"00:16:3e:aa:bb:cc","mask":"10.0.0.0/27"}],"vps":{"billingId":"login_vps_1","currentAction":null,"isEmpty":"0","ordered_ip_count":"2"}}}`))
+		// Real attached shape: local_ip and ips come as BARE OBJECTS (not arrays) when
+		// populated; a public IP has a FRACTIONAL price (142.06, money-as-float).
+		_, _ = w.Write([]byte(`{"result":{"ips":{"ip":"77.222.43.225","gateway":"77.222.43.1","netmask":"77.222.43.0/24","datacenter":1,"ptr":"x","price":142.06},"protected_ips":[],"local_ip":{"ip":"10.0.0.24","mac":"00:16:3e:aa:bb:cc","mask":"10.0.0.0/27"},"vps":{"billingId":"login_vps_1","currentAction":null,"isEmpty":"0","ordered_ip_count":"2"}}}`))
 	})
 	info, err := c.IP.Info(context.Background(), "login_vps_1")
 	if err != nil {

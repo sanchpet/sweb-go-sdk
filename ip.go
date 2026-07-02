@@ -1,6 +1,7 @@
 package sweb
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -30,13 +31,60 @@ type IPAddress struct {
 	Price      FlexFloat `json:"price"` // money: the API returns fractional prices (e.g. 142.06)
 }
 
+// decodeArrayOrObject unmarshals a JSON value SpaceWeb returns as EITHER a list
+// ([]) or a single bare object ({}) — the /vps/ip index does this for local_ip
+// (empty → [], attached → a bare object) and may for the IP lists too.
+func decodeArrayOrObject[T any](b []byte) ([]T, error) {
+	b = bytes.TrimSpace(b)
+	if len(b) == 0 || bytes.Equal(b, []byte("null")) {
+		return nil, nil
+	}
+	switch b[0] {
+	case '[':
+		var arr []T
+		if err := json.Unmarshal(b, &arr); err != nil {
+			return nil, err
+		}
+		return arr, nil
+	case '{':
+		var one T
+		if err := json.Unmarshal(b, &one); err != nil {
+			return nil, err
+		}
+		return []T{one}, nil
+	default:
+		return nil, fmt.Errorf("sweb: expected a JSON array or object, got %s", b)
+	}
+}
+
+// LocalIPList is []LocalIP that also decodes a bare object or null (SpaceWeb
+// returns local_ip as [] when unattached, a single object when attached).
+type LocalIPList []LocalIP
+
+// UnmarshalJSON accepts an array, a single object, or null.
+func (l *LocalIPList) UnmarshalJSON(b []byte) error {
+	v, err := decodeArrayOrObject[LocalIP](b)
+	*l = v
+	return err
+}
+
+// IPAddressList is []IPAddress with the same array-or-object tolerance.
+type IPAddressList []IPAddress
+
+// UnmarshalJSON accepts an array, a single object, or null.
+func (l *IPAddressList) UnmarshalJSON(b []byte) error {
+	v, err := decodeArrayOrObject[IPAddress](b)
+	*l = v
+	return err
+}
+
 // IPInfo is the per-VPS IP inventory returned by the "index" method: public IPs,
 // protected IPs, and the local-network attachment (if any).
 type IPInfo struct {
-	IPs          []IPAddress       `json:"ips"`
-	ProtectedIPs []json.RawMessage `json:"protected_ips"` // typed on demand
-	LocalIP      []LocalIP         `json:"local_ip"`
-	VPS          IPVPSInfo         `json:"vps"`
+	IPs          IPAddressList   `json:"ips"`
+	ProtectedIPs json.RawMessage `json:"protected_ips"` // raw: shape varies; decode on demand
+	LocalIP      LocalIPList     `json:"local_ip"`
+	VPS          IPVPSInfo       `json:"vps"`
 }
 
 // IPVPSInfo is the VPS summary embedded in the IP index.
