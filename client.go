@@ -44,6 +44,8 @@ type Client struct {
 
 	// VPS groups VPS operations (endpoint /vps).
 	VPS *VPSService
+	// IP groups IP operations (endpoint /vps/ip): local network + public IPs.
+	IP *IPService
 }
 
 // Option configures a Client.
@@ -82,6 +84,7 @@ func New(opts ...Option) *Client {
 		o(c)
 	}
 	c.VPS = &VPSService{c: c}
+	c.IP = &IPService{c: c}
 	return c
 }
 
