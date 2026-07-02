@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.2](https://github.com/sanchpet/sweb-go-sdk/compare/v0.8.1...v0.8.2) (2026-07-02)
+
+
+### Bug Fixes
+
+* decode local_ip/ips as array OR bare object ([#21](https://github.com/sanchpet/sweb-go-sdk/issues/21)) ([f6ef0bd](https://github.com/sanchpet/sweb-go-sdk/commit/f6ef0bd1bed20df6dccb90a0d56ef994c7068db9))
+
 ## [0.8.1](https://github.com/sanchpet/sweb-go-sdk/compare/v0.8.0...v0.8.1) (2026-07-02)
 
 
