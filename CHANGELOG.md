@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.10.0...v0.11.0) (2026-07-10)
+
+
+### Features
+
+* add IP add/remove/move and PTR get/edit (/vps/ip) ([#30](https://github.com/sanchpet/sweb-go-sdk/issues/30)) ([e891b21](https://github.com/sanchpet/sweb-go-sdk/commit/e891b217d1022a6d34013ec5f5e70603026528a0))
+
 ## [0.10.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.9.0...v0.10.0) (2026-07-10)
 
 
