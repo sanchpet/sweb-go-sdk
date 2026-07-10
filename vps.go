@@ -206,6 +206,40 @@ func (s *VPSService) powerAction(ctx context.Context, method, billingID string) 
 	return nil
 }
 
+// Copy clones a VPS into a new one on the given plan (method "copy"). billingID
+// is the source; vpsPlanID is the new VPS's plan (from AvailableConfig, or
+// GetConstructorPlanID for a custom configuration). Like Create, this provisions
+// a NEW, billed VPS and runs asynchronously — the result shape is left raw
+// pending a recorded response; find the new node via List once it settles.
+func (s *VPSService) Copy(ctx context.Context, billingID string, vpsPlanID int) (json.RawMessage, error) {
+	var out json.RawMessage
+	err := s.c.call(ctx, vpsEndpoint, "copy", map[string]any{
+		"billingId": billingID,
+		"vpsPlanId": vpsPlanID,
+	}, &out)
+	return out, err
+}
+
+// ReinstallOS reinstalls the VPS's operating system (method "reinstallOs") to the
+// given distributive (see AvailableConfig.SelectOS for the ids). This is
+// DESTRUCTIVE — it wipes the system disk unless keepDisk is set (the API's
+// save_disk flag). It runs asynchronously; poll WaitForIdle to await the rebuild.
+// The API answers 1 on acceptance (0 = failure).
+func (s *VPSService) ReinstallOS(ctx context.Context, billingID string, distributiveID int, keepDisk bool) error {
+	var out FlexInt
+	if err := s.c.call(ctx, vpsEndpoint, "reinstallOs", map[string]any{
+		"billingId":      billingID,
+		"distributiveId": distributiveID,
+		"save_disk":      keepDisk,
+	}, &out); err != nil {
+		return err
+	}
+	if out != 1 {
+		return fmt.Errorf("sweb: reinstallOs returned %d, want 1 (0 = failure)", int64(out))
+	}
+	return nil
+}
+
 // IsRunning reports whether the VPS is powered on (method "isRunning"). Read-only.
 // Note List already carries VPS.IsRunning for every node; this is the cheaper
 // single-VPS query when only the power state is needed.
@@ -346,4 +380,25 @@ func (s *VPSService) WaitForIdle(ctx context.Context, billingID string, poll tim
 func isIdle(action string) bool {
 	a := strings.TrimSpace(action)
 	return a == "" || strings.EqualFold(a, "none")
+}
+
+// VPSLogEntry is one entry of a VPS's operation log (method "logs"). Field names
+// follow the documented shape (type/status/started_at/ended_at); the call is
+// read-only, so the struct is reconciled from the docs pending a recorded
+// response — unknown fields simply decode to zero.
+type VPSLogEntry struct {
+	Type      string `json:"type"`
+	Status    string `json:"status"`
+	StartedAt string `json:"started_at"`
+	EndedAt   string `json:"ended_at"`
+}
+
+// Logs returns the VPS's operation log (method "logs") — the record of lifecycle
+// actions (create, reinstall, resize, …) run against the node. Read-only.
+func (s *VPSService) Logs(ctx context.Context, billingID string) ([]VPSLogEntry, error) {
+	var out []VPSLogEntry
+	if err := s.c.call(ctx, vpsEndpoint, "logs", map[string]string{"billingId": billingID}, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
 }
