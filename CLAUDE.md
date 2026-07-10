@@ -9,11 +9,35 @@ so the **public interface is a contract**: keep it stable and well-typed.
 - `client.go` — `Client`, functional options, and the private `call()` transport
   (JSON-RPC envelope, Bearer auth, `{result|error}` decoding, non-200 mapping).
   HTTP/auth/retry are **internal**; consumers never see them.
-- `auth.go`, `vps.go`, `config.go` — typed operations grouped by service
-  (`Client.VPS.List/Create/AvailableConfig`, `Client.CreateToken`).
+- `vps.go`, `config.go`, `ip.go`, `auth.go` — typed operations grouped by service
+  (`Client.VPS.*`, `Client.IP.*`, `Client.CreateToken`). One file per service; a
+  service is a small struct hanging off `Client` with methods that call `call()`.
+- `flex.go` — `FlexInt` / `FlexFloat` (see conventions).
 - `errors.go` — `*Error` (JSON-RPC error object / non-200).
 - **stdlib only.** CLI/UX concerns (Cobra, Viper, Charm) belong in the *CLI* repo,
   never here — the SDK stays dependency-light and importable.
+
+## API conventions (learned against the live API — keep to them)
+
+- **Numbers arrive polymorphic.** SpaceWeb quotes numeric fields inconsistently
+  (bare `1`, quoted `"1024"`, or `null`) and even returns money as `int`-or-`float`.
+  Decode every numeric API field through **`FlexInt` / `FlexFloat`**, never a bare
+  `int`/`float64` — a strict type panics on real payloads. Same for shape drift:
+  a field documented as an array can arrive as a bare object when populated
+  (`local_ip`), so tolerant `UnmarshalJSON` over strict typing.
+- **Mutating actions answer `1`/`0`.** Action methods (`rename`, `changePlan`,
+  `powerOn`/`powerOff`/`reboot`, `addLocal`, …) return `1` on success and `0` on
+  failure — decode into `FlexInt` and treat non-`1` as an error. Group siblings
+  behind a private helper (`VPS.powerAction`, `IP.localAction`).
+- **Async lifecycle.** create/resize/power settle over a *sequence* of async
+  actions with `is_running` staying `1`; "settled" means `current_action` is idle,
+  not `is_running == 1`. Poll via `WaitForIdle` (reads `index.current_action`).
+- **Evidence-first typing.** Types are reconciled against *recorded real
+  responses*; a method whose result shape hasn't been observed live is left
+  `json.RawMessage` (e.g. `create`) rather than guessed. Document doc-vs-reality
+  gaps inline (see the `changePlan` / `getFirstOrderInfo` notes).
+- **Tests are offline.** Exercise handlers against the `serve(t, handler)` mock
+  server; never hit the live API in tests — `create` mutates and bills.
 
 ## Build & test (mise-first)
 
@@ -29,7 +53,8 @@ pre-commit install && pre-commit run -a
 
 - **English** for all repo artifacts (code, comments, docs, commits, PRs).
 - Commits: small and focused; end every commit with `Signed-off-by:` (`--signoff`)
-  and, since this is a personal repo, a `Co-Authored-By: Claude` trailer.
+  and, since this is a personal repo, an `Assisted-By: Claude <noreply@anthropic.com>`
+  trailer (the owner authors, Claude assists — not `Co-Authored-By`).
 - **Branch + PR**; do not self-merge — merging is the owner's call.
 - **Conventional Commits + release-please (BLOCKING):** commit / PR-title format is
   `<type>[scope]: <desc>` (`feat`→minor, `fix`→patch, `!` or `BREAKING CHANGE`→major).
