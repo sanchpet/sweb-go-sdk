@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.11.0...v0.12.0) (2026-07-10)
+
+
+### Features
+
+* add local and cloud backup services (/vps/backup, /vps/remoteBackup) ([#32](https://github.com/sanchpet/sweb-go-sdk/issues/32)) ([0dc48cd](https://github.com/sanchpet/sweb-go-sdk/commit/0dc48cdac0f91993ed439ed7e4b8d7c2210ee156))
+
 ## [0.11.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.10.0...v0.11.0) (2026-07-10)
 
 
