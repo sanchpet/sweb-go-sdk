@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.9.0...v0.10.0) (2026-07-10)
+
+
+### Features
+
+* add VPS reinstall/clone/logs (reinstallOs, copy, logs) ([#28](https://github.com/sanchpet/sweb-go-sdk/issues/28)) ([732ad49](https://github.com/sanchpet/sweb-go-sdk/commit/732ad49c8142ef9809b6696c57f45e75933a6644))
+
 ## [0.9.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.8.2...v0.9.0) (2026-07-10)
 
 
