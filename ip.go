@@ -145,3 +145,84 @@ func (s *IPService) WaitForLocalIP(ctx context.Context, billingID string, interv
 		}
 	}
 }
+
+// Add orders number additional public IPs for a VPS (method "add"). This BILLS.
+// Like Create, the result shape is left raw pending a recorded response — read
+// the assigned addresses back via Info once they settle.
+func (s *IPService) Add(ctx context.Context, billingID string, number int) (json.RawMessage, error) {
+	var out json.RawMessage
+	err := s.c.call(ctx, ipEndpoint, "add", map[string]any{
+		"billingId": billingID,
+		"number":    number,
+	}, &out)
+	return out, err
+}
+
+// Remove releases a public IP from a VPS (method "remove"). Action 1/0 result.
+func (s *IPService) Remove(ctx context.Context, billingID, ip string) error {
+	var out FlexInt
+	if err := s.c.call(ctx, ipEndpoint, "remove", map[string]string{
+		"billingId": billingID,
+		"ip":        ip,
+	}, &out); err != nil {
+		return err
+	}
+	if out != 1 {
+		return fmt.Errorf("sweb: remove ip returned %d, want 1 (0 = failure)", int64(out))
+	}
+	return nil
+}
+
+// Move attaches an IP to a VPS, or detaches it when billingID is empty (method
+// "move"; the API takes billingId=null to detach). Action 1/0 result.
+func (s *IPService) Move(ctx context.Context, ip, billingID string) error {
+	params := map[string]any{"ip": ip, "billingId": nil}
+	if billingID != "" {
+		params["billingId"] = billingID
+	}
+	var out FlexInt
+	if err := s.c.call(ctx, ipEndpoint, "move", params, &out); err != nil {
+		return err
+	}
+	if out != 1 {
+		return fmt.Errorf("sweb: move ip returned %d, want 1 (0 = failure)", int64(out))
+	}
+	return nil
+}
+
+// GetPtr returns the PTR (reverse-DNS) record for an IP (method "getPtr").
+// Read-only. Tolerates the record arriving as a bare string or a {"ptr": …}
+// object.
+func (s *IPService) GetPtr(ctx context.Context, ip string) (string, error) {
+	var raw json.RawMessage
+	if err := s.c.call(ctx, ipEndpoint, "getPtr", map[string]string{"ip": ip}, &raw); err != nil {
+		return "", err
+	}
+	var str string
+	if json.Unmarshal(raw, &str) == nil {
+		return str, nil
+	}
+	var obj struct {
+		PTR string `json:"ptr"`
+	}
+	if json.Unmarshal(raw, &obj) == nil {
+		return obj.PTR, nil
+	}
+	return "", fmt.Errorf("sweb: unexpected getPtr result %s", raw)
+}
+
+// EditPtr sets the PTR (reverse-DNS) record for an IP (method "editPtr"). An empty
+// ptr resets it to the provider default. Action 1/0 result.
+func (s *IPService) EditPtr(ctx context.Context, ip, ptr string) error {
+	var out FlexInt
+	if err := s.c.call(ctx, ipEndpoint, "editPtr", map[string]string{
+		"ip":  ip,
+		"ptr": ptr,
+	}, &out); err != nil {
+		return err
+	}
+	if out != 1 {
+		return fmt.Errorf("sweb: editPtr returned %d, want 1 (0 = failure)", int64(out))
+	}
+	return nil
+}
