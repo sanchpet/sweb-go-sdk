@@ -174,6 +174,49 @@ func (s *VPSService) ChangePlan(ctx context.Context, billingID string, vpsPlanID
 	return nil
 }
 
+// PowerOn boots a stopped VPS (method "powerOn"). The power change is
+// asynchronous: the API accepts the request (returns 1) and the machine settles
+// over the following seconds — poll IsRunning, or WaitForIdle for the
+// current_action to clear. A JSON-RPC error (or a 0 result) surfaces as an error.
+func (s *VPSService) PowerOn(ctx context.Context, billingID string) error {
+	return s.powerAction(ctx, "powerOn", billingID)
+}
+
+// PowerOff shuts a running VPS down (method "powerOff"). Asynchronous — see PowerOn.
+func (s *VPSService) PowerOff(ctx context.Context, billingID string) error {
+	return s.powerAction(ctx, "powerOff", billingID)
+}
+
+// Reboot restarts a VPS (method "reboot"). Asynchronous — see PowerOn.
+func (s *VPSService) Reboot(ctx context.Context, billingID string) error {
+	return s.powerAction(ctx, "reboot", billingID)
+}
+
+// powerAction issues a power method against the VPS endpoint. Like the other
+// action methods, the API answers 1 on success and 0 on failure (quoted or bare
+// — hence FlexInt).
+func (s *VPSService) powerAction(ctx context.Context, method, billingID string) error {
+	var out FlexInt
+	if err := s.c.call(ctx, vpsEndpoint, method, map[string]string{"billingId": billingID}, &out); err != nil {
+		return err
+	}
+	if out != 1 {
+		return fmt.Errorf("sweb: %s returned %d, want 1 (0 = failure)", method, int64(out))
+	}
+	return nil
+}
+
+// IsRunning reports whether the VPS is powered on (method "isRunning"). Read-only.
+// Note List already carries VPS.IsRunning for every node; this is the cheaper
+// single-VPS query when only the power state is needed.
+func (s *VPSService) IsRunning(ctx context.Context, billingID string) (bool, error) {
+	var out FlexInt
+	if err := s.c.call(ctx, vpsEndpoint, "isRunning", map[string]string{"billingId": billingID}, &out); err != nil {
+		return false, err
+	}
+	return out == 1, nil
+}
+
 // GetConstructorPlanID resolves a custom ("configurator") plan ID for the given
 // resources via the "getConstructorPlanId" method. ram and disk are in GB;
 // categoryID is a catalog category id (see AvailableConfig.Categories). This is
