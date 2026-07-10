@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.8.2...v0.9.0) (2026-07-10)
+
+
+### Features
+
+* add VPS power operations (powerOn/powerOff/reboot, isRunning) ([#25](https://github.com/sanchpet/sweb-go-sdk/issues/25)) ([584f061](https://github.com/sanchpet/sweb-go-sdk/commit/584f061747cde2dcdc32d6e437ddf42228ae5c72))
+
 ## [0.8.2](https://github.com/sanchpet/sweb-go-sdk/compare/v0.8.1...v0.8.2) (2026-07-02)
 
 
