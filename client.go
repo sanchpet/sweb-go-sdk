@@ -46,6 +46,10 @@ type Client struct {
 	VPS *VPSService
 	// IP groups IP operations (endpoint /vps/ip): local network + public IPs.
 	IP *IPService
+	// Backup groups local backup operations (endpoint /vps/backup).
+	Backup *BackupService
+	// RemoteBackup groups cloud backup operations (endpoint /vps/remoteBackup).
+	RemoteBackup *RemoteBackupService
 }
 
 // Option configures a Client.
@@ -85,6 +89,8 @@ func New(opts ...Option) *Client {
 	}
 	c.VPS = &VPSService{c: c}
 	c.IP = &IPService{c: c}
+	c.Backup = &BackupService{c: c}
+	c.RemoteBackup = &RemoteBackupService{c: c}
 	return c
 }
 
