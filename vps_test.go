@@ -49,6 +49,87 @@ func TestPowerActionFailure(t *testing.T) {
 	}
 }
 
+func TestReinstallOS(t *testing.T) {
+	var gotMethod string
+	var gotParams struct {
+		BillingID      string `json:"billingId"`
+		DistributiveID int    `json:"distributiveId"`
+		SaveDisk       bool   `json:"save_disk"`
+	}
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+			Params json.RawMessage
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod = req.Method
+		_ = json.Unmarshal(req.Params, &gotParams)
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":1}`))
+	})
+	if err := c.VPS.ReinstallOS(context.Background(), "login_vps_1", 42, true); err != nil {
+		t.Fatalf("ReinstallOS: %v", err)
+	}
+	if gotMethod != "reinstallOs" || gotParams.BillingID != "login_vps_1" ||
+		gotParams.DistributiveID != 42 || !gotParams.SaveDisk {
+		t.Errorf("method/params = %q/%+v, want reinstallOs / login_vps_1,42,save_disk=true", gotMethod, gotParams)
+	}
+}
+
+func TestReinstallOSFailure(t *testing.T) {
+	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":0}`))
+	})
+	if err := c.VPS.ReinstallOS(context.Background(), "login_vps_1", 42, false); err == nil {
+		t.Fatal("ReinstallOS: want error on result 0, got nil")
+	}
+}
+
+func TestCopy(t *testing.T) {
+	var gotMethod string
+	var gotParams struct {
+		BillingID string `json:"billingId"`
+		VPSPlanID int    `json:"vpsPlanId"`
+	}
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+			Params json.RawMessage
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod = req.Method
+		_ = json.Unmarshal(req.Params, &gotParams)
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":{"billingId":"login_vps_2"}}`))
+	})
+	if _, err := c.VPS.Copy(context.Background(), "login_vps_1", 7); err != nil {
+		t.Fatalf("Copy: %v", err)
+	}
+	if gotMethod != "copy" || gotParams.BillingID != "login_vps_1" || gotParams.VPSPlanID != 7 {
+		t.Errorf("method/params = %q/%+v, want copy / login_vps_1,7", gotMethod, gotParams)
+	}
+}
+
+func TestLogs(t *testing.T) {
+	var gotMethod string
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod = req.Method
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":[{"type":"create","status":"done","started_at":"2026-07-10 10:00:00","ended_at":"2026-07-10 10:03:00"}]}`))
+	})
+	logs, err := c.VPS.Logs(context.Background(), "login_vps_1")
+	if err != nil {
+		t.Fatalf("Logs: %v", err)
+	}
+	if gotMethod != "logs" {
+		t.Errorf("method = %q, want logs", gotMethod)
+	}
+	if len(logs) != 1 || logs[0].Type != "create" || logs[0].Status != "done" {
+		t.Errorf("logs = %+v, want one create/done entry", logs)
+	}
+}
+
 func TestIsRunning(t *testing.T) {
 	for _, tc := range []struct {
 		name   string
