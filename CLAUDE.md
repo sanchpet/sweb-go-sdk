@@ -9,9 +9,10 @@ so the **public interface is a contract**: keep it stable and well-typed.
 - `client.go` — `Client`, functional options, and the private `call()` transport
   (JSON-RPC envelope, Bearer auth, `{result|error}` decoding, non-200 mapping).
   HTTP/auth/retry are **internal**; consumers never see them.
-- `vps.go`, `config.go`, `ip.go`, `auth.go` — typed operations grouped by service
-  (`Client.VPS.*`, `Client.IP.*`, `Client.CreateToken`). One file per service; a
-  service is a small struct hanging off `Client` with methods that call `call()`.
+- `vps.go`, `config.go`, `ip.go`, `backup.go`, `remotebackup.go`, `dns.go`,
+  `auth.go` — typed operations grouped by service (`Client.VPS.*`, `Client.IP.*`,
+  `Client.Backup.*`, `Client.DNS.*`, `Client.CreateToken`). One file per service;
+  a service is a small struct hanging off `Client` with methods that call `call()`.
 - `flex.go` — `FlexInt` / `FlexFloat` (see conventions).
 - `errors.go` — `*Error` (JSON-RPC error object / non-200).
 - **stdlib only.** CLI/UX concerns (Cobra, Viper, Charm) belong in the *CLI* repo,
@@ -28,7 +29,11 @@ so the **public interface is a contract**: keep it stable and well-typed.
 - **Mutating actions answer `1`/`0`.** Action methods (`rename`, `changePlan`,
   `powerOn`/`powerOff`/`reboot`, `addLocal`, …) return `1` on success and `0` on
   failure — decode into `FlexInt` and treat non-`1` as an error. Group siblings
-  behind a private helper (`VPS.powerAction`, `IP.localAction`).
+  behind a private helper (`VPS.powerAction`, `IP.localAction`). **Sentinels are
+  not uniform even within one endpoint:** on `/domains/dns`, `editMx` answers
+  integer `1` but `editSrv`/`editNS`/`editTxt`/`editMain` answer boolean `true`
+  (hence the split `DNS.editOne`/`DNS.editBool` helpers). Confirm the sentinel per
+  method, don't assume the endpoint's first method sets the rule.
 - **Async lifecycle.** create/resize/power settle over a *sequence* of async
   actions with `is_running` staying `1`; "settled" means `current_action` is idle,
   not `is_running == 1`. Poll via `WaitForIdle` (reads `index.current_action`).

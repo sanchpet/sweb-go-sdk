@@ -50,6 +50,8 @@ type Client struct {
 	Backup *BackupService
 	// RemoteBackup groups cloud backup operations (endpoint /vps/remoteBackup).
 	RemoteBackup *RemoteBackupService
+	// DNS groups DNS-zone operations (endpoint /domains/dns).
+	DNS *DNSService
 }
 
 // Option configures a Client.
@@ -91,6 +93,7 @@ func New(opts ...Option) *Client {
 	c.IP = &IPService{c: c}
 	c.Backup = &BackupService{c: c}
 	c.RemoteBackup = &RemoteBackupService{c: c}
+	c.DNS = &DNSService{c: c}
 	return c
 }
 
