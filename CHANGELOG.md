@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.1](https://github.com/sanchpet/sweb-go-sdk/compare/v0.13.0...v0.13.1) (2026-07-11)
+
+
+### Bug Fixes
+
+* decode DNS info result returned as a bare array ([#36](https://github.com/sanchpet/sweb-go-sdk/issues/36)) ([980dc2b](https://github.com/sanchpet/sweb-go-sdk/commit/980dc2b5acce97c6d4d94acecc2bf5a89c5c00b1))
+
 ## [0.13.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.12.0...v0.13.0) (2026-07-11)
 
 
