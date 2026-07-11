@@ -1,6 +1,7 @@
 package sweb
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -59,26 +60,57 @@ type DNSRecord struct {
 	Main   FlexInt `json:"main"`
 }
 
-// dnsInfoEnvelope is the "info" result. SpaceWeb wraps the zone records in a
-// double-nested array (ips = [[ {…}, {…} ]]) and returns them alongside the
-// same account/IP fields the /vps/ip index carries (protected_ips, vps, …);
-// only the records are DNS-relevant, so we decode ips and ignore the rest.
-type dnsInfoEnvelope struct {
-	IPs [][]DNSRecord `json:"ips"`
-}
-
-// Records returns the DNS zone's records (method "info"). Read-only. The nested
-// record groups are flattened into a single slice.
+// Records returns the DNS zone's records (method "info"). Read-only.
 func (s *DNSService) Records(ctx context.Context, domain string) ([]DNSRecord, error) {
-	var env dnsInfoEnvelope
-	if err := s.c.call(ctx, dnsEndpoint, "info", map[string]string{"domain": domain}, &env); err != nil {
+	var raw json.RawMessage
+	if err := s.c.call(ctx, dnsEndpoint, "info", map[string]string{"domain": domain}, &raw); err != nil {
 		return nil, err
 	}
-	var records []DNSRecord
-	for _, group := range env.IPs {
-		records = append(records, group...)
+	return parseDNSInfo(raw)
+}
+
+// parseDNSInfo extracts the zone records from an "info" result. SpaceWeb returns
+// them in one of two shapes: a bare array of records (the normal case), or — for
+// a domain attached to a VPS — an object that wraps them in ips (alongside the
+// same protected_ips/vps fields the /vps/ip index carries). Tolerate both, and
+// the array-of-arrays the object's ips uses.
+func parseDNSInfo(raw json.RawMessage) ([]DNSRecord, error) {
+	raw = bytes.TrimSpace(raw)
+	if len(raw) == 0 || bytes.Equal(raw, []byte("null")) {
+		return nil, nil
 	}
-	return records, nil
+	if raw[0] == '{' {
+		var env struct {
+			IPs json.RawMessage `json:"ips"`
+		}
+		if err := json.Unmarshal(raw, &env); err != nil {
+			return nil, err
+		}
+		return flattenDNSRecords(env.IPs)
+	}
+	return flattenDNSRecords(raw)
+}
+
+// flattenDNSRecords decodes a records array that is either flat ([{…}]) or
+// nested one level ([[{…}]]).
+func flattenDNSRecords(raw json.RawMessage) ([]DNSRecord, error) {
+	raw = bytes.TrimSpace(raw)
+	if len(raw) == 0 || bytes.Equal(raw, []byte("null")) {
+		return nil, nil
+	}
+	var flat []DNSRecord
+	if err := json.Unmarshal(raw, &flat); err == nil {
+		return flat, nil
+	}
+	var nested [][]DNSRecord
+	if err := json.Unmarshal(raw, &nested); err != nil {
+		return nil, err
+	}
+	var out []DNSRecord
+	for _, g := range nested {
+		out = append(out, g...)
+	}
+	return out, nil
 }
 
 // ZoneFile is the raw BIND-style zone file returned by "getFile".

@@ -7,19 +7,49 @@ import (
 	"testing"
 )
 
-// infoResult is the "info" response body verbatim from the apidoc example
-// (test32132.ru): records live double-nested in ips ([[…]]) and are returned
-// beside the same account fields the /vps/ip index carries. Numeric fields are
-// quoted strings on MX/SRV/TXT (priority "10", ttl "600") but bare on index.
-const infoResult = `{"jsonrpc":"2.0","id":"817933088500481.kNKomyKXev","result":{"ips":[[` +
-	`{"name":"","value":"10.18.5.59","index":0,"canChange":"true","sel":"A","type":"A","category":"zoneMain"},` +
-	`{"name":"www","value":"10.18.5.59","index":1,"canChange":"false","sel":"A","type":"A","category":"zoneMain"},` +
-	`{"name":"autoconfig","value":"autoconfig.spaceweb.ru.","type":"CNAME","index":2,"category":"subdom"},` +
-	`{"value":"mx1.spaceweb.ru.","priority":"10","name":"","index":0,"category":"mx","type":"MX"},` +
-	`{"value":"mx2.spaceweb.ru.","priority":"20","name":"","index":1,"category":"mx","type":"MX"},` +
-	`{"service":"autodiscover","protocol":"tcp","ttl":"86400","priority":"5","weight":"0","port":"443","target":"autodiscover.spaceweb.ru.","index":0,"category":"srv","type":"SRV","name":""},` +
-	`{"domain":"@","ttl":"600","value":"v=spf1 include:_spf.spaceweb.ru ~all","index":0,"main":1,"category":"mainTxt","type":"TXT"}` +
-	`]],"protected_ips":[{"ip":"127.0.105.44","canBeDeclined":1,"price":6000}],"vps_ip":[],"local_ip":[],"vps":{"billingId":"dyasyuc384_vps_1","currentAction":null,"isEmpty":"0","ordered_ip_count":2}}}`
+// dnsRecordsJSON is a synthetic 7-record zone (TEST-NET IPs, example.com hosts —
+// the live shape, values scrubbed). Numeric fields are quoted strings on
+// MX/SRV/TXT (priority "10", ttl "600") but bare on index/main; canChange is a
+// stringified bool.
+const dnsRecordsJSON = `[` +
+	`{"name":"","value":"203.0.113.10","index":0,"canChange":"true","sel":"A","type":"A","category":"zoneMain"},` +
+	`{"name":"www","value":"203.0.113.10","index":1,"canChange":"false","sel":"A","type":"A","category":"zoneMain"},` +
+	`{"name":"autoconfig","value":"autoconfig.example.com.","type":"CNAME","index":2,"category":"subdom"},` +
+	`{"value":"mx1.example.com.","priority":"10","name":"","index":0,"category":"mx","type":"MX"},` +
+	`{"value":"mx2.example.com.","priority":"20","name":"","index":1,"category":"mx","type":"MX"},` +
+	`{"service":"autodiscover","protocol":"tcp","ttl":"86400","priority":"5","weight":"0","port":"443","target":"autodiscover.example.com.","index":0,"category":"srv","type":"SRV","name":""},` +
+	`{"domain":"@","ttl":"600","value":"v=spf1 ~all","index":0,"main":1,"category":"mainTxt","type":"TXT"}` +
+	`]`
+
+// infoFlat is the common shape: result is a bare array of records (verified
+// against a live sanch.pet response).
+const infoFlat = `{"jsonrpc":"2.0","result":` + dnsRecordsJSON + `}`
+
+// infoEnvelope is the VPS-attached-domain shape: records nested in ips=[[…]]
+// alongside the /vps/ip index's protected_ips/vps fields (the apidoc example).
+const infoEnvelope = `{"jsonrpc":"2.0","result":{"ips":[` + dnsRecordsJSON + `],` +
+	`"protected_ips":[{"ip":"203.0.113.44","canBeDeclined":1,"price":6000}],"vps_ip":[],"local_ip":[],` +
+	`"vps":{"billingId":"login_vps_1","currentAction":null,"isEmpty":"0","ordered_ip_count":2}}}`
+
+// assertZone checks the 7 records decode correctly regardless of container shape.
+func assertZone(t *testing.T, recs []DNSRecord) {
+	t.Helper()
+	if len(recs) != 7 {
+		t.Fatalf("got %d records, want 7", len(recs))
+	}
+	if recs[0].Type != "A" || recs[0].CanChange != "true" || recs[0].Value != "203.0.113.10" {
+		t.Errorf("record[0] = %+v, want A/canChange true/203.0.113.10", recs[0])
+	}
+	if mx := recs[3]; mx.Type != "MX" || mx.Priority != 10 { // priority from quoted "10"
+		t.Errorf("record[3] = %+v, want MX priority 10", mx)
+	}
+	if srv := recs[5]; srv.Type != "SRV" || srv.TTL != 86400 || srv.Port != 443 || srv.Weight != 0 {
+		t.Errorf("record[5] = %+v, want SRV ttl 86400/port 443", srv)
+	}
+	if txt := recs[6]; txt.Type != "TXT" || txt.Domain != "@" || txt.Main != 1 || txt.TTL != 600 {
+		t.Errorf("record[6] = %+v, want TXT @/main 1/ttl 600", txt)
+	}
+}
 
 func TestDNSRecords(t *testing.T) {
 	var gotMethod, gotDomain string
@@ -32,37 +62,29 @@ func TestDNSRecords(t *testing.T) {
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod, gotDomain = req.Method, req.Params.Domain
-		_, _ = w.Write([]byte(infoResult))
+		_, _ = w.Write([]byte(infoFlat))
 	})
-	recs, err := c.DNS.Records(context.Background(), "test32132.ru")
+	recs, err := c.DNS.Records(context.Background(), "example.com")
 	if err != nil {
 		t.Fatalf("Records: %v", err)
 	}
-	if gotMethod != "info" || gotDomain != "test32132.ru" {
-		t.Errorf("method/domain = %q/%q, want info/test32132.ru", gotMethod, gotDomain)
+	if gotMethod != "info" || gotDomain != "example.com" {
+		t.Errorf("method/domain = %q/%q, want info/example.com", gotMethod, gotDomain)
 	}
-	if len(recs) != 7 {
-		t.Fatalf("got %d records, want 7 (flattened from double-nested ips)", len(recs))
+	assertZone(t, recs)
+}
+
+// TestDNSRecordsEnvelope covers the VPS-attached-domain shape (records wrapped in
+// an object's ips=[[…]]), which must decode to the same records.
+func TestDNSRecordsEnvelope(t *testing.T) {
+	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = w.Write([]byte(infoEnvelope))
+	})
+	recs, err := c.DNS.Records(context.Background(), "example.com")
+	if err != nil {
+		t.Fatalf("Records: %v", err)
 	}
-	// A record: stringified bool canChange, sel selector.
-	if recs[0].Type != "A" || recs[0].CanChange != "true" || recs[0].Value != "10.18.5.59" {
-		t.Errorf("record[0] = %+v, want A/canChange true/10.18.5.59", recs[0])
-	}
-	// MX: priority arrives as the quoted string "10" and must decode through FlexInt.
-	mx := recs[3]
-	if mx.Type != "MX" || mx.Priority != 10 {
-		t.Errorf("record[3] = %+v, want MX priority 10 (from \"10\")", mx)
-	}
-	// SRV: ttl/weight/port all quoted strings.
-	srv := recs[5]
-	if srv.Type != "SRV" || srv.TTL != 86400 || srv.Port != 443 || srv.Weight != 0 {
-		t.Errorf("record[5] = %+v, want SRV ttl 86400/port 443", srv)
-	}
-	// TXT: main is a bare int 1.
-	txt := recs[6]
-	if txt.Type != "TXT" || txt.Domain != "@" || txt.Main != 1 || txt.TTL != 600 {
-		t.Errorf("record[6] = %+v, want TXT @/main 1/ttl 600", txt)
-	}
+	assertZone(t, recs)
 }
 
 func TestDNSGetFile(t *testing.T) {
