@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.12.0...v0.13.0) (2026-07-11)
+
+
+### Features
+
+* add DNS-zone service (/domains/dns) ([#34](https://github.com/sanchpet/sweb-go-sdk/issues/34)) ([7ea5a0e](https://github.com/sanchpet/sweb-go-sdk/commit/7ea5a0e9b7c679523cce866a27c0f0a556ed836e))
+
 ## [0.12.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.11.0...v0.12.0) (2026-07-10)
 
 
