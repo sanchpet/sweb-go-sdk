@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.13.1...v0.14.0) (2026-07-12)
+
+
+### Features
+
+* add Domains service for the /domains lifecycle ([#38](https://github.com/sanchpet/sweb-go-sdk/issues/38)) ([f70ec3f](https://github.com/sanchpet/sweb-go-sdk/commit/f70ec3fe57038867fed0b3871321b6a79876394c))
+
 ## [0.13.1](https://github.com/sanchpet/sweb-go-sdk/compare/v0.13.0...v0.13.1) (2026-07-11)
 
 
