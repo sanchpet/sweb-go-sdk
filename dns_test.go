@@ -165,7 +165,7 @@ func TestEditBoolMethods(t *testing.T) {
 			return c.DNS.EditNS(context.Background(), "d", DNSActionEdit, 0, "sub", "ns1.example.com.")
 		}},
 		{"TXT", "editTxt", func(c *Client) error {
-			return c.DNS.EditTXT(context.Background(), "d", DNSActionRemove, 0, "sub", "v=spf1")
+			return c.DNS.EditTXT(context.Background(), "d", DNSActionEdit, 0, "sub", "v=spf1")
 		}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -189,6 +189,60 @@ func TestEditBoolMethods(t *testing.T) {
 			}
 			if gotAction == "" {
 				t.Errorf("action param not sent")
+			}
+		})
+	}
+}
+
+// TestDNSEditDelete covers the remove path: DNSActionRemove routes through
+// editDelete, sending the wire verb "del" with a "type" discriminator and the
+// index — and NOT subDomain/value — regardless of the record type's normal
+// success sentinel. Verified against both the boolean-true and integer-1
+// responses.
+func TestDNSEditDelete(t *testing.T) {
+	for _, tc := range []struct {
+		name, method, wantType, result string
+		call                           func(*Client) error
+	}{
+		{"TXT", "editTxt", "TXT", `true`, func(c *Client) error {
+			return c.DNS.EditTXT(context.Background(), "d", DNSActionRemove, 1, "sub", "v=spf1")
+		}},
+		{"MX", "editMx", "MX", `1`, func(c *Client) error {
+			return c.DNS.EditMX(context.Background(), "d", DNSActionRemove, MXRecord{Index: 2})
+		}},
+		{"Main", "editMain", "A", `true`, func(c *Client) error {
+			return c.DNS.EditMain(context.Background(), "d", DNSActionRemove, MainRecord{Index: 3, Type: "A"})
+		}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var gotMethod string
+			var gotParams map[string]any
+			c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+				var req struct {
+					Method string         `json:"method"`
+					Params map[string]any `json:"params"`
+				}
+				_ = json.NewDecoder(r.Body).Decode(&req)
+				gotMethod, gotParams = req.Method, req.Params
+				_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":` + tc.result + `}`))
+			})
+			if err := tc.call(c); err != nil {
+				t.Fatalf("%s delete: %v", tc.name, err)
+			}
+			if gotMethod != tc.method {
+				t.Errorf("method = %q, want %q", gotMethod, tc.method)
+			}
+			if gotParams["action"] != "del" {
+				t.Errorf("action = %v, want del", gotParams["action"])
+			}
+			if gotParams["type"] != tc.wantType {
+				t.Errorf("type = %v, want %s", gotParams["type"], tc.wantType)
+			}
+			if _, ok := gotParams["subDomain"]; ok {
+				t.Errorf("del sent subDomain, want it omitted")
+			}
+			if _, ok := gotParams["value"]; ok {
+				t.Errorf("del sent value, want it omitted")
 			}
 		})
 	}
