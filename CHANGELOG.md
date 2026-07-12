@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.1](https://github.com/sanchpet/sweb-go-sdk/compare/v0.14.0...v0.14.1) (2026-07-12)
+
+
+### Bug Fixes
+
+* DNS record removal uses the wire verb "del" with a type discriminator ([#40](https://github.com/sanchpet/sweb-go-sdk/issues/40)) ([51ca376](https://github.com/sanchpet/sweb-go-sdk/commit/51ca3763a5ffe337ddad2c8ed04d1988ddeb0fd5))
+
 ## [0.14.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.13.1...v0.14.0) (2026-07-12)
 
 
