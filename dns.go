@@ -13,15 +13,19 @@ const dnsEndpoint = "/domains/dns"
 // (Records, ZoneFile) and edit records by type (Main/MX/SRV/NS/TXT).
 type DNSService struct{ c *Client }
 
-// DNSAction is the operation an edit method performs on a record. The API's
-// "action" parameter ("тип операции с записью") is the add/edit/remove
-// discriminator on every edit* method. Only "edit" is shown in the apidoc
-// examples; "add"/"remove" are the documented parameter's other values and are
-// not yet confirmed against a live response — probe before relying on them.
+// DNSAction is the operation an edit method performs on a record — the
+// add/edit/remove discriminator. This is the SDK's logical token; the wire
+// "action" value can differ (remove is sent as "del", see editDelete).
+//
+// add and edit are confirmed against live responses (add via a live editTxt
+// probe, edit via the apidoc examples). remove is routed through editDelete,
+// whose wire shape ("del" + a "type" discriminator, no subDomain/value) was
+// observed live for editTxt; the same shape is applied to the other record
+// types by inference.
 type DNSAction string
 
-// The DNS edit "action" values. Only DNSActionEdit is confirmed against the
-// apidoc examples; add/remove are the parameter's other documented values.
+// The DNS edit action values (SDK-logical). DNSActionRemove maps to the wire
+// verb "del" inside editDelete — it is not sent verbatim.
 const (
 	DNSActionAdd    DNSAction = "add"
 	DNSActionEdit   DNSAction = "edit"
@@ -144,6 +148,9 @@ type MainRecord struct {
 // true=success). Covers the record types without a dedicated method (A, AAAA,
 // CNAME, …).
 func (s *DNSService) EditMain(ctx context.Context, domain string, action DNSAction, r MainRecord) error {
+	if action == DNSActionRemove {
+		return s.editDelete(ctx, "editMain", r.Type, domain, r.Index)
+	}
 	return s.editBool(ctx, "editMain", map[string]any{
 		"domain": domain,
 		"action": string(action),
@@ -165,6 +172,9 @@ type MXRecord struct {
 
 // EditMX adds/edits/removes an MX record (method "editMx", 1=success).
 func (s *DNSService) EditMX(ctx context.Context, domain string, action DNSAction, r MXRecord) error {
+	if action == DNSActionRemove {
+		return s.editDelete(ctx, "editMx", "MX", domain, r.Index)
+	}
 	// editMx is the one edit method answering with integer 1 rather than boolean true.
 	return s.editOne(ctx, "editMx", map[string]any{
 		"domain":    domain,
@@ -191,6 +201,9 @@ type SRVRecord struct {
 
 // EditSRV adds/edits/removes an SRV record (method "editSrv", true=success).
 func (s *DNSService) EditSRV(ctx context.Context, domain string, action DNSAction, r SRVRecord) error {
+	if action == DNSActionRemove {
+		return s.editDelete(ctx, "editSrv", "SRV", domain, r.Index)
+	}
 	return s.editBool(ctx, "editSrv", map[string]any{
 		"domain":    domain,
 		"action":    string(action),
@@ -208,6 +221,9 @@ func (s *DNSService) EditSRV(ctx context.Context, domain string, action DNSActio
 
 // EditNS adds/edits/removes an NS record (method "editNS", true=success).
 func (s *DNSService) EditNS(ctx context.Context, domain string, action DNSAction, index int, subDomain, value string) error {
+	if action == DNSActionRemove {
+		return s.editDelete(ctx, "editNS", "NS", domain, index)
+	}
 	return s.editBool(ctx, "editNS", map[string]any{
 		"domain":    domain,
 		"action":    string(action),
@@ -219,6 +235,9 @@ func (s *DNSService) EditNS(ctx context.Context, domain string, action DNSAction
 
 // EditTXT adds/edits/removes a TXT record (method "editTxt", true=success).
 func (s *DNSService) EditTXT(ctx context.Context, domain string, action DNSAction, index int, subDomain, value string) error {
+	if action == DNSActionRemove {
+		return s.editDelete(ctx, "editTxt", "TXT", domain, index)
+	}
 	return s.editBool(ctx, "editTxt", map[string]any{
 		"domain":    domain,
 		"action":    string(action),
@@ -238,6 +257,31 @@ func (s *DNSService) editOne(ctx context.Context, method string, params map[stri
 		return fmt.Errorf("sweb: %s returned %d, want 1", method, int64(out))
 	}
 	return nil
+}
+
+// editDelete removes a record via its per-type edit method. Deletion uses a
+// param shape distinct from add/edit: the wire action "del" plus a "type"
+// discriminator, addressing the record by index — no subDomain/value. This was
+// observed live for editTxt (a TXT delete sends {domain, action:"del", index,
+// type:"TXT"}); the other record types are deleted the same way by inference.
+// The del success sentinel is not observed per method, so accept either the
+// integer 1 or boolean true.
+func (s *DNSService) editDelete(ctx context.Context, method, recordType, domain string, index int) error {
+	var raw json.RawMessage
+	if err := s.c.call(ctx, dnsEndpoint, method, map[string]any{
+		"domain": domain,
+		"action": "del",
+		"index":  index,
+		"type":   recordType,
+	}, &raw); err != nil {
+		return err
+	}
+	switch b := bytes.TrimSpace(raw); {
+	case bytes.Equal(b, []byte("1")), bytes.Equal(b, []byte("true")):
+		return nil
+	default:
+		return fmt.Errorf("sweb: %s del returned %s, want 1 or true", method, b)
+	}
 }
 
 // editBool runs an edit method whose success sentinel is boolean true
