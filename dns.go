@@ -137,11 +137,15 @@ func (s *DNSService) GetFile(ctx context.Context, domain string) (*ZoneFile, err
 
 // MainRecord addresses a general zone record (A/AAAA/CNAME/…) for editMain.
 type MainRecord struct {
-	Index  int    // record id for edit/remove
-	Name   string // subdomain name, or "" for the apex
-	Type   string // A, AAAA, CNAME, MX, TXT, …
-	Value  string
-	Prefix string // "префикс или TTL записи"; the apidoc example sends a bare int
+	Index int    // record id for edit/remove
+	Name  string // subdomain name, or "" for the apex
+	Type  string // A, AAAA, CNAME, MX, TXT, …
+	Value string
+	// Prefix is a name label prepended to Name (e.g. Prefix "600" + Name
+	// "probe" → "600.probe"). The apidoc calls it "префикс или TTL", but a live
+	// probe showed it is NOT a TTL: A/CNAME records carry no per-record TTL
+	// (they inherit the zone default), so this only ever shifts the host name.
+	Prefix string
 }
 
 // EditMain adds/edits/removes a general zone record (method "editMain",
