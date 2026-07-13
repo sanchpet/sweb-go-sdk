@@ -1,0 +1,1749 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultGetAvailableConfig": {
+        "description": "'vpsPlans' array Тарифные планы\n\nКаждый тарифный план содержит массив значений:\n\n'id' int id тарифного плана\n\n'ts_create' string дата и время создания в формате YYYY-MM-DD HH:MM:SS\n\n'ts_update' string дата и время обновления в формате YYYY-MM-DD HH:MM:SS\n\n'billing_id' string id услуги\n\n'category_id' string id категории тарифного плана\n\n'name' string название тарифа\n\n'price_per_month' int стоимость одного месяца при помесячной оплате\n\n'parent_plan_id' int|null id родительского тарифного плана\n\n'cpu_cores' string кол-во ядер\n\n'ram' string кол-во оперативной памяти\n\n'disk_type' string тип диска\n\n'volume_disk' string ёмкость диска\n\n'units' string кол-во занимаемых юнитов\n\n'is_promo' string является ли промо-трифом (0 - не является)\n\n'package_duration' string длительность пакета в месяцах\n\n'constructor' string относится ли тариф к категории Конструктор сайтов (N - не относится)\n\n'year_price_per_month' int стоимость одного месяца в годовом пакете\n\n'category' string название категории тарифного плана\n\n'datacenters' array массив из id дата-центров\n\n'price_per_month_promo' int стоимость месяца промо-версии тарифа при помесячной оплате\n\n'year_price_per_month_promo' int стоимость месяца промо-версии тарифа в годовом пакете\n\n'selectOs' array Операционные системы\n\nКаждая ОС содержит массив значений:\n\n'id' string id операционной системы\n\n'name' string название ОС\n\n'description' string более подробное название ОС\n\n'order' string порядковый номер для сортировки в списке\n\n'url' string|null ссылка на страницу с информацией об ОС\n\n'full_description' string|null полное подробное описание\n\n'plan_id' string id тарифного плана по умолчанию\n\n'os_distribution_id' string id сборки\n\n'panel_type' array массив названий доступных панелей управления (empty - без ПУ)\n\n'selectPanel' array Панели управления\n\nКаждая панель управления содержит массив значений:\n\n'id' string id панели управления\n\n'name' string алиас названия\n\n'description' string полное название\n\n'order' string порядковый номер для сортировки в списке\n\n'creation_time' string|null диапазон времени(в минутах)\n\n'url' string|null ссылка на страницу с информацией о панели управления\n\n'full_description' string|null полное подробне описание\n\n'plan_id' string id тарифного плана по умолчанию для данной панели\n\n'os_distribution_id' string id сборки\n\n'action' int действует ли акция на данную панель управления (0 - нет акции)\n\n'price' int текущая стоимость панели управления в месяц с учетом активности акции (0 - бесплатно)\n\n'old_price' int базовая стоимость панели управления без акции\n\n'osPanel' array Дистрибутивы (операционная система+панель). distributive передается в create\n\nКаждый дистрибутив содержит массив значений:\n\n'distributive' string id дистрибутива\n\n'os' string id операционной системы\n\n'panel' string id панели\n\n'availablePlanIds' array массив из id тарифных планов доступных с этим дистрибутивом\n\n'minRam' int минимальное кол-во ОЗУ (Гб)\n\n'minStorage' int минимальный объем на диске\n\n'datacenters' array Доступные дата-центры\n\nКаждый дата-центр содержит массив значений:\n\n'id' string id дата-центра\n\n'name' string алиас названия (spb / msk)\n\n'location' string название местоположения (Санкт-Петербург)\n\n'site_name' string название дата-центра для пользователей\n\n'categories' array Категории тарифных планов\n\nКаждая категория содержит массив значений:\n\n'id' string id категории\n\n'slug' string алиас категории\n\n'name' string название категории для пользователей\n\n'prior' string порядковый номер для сортировки в списке\n\n'kit' array массив параметров для конфигуратора тарифов категории NVME:\n\n'cpuCores' array параметры для установки кол-ва ядер:\n\n'start' int минимальное значение\n\n'end' int максимальное значение\n\n'step' int размер шага при изменении кол-ва ядер\n\n'price' int стоимость одного ядра\n\n'ram' array параметры для установки кол-ва ОЗУ:\n\n'values' array массив из доступных объемов в Гб:\n\n'price' int стоимость одного Гб\n\n'volumeDisk' array параметры для установки объема жесткого диск:\n\n'start' int минимальное значение\n\n'end' int максимальное значение\n\n'step' int размер шага при изменении объема диска\n\n'price' int стоимость одного Гб\n\n'price_backup' int стоимость одного Гб бэкапа\n\n'categoryId' int id категории тарифного плана\n\n'kit_turbo' array массив параметров для конструктора тарифов категории Turbo:\n\n'cpuCores' array параметры для установки кол-ва ядер:\n\n'start' int минимальное значение\n\n'end' int максимальное значение\n\n'step' int размер шага при изменении кол-ва ядер\n\n'price' int стоимость одного ядра\n\n'ram' array параметры для установки кол-ва ОЗУ:\n\n'start' int минимальное значение в Гб\n\n'end' int максимальное значение в Гб\n\n'step' int размер шага при изменении объема ОЗУ в Гб\n\n'price' int стоимость одного Гб\n\n'volumeDisk' array параметры для установки объема жесткого диска:\n\n'start' int минимальное значение в Гб\n\n'end' int максимальное значение в Гб\n\n'step' int размер шага при изменении объема жесткого диска в Гб\n\n'price' int стоимость одного Гб\n\n'price_backup' int стоимость одного Гб бэкапа\n\n'categoryId' int id категории тарифного плана\n\n'kit_hdd' array массив параметров для конструктора тарифов категории HDD:\n\n'cpuCores' array параметры для установки кол-ва ядер:\n\n'start' int минимальное значение\n\n'end' int максимальное значение\n\n'step' int размер шага при изменении кол-ва ядер\n\n'price' int стоимость одного ядра\n\n'ram' array параметры для установки кол-ва ОЗУ:\n\n'start' int минимальное значение в Гб\n\n'end' int максимальное значение в Гб\n\n'step' int размер шага при изменении объема ОЗУ в Гб\n\n'price' int стоимость одного Гб\n\n'volumeDisk' array параметры для установки объема жесткого диска:\n\n'start' int минимальное значение в Гб\n\n'end' int максимальное значение в Гб\n\n'step' int размер шага при изменении объема жесткого диска в Гб\n\n'price' int стоимость одного Гб\n\n'categoryId' int id категории тарифного плана\n\n",
+        "name": "resultGetAvailableConfig",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultGetConstructorPlanId": {
+        "description": "id тарифного плана конструктора VPS",
+        "name": "resultGetConstructorPlanId",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultGetCurrentAction": {
+        "description": "получение текущей операции по VPS",
+        "name": "resultGetCurrentAction",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "resultGetFirstOrderInfo": {
+        "description": "'plan' string Название плана\n\n'os' string Название ОС\n\n'panel' string Название ПУ\n\n'cpu_cores' string Количество процессоров\n\n'ram' string Количество памяти\n\n'volume_disk' string Размер диска\n\n'price_per_month' int Цена за месяц\n\n'pay_period' int Цена за период\n\n'price_for_period_with_stock' int Цена за месяц со скидкой\n\n'price_per_month_with_stock' int Цена за период со скидкой\n\n'promocode' string|null Промо-код на скидку (не партнерский) введенный при регистрации\n\n'clearAvailable' bool Доступна возможность очистки первого заказа\n\n'plan_is_constructor' bool Флаг сконструированного тарифа\n\n'ipCount' int Кол-во не защищенных IP в заказе\n\n'protectedIps' int[] Массив ID тарифов защищенных IP для заказа (например, [1, 3, 3])",
+        "name": "resultGetFirstOrderInfo",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultIndex": {
+        "description": "'billingId' string ID сервиса\n\n'name' string Имя VPS\n\n'plan_id' int ID плана\n\n'plan_name' string Название палана\n\n'parent_plan_id' int ID родительского плана\n\n'plan_price' int Стоимость\n\n'cpu' int Число процессоров\n\n'ram' string Количество памяти\n\n'disk' string Размер диска\n\n'blockUi' int Заблокирована\n\n'active' int Активна\n\n'uid' string Идентификатор машины\n\n'os_distribution' string Название ОС\n\n'os_distr_id' int ID Дистрибутива\n\n'category' string Категория\n\n'ts_create' string Дата создания\n\n'mac' string MAC-адрес\n\n'ip' string IP\n\n'local_ip' string локальный IP\n\n'local_mac' string локальный MAC\n\n'local_mask' string локальная маска подсети\n\n'current_action' string Текущая операция\n\n'is_running' int Запущена\n\n'isp' array Информация о панели управления:\n\n'license_type' string Название панели\n\n'ip' string IP\n\n'active_until' string Активна до даты\n\n'price' float Стоимость\n\n'link' string Ссылка на вход в панель\n\n'is_blocked' int Заблокирована\n\n'creation_time' string Дата создания\n\n'ext_ips' array Информация о доп. IP:\n\n'is_test' int Тестовый период\n\n'is_new' bool Новая услуга\n\n'datacenter' string Дата-центр\n\n'ordered_ip_count' int Количество адресов, заказанных на VPS\n\n'protected_ips'",
+        "name": "resultIndex",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultInt": {
+        "description": "1 - успешно, 0 - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultLoad": {
+        "description": "'mimetype' string MIME-тип данных (image/png;base64)\n\n'metadata' array мета-данные\n\n'content' string содержимое в base64",
+        "name": "resultLoad",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultLogs": {
+        "description": "'type' string тип операции\n\n'status' string статус операции\n\n'started_at' string дата и время начала операции в формате YYYY-MM-DD HH:MM:SS\n\n'ended_at' string дата и время окончания операции в формате YYYY-MM-DD HH:MM:SS",
+        "name": "resultLogs",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultStringVps": {
+        "description": "создание/клонирование VPS",
+        "name": "resultStringVps",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "examples": {
+      "arrayProtectedIps": {
+        "description": "массив ID тарифов защищенных IP для заказа (например, [1, 3, 3])",
+        "name": "protectedIps",
+        "summary": "protectedIps",
+        "value": [
+          1,
+          2,
+          3
+        ]
+      },
+      "boolStartTestPeriod": {
+        "description": "начать тестовый период",
+        "name": "startTestPeriod",
+        "summary": "startTestPeriod",
+        "value": true
+      },
+      "idMonitoringContact": {
+        "description": "ID контакта мониторинга",
+        "name": "monitoringContactId",
+        "summary": "monitoringContactId",
+        "value": 2642
+      },
+      "idMonitoringPlan": {
+        "description": "ID плана мониторинга",
+        "name": "monitoringPlanId",
+        "summary": "monitoringPlanId",
+        "value": 1
+      },
+      "intCPU": {
+        "description": "кол-во ядер CPU",
+        "name": "cpu_cores",
+        "summary": "cpu_cores",
+        "value": 4
+      },
+      "intCategory": {
+        "description": "id категории",
+        "name": "category_id",
+        "summary": "category_id",
+        "value": 1
+      },
+      "intDatacenter": {
+        "description": "Дата-центр",
+        "name": "datacenter",
+        "summary": "datacenter",
+        "value": 1
+      },
+      "intDistributiveId": {
+        "description": "ID дистрибутива",
+        "name": "distributiveId",
+        "summary": "distributiveId",
+        "value": 32
+      },
+      "intIpCount": {
+        "description": "кол-во заказанных вместе с VPS IP-адресов",
+        "name": "ipCount",
+        "summary": "ipCount",
+        "value": 2
+      },
+      "intIpCountFirst": {
+        "description": "кол-во заказанных вместе с VPS IP-адресов (для 1ого заказа: 0 или 1)",
+        "name": "ipCount",
+        "summary": "ipCount",
+        "value": 1
+      },
+      "intPeriod": {
+        "description": "период оплаты (1 или 12 мес.)",
+        "name": "period",
+        "summary": "period",
+        "value": 1
+      },
+      "intProtectedIps": {
+        "description": "массив ID тарифов защищенных IP для заказа (например, [1, 3, 3])",
+        "name": "protectedIps",
+        "summary": "protectedIps",
+        "value": [
+          1,
+          2
+        ]
+      },
+      "intRam": {
+        "description": "ОЗУ в гигабайтах",
+        "name": "ram",
+        "summary": "ram",
+        "value": 2
+      },
+      "intVolumeDisk": {
+        "description": "жесткий диск в гигабайтах",
+        "name": "volume_disk",
+        "summary": "volume_disk",
+        "value": 20
+      },
+      "intVpsPlanId": {
+        "description": "тарифный план",
+        "name": "vpsPlanId",
+        "summary": "vpsPlanId",
+        "value": 4
+      },
+      "resultGetAvailableConfig": {
+        "description": "'vpsPlans' array Тарифные планы\n\nКаждый тарифный план содержит массив значений:\n\n'id' int id тарифного плана\n\n'ts_create' string дата и время создания в формате YYYY-MM-DD HH:MM:SS\n\n'ts_update' string дата и время обновления в формате YYYY-MM-DD HH:MM:SS\n\n'billing_id' string id услуги\n\n'category_id' string id категории тарифного плана\n\n'name' string название тарифа\n\n'price_per_month' int стоимость одного месяца при помесячной оплате\n\n'parent_plan_id' int|null id родительского тарифного плана\n\n'cpu_cores' string кол-во ядер\n\n'ram' string кол-во оперативной памяти\n\n'disk_type' string тип диска\n\n'volume_disk' string ёмкость диска\n\n'units' string кол-во занимаемых юнитов\n\n'is_promo' string является ли промо-трифом (0 - не является)\n\n'package_duration' string длительность пакета в месяцах\n\n'constructor' string относится ли тариф к категории Конструктор сайтов (N - не относится)\n\n'year_price_per_month' int стоимость одного месяца в годовом пакете\n\n'category' string название категории тарифного плана\n\n'datacenters' array массив из id дата-центров\n\n'price_per_month_promo' int стоимость месяца промо-версии тарифа при помесячной оплате\n\n'year_price_per_month_promo' int стоимость месяца промо-версии тарифа в годовом пакете\n\n'selectOs' array Операционные системы\n\nКаждая ОС содержит массив значений:\n\n'id' string id операционной системы\n\n'name' string название ОС\n\n'description' string более подробное название ОС\n\n'order' string порядковый номер для сортировки в списке\n\n'url' string|null ссылка на страницу с информацией об ОС\n\n'full_description' string|null полное подробное описание\n\n'plan_id' string id тарифного плана по умолчанию\n\n'os_distribution_id' string id сборки\n\n'panel_type' array массив названий доступных панелей управления (empty - без ПУ)\n\n'selectPanel' array Панели управления\n\nКаждая панель управления содержит массив значений:\n\n'id' string id панели управления\n\n'name' string алиас названия\n\n'description' string полное название\n\n'order' string порядковый номер для сортировки в списке\n\n'creation_time' string|null диапазон времени(в минутах)\n\n'url' string|null ссылка на страницу с информацией о панели управления\n\n'full_description' string|null полное подробне описание\n\n'plan_id' string id тарифного плана по умолчанию для данной панели\n\n'os_distribution_id' string id сборки\n\n'action' int действует ли акция на данную панель управления (0 - нет акции)\n\n'price' int текущая стоимость панели управления в месяц с учетом активности акции (0 - бесплатно)\n\n'old_price' int базовая стоимость панели управления без акции\n\n'osPanel' array Дистрибутивы (операционная система+панель). distributive передается в create\n\nКаждый дистрибутив содержит массив значений:\n\n'distributive' string id дистрибутива\n\n'os' string id операционной системы\n\n'panel' string id панели\n\n'availablePlanIds' array массив из id тарифных планов доступных с этим дистрибутивом\n\n'minRam' int минимальное кол-во ОЗУ (Гб)\n\n'minStorage' int минимальный объем на диске\n\n'datacenters' array Доступные дата-центры\n\nКаждый дата-центр содержит массив значений:\n\n'id' string id дата-центра\n\n'name' string алиас названия (spb / msk)\n\n'location' string название местоположения (Санкт-Петербург)\n\n'site_name' string название дата-центра для пользователей\n\n'categories' array Категории тарифных планов\n\nКаждая категория содержит массив значений:\n\n'id' string id категории\n\n'slug' string алиас категории\n\n'name' string название категории для пользователей\n\n'prior' string порядковый номер для сортировки в списке\n\n'kit' array массив параметров для конфигуратора тарифов категории NVME:\n\n'cpuCores' array параметры для установки кол-ва ядер:\n\n'start' int минимальное значение\n\n'end' int максимальное значение\n\n'step' int размер шага при изменении кол-ва ядер\n\n'price' int стоимость одного ядра\n\n'ram' array параметры для установки кол-ва ОЗУ:\n\n'values' array массив из доступных объемов в Гб:\n\n'price' int стоимость одного Гб\n\n'volumeDisk' array параметры для установки объема жесткого диск:\n\n'start' int минимальное значение\n\n'end' int максимальное значение\n\n'step' int размер шага при изменении объема диска\n\n'price' int стоимость одного Гб\n\n'price_backup' int стоимость одного Гб бэкапа\n\n'categoryId' int id категории тарифного плана\n\n'kit_turbo' array массив параметров для конструктора тарифов категории Turbo:\n\n'cpuCores' array параметры для установки кол-ва ядер:\n\n'start' int минимальное значение\n\n'end' int максимальное значение\n\n'step' int размер шага при изменении кол-ва ядер\n\n'price' int стоимость одного ядра\n\n'ram' array параметры для установки кол-ва ОЗУ:\n\n'start' int минимальное значение в Гб\n\n'end' int максимальное значение в Гб\n\n'step' int размер шага при изменении объема ОЗУ в Гб\n\n'price' int стоимость одного Гб\n\n'volumeDisk' array параметры для установки объема жесткого диска:\n\n'start' int минимальное значение в Гб\n\n'end' int максимальное значение в Гб\n\n'step' int размер шага при изменении объема жесткого диска в Гб\n\n'price' int стоимость одного Гб\n\n'price_backup' int стоимость одного Гб бэкапа\n\n'categoryId' int id категории тарифного плана\n\n'kit_hdd' array массив параметров для конструктора тарифов категории HDD:\n\n'cpuCores' array параметры для установки кол-ва ядер:\n\n'start' int минимальное значение\n\n'end' int максимальное значение\n\n'step' int размер шага при изменении кол-ва ядер\n\n'price' int стоимость одного ядра\n\n'ram' array параметры для установки кол-ва ОЗУ:\n\n'start' int минимальное значение в Гб\n\n'end' int максимальное значение в Гб\n\n'step' int размер шага при изменении объема ОЗУ в Гб\n\n'price' int стоимость одного Гб\n\n'volumeDisk' array параметры для установки объема жесткого диска:\n\n'start' int минимальное значение в Гб\n\n'end' int максимальное значение в Гб\n\n'step' int размер шага при изменении объема жесткого диска в Гб\n\n'price' int стоимость одного Гб\n\n'categoryId' int id категории тарифного плана\n\n",
+        "name": "resultGetAvailableConfig",
+        "summary": "resultGetAvailableConfig",
+        "value": {
+          "categories": [
+            {
+              "id": "1",
+              "name": "VPS/VDS на NVMe (быстрые)",
+              "prior": "1",
+              "slug": "nvme"
+            },
+            {
+              "id": "3",
+              "name": "VPS/VDS HighCPU (турбо)",
+              "prior": "2",
+              "slug": "turbo"
+            },
+            {
+              "id": "2",
+              "name": "VPS/VDS на HDD (большого объёма)",
+              "prior": "3",
+              "slug": "hdd"
+            },
+            {
+              "id": "4",
+              "name": "Конфигуратор VPS/VDS",
+              "prior": "4",
+              "slug": "kit"
+            }
+          ],
+          "datacenters": [
+            {
+              "id": "1",
+              "location": "Санкт-Петербург",
+              "name": "spb",
+              "site_name": "Дата-центр в СПБ"
+            },
+            {
+              "id": "2",
+              "location": "Москва",
+              "name": "msk",
+              "site_name": "Дата-центр в Москве"
+            }
+          ],
+          "kit": {
+            "categoryId": 1,
+            "cpuCores": {
+              "end": 16,
+              "price": 110,
+              "start": 2,
+              "step": 2
+            },
+            "ram": {
+              "price": 115,
+              "values": [
+                1,
+                2,
+                3,
+                4,
+                6,
+                8,
+                10,
+                12,
+                14,
+                16,
+                18,
+                20,
+                22,
+                24,
+                26,
+                28,
+                30,
+                32
+              ]
+            },
+            "volumeDisk": {
+              "end": 320,
+              "price": 15,
+              "price_backup": 1.5,
+              "start": 10,
+              "step": 10
+            }
+          },
+          "kit_hdd": {
+            "categoryId": 2,
+            "cpuCores": {
+              "end": 2,
+              "price": 530,
+              "start": 1,
+              "step": 1
+            },
+            "ram": {
+              "end": 4,
+              "price": 160,
+              "start": 2,
+              "step": 1
+            },
+            "volumeDisk": {
+              "end": 1000,
+              "price": 2,
+              "start": 500,
+              "step": 10
+            }
+          },
+          "kit_turbo": {
+            "categoryId": 3,
+            "cpuCores": {
+              "end": 4,
+              "price": 530,
+              "start": 1,
+              "step": 1
+            },
+            "ram": {
+              "end": 8,
+              "price": 140,
+              "start": 2,
+              "step": 1
+            },
+            "volumeDisk": {
+              "end": 160,
+              "price": 9,
+              "price_backup": 3,
+              "start": 40,
+              "step": 10
+            }
+          },
+          "osPanel": [
+            {
+              "availablePlanIds": [
+                4,
+                5,
+                6,
+                12,
+                14,
+                26,
+                28,
+                34,
+                38,
+                42
+              ],
+              "distributive": "8",
+              "minRam": 0,
+              "minStorage": 0,
+              "os": "4",
+              "panel": "7"
+            },
+            {
+              "availablePlanIds": [
+                5,
+                6,
+                12,
+                14,
+                26,
+                28,
+                34,
+                38,
+                42
+              ],
+              "distributive": "89",
+              "minRam": 2,
+              "minStorage": 0,
+              "os": "20",
+              "panel": "15"
+            }
+          ],
+          "selectOs": [
+            {
+              "description": "Ubuntu 20.04 LTS",
+              "full_description": null,
+              "id": "20",
+              "name": "ubuntu-20-04",
+              "order": "1",
+              "os_distribution_id": "32",
+              "panel_type": [
+                "empty",
+                "isp",
+                "docker",
+                "nodejs",
+                "rocket",
+                "gitlab",
+                "hestia",
+                "nextcloud",
+                "fastpanel",
+                "minecraft"
+              ],
+              "plan_id": "4",
+              "url": null
+            },
+            {
+              "description": "Debian 9",
+              "full_description": null,
+              "id": "13",
+              "name": "debian-9",
+              "order": "103",
+              "os_distribution_id": "22",
+              "panel_type": [
+                "empty",
+                "isp"
+              ],
+              "plan_id": "4",
+              "url": null
+            },
+            {
+              "description": "BitrixVM 7",
+              "full_description": "Готовое решение для продуктов на 1С-Битрикс",
+              "id": "19",
+              "name": "bitrix-auto-centos-7",
+              "order": "104",
+              "os_distribution_id": "30",
+              "panel_type": [
+                "empty"
+              ],
+              "plan_id": "6",
+              "url": "https://sweb.ru/vds/bitrix/"
+            }
+          ],
+          "selectPanel": [
+            {
+              "action": 0,
+              "creation_time": null,
+              "description": "Без ПО",
+              "full_description": null,
+              "id": "7",
+              "name": "empty",
+              "old_price": 0,
+              "order": "0",
+              "os_distribution_id": "0",
+              "plan_id": "5",
+              "price": 0,
+              "url": null
+            },
+            {
+              "action": 0,
+              "creation_time": "20-30",
+              "description": "ISPmanager 6 Lite",
+              "full_description": "Популярная панель управления сервером, 10 сайтов",
+              "id": "4",
+              "name": "vps_isp6_lite",
+              "old_price": 300,
+              "order": "2",
+              "os_distribution_id": "77",
+              "plan_id": "5",
+              "price": 300,
+              "url": "https://help.sweb.ru/entry/728/"
+            },
+            {
+              "action": 0,
+              "creation_time": "10-15",
+              "description": "Node.js",
+              "full_description": "Серверная платформа для работы с JavaScript",
+              "id": "9",
+              "name": "nodejs",
+              "old_price": 0,
+              "order": "8",
+              "os_distribution_id": "62",
+              "plan_id": "5",
+              "price": 0,
+              "url": null
+            },
+            {
+              "action": 0,
+              "creation_time": "10-15",
+              "description": "Rocket.Chat",
+              "full_description": "Корпоративный мессенджер с открытым исходным кодом",
+              "id": "10",
+              "name": "rocket",
+              "old_price": 0,
+              "order": "9",
+              "os_distribution_id": "63",
+              "plan_id": "5",
+              "price": 0,
+              "url": null
+            },
+            {
+              "action": 0,
+              "creation_time": "15-30",
+              "description": "GitLab",
+              "full_description": "Система управления репозиториями программного кода для Git",
+              "id": "11",
+              "name": "gitlab",
+              "old_price": 0,
+              "order": "10",
+              "os_distribution_id": "64",
+              "plan_id": "6",
+              "price": 0,
+              "url": null
+            },
+            {
+              "action": 0,
+              "creation_time": "10-15",
+              "description": "Minecraft JE Server",
+              "full_description": "Сервер игры Minecraft Java Edition",
+              "id": "15",
+              "name": "minecraft",
+              "old_price": 0,
+              "order": "11",
+              "os_distribution_id": "89",
+              "plan_id": "6",
+              "price": 0,
+              "url": "https://sweb.ru/vds/minecraft/"
+            }
+          ],
+          "vpsPlans": [
+            {
+              "billing_id": "597",
+              "category": "nvme",
+              "category_id": "1",
+              "constructor": "N",
+              "cpu_cores": "2",
+              "datacenters": [
+                1,
+                2
+              ],
+              "disk_type": "NVMe",
+              "id": 4,
+              "is_promo": "0",
+              "name": "KVM-10",
+              "package_duration": "1",
+              "parent_plan_id": null,
+              "price_per_month": 349,
+              "price_per_month_promo": 239,
+              "ram": "1024",
+              "ts_create": "2015-09-29 13:43:43",
+              "ts_update": "2021-09-22 11:48:03",
+              "units": "1",
+              "volume_disk": "10 ГБ",
+              "year_price_per_month": 299,
+              "year_price_per_month_promo": 239
+            },
+            {
+              "billing_id": "598",
+              "category": "nvme",
+              "category_id": "1",
+              "constructor": "N",
+              "cpu_cores": "2",
+              "datacenters": [
+                1,
+                2
+              ],
+              "disk_type": "NVMe",
+              "id": 5,
+              "is_promo": "0",
+              "name": "KVM-20",
+              "package_duration": "1",
+              "parent_plan_id": null,
+              "price_per_month": 649,
+              "price_per_month_promo": 439,
+              "ram": "2048",
+              "ts_create": "2015-09-29 13:43:43",
+              "ts_update": "2022-03-18 09:16:03",
+              "units": "2",
+              "volume_disk": "20 ГБ",
+              "year_price_per_month": 549,
+              "year_price_per_month_promo": 439
+            },
+            {
+              "billing_id": "1606",
+              "category": "turbo",
+              "category_id": "3",
+              "constructor": "N",
+              "cpu_cores": "4",
+              "datacenters": [
+                1,
+                2
+              ],
+              "disk_type": "NVMe",
+              "id": 42,
+              "is_promo": "0",
+              "name": "TURBO-160",
+              "package_duration": "1",
+              "parent_plan_id": null,
+              "price_per_month": 4099,
+              "price_per_month_promo": 2639,
+              "ram": "8192",
+              "ts_create": "2021-11-22 14:18:18",
+              "ts_update": null,
+              "units": "16",
+              "volume_disk": "160 ГБ",
+              "year_price_per_month": 3299,
+              "year_price_per_month_promo": 2639
+            }
+          ]
+        }
+      },
+      "resultGetConstructorPlanId": {
+        "description": "id тарифного плана конструктора VPS",
+        "name": "resultGetConstructorPlanId",
+        "summary": "resultGetConstructorPlanId",
+        "value": 124
+      },
+      "resultGetCurrentAction": {
+        "description": "получение текущей операции по VPS",
+        "name": "resultGetCurrentAction",
+        "summary": "resultGetCurrentAction",
+        "value": "start"
+      },
+      "resultGetFirstOrderInfo": {
+        "description": "'plan' string Название плана\n\n'os' string Название ОС\n\n'panel' string Название ПУ\n\n'cpu_cores' string Количество процессоров\n\n'ram' string Количество памяти\n\n'volume_disk' string Размер диска\n\n'price_per_month' int Цена за месяц\n\n'pay_period' int Цена за период\n\n'price_for_period_with_stock' int Цена за месяц со скидкой\n\n'price_per_month_with_stock' int Цена за период со скидкой\n\n'promocode' string|null Промо-код на скидку (не партнерский) введенный при регистрации\n\n'clearAvailable' bool Доступна возможность очистки первого заказа\n\n'plan_is_constructor' bool Флаг сконструированного тарифа\n\n'ipCount' int Кол-во не защищенных IP в заказе\n\n'protectedIps' int[] Массив ID тарифов защищенных IP для заказа (например, [1, 3, 3])",
+        "name": "resultGetFirstOrderInfo",
+        "summary": "Получение информации о первом заказе",
+        "value": [
+          {
+            "id": "20250327104613.kmuG0Cu94B",
+            "jsonrpc": "2.0",
+            "result": {
+              "clearAvailable": false,
+              "cpu_cores": "1",
+              "ipCount": 1,
+              "os": "Ubuntu 24.04 LTS",
+              "panel": "Без ПО",
+              "pay_period": 12,
+              "plan": "CLOUD PROMO на год",
+              "plan_is_constructor": false,
+              "price_for_period_with_stock": 1668,
+              "price_per_month": 139,
+              "price_per_month_with_stock": 139,
+              "promocode": null,
+              "protectedIps": [
+                1,
+                2
+              ],
+              "ram": "1024",
+              "volume_disk": "10 ГБ"
+            },
+            "version": "1.263.20250326113457"
+          }
+        ]
+      },
+      "resultIndex": {
+        "description": "'billingId' string ID сервиса\n\n'name' string Имя VPS\n\n'plan_id' int ID плана\n\n'plan_name' string Название палана\n\n'parent_plan_id' int ID родительского плана\n\n'plan_price' int Стоимость\n\n'cpu' int Число процессоров\n\n'ram' string Количество памяти\n\n'disk' string Размер диска\n\n'blockUi' int Заблокирована\n\n'active' int Активна\n\n'uid' string Идентификатор машины\n\n'os_distribution' string Название ОС\n\n'os_distr_id' int ID Дистрибутива\n\n'category' string Категория\n\n'ts_create' string Дата создания\n\n'mac' string MAC-адрес\n\n'ip' string IP\n\n'local_ip' string локальный IP\n\n'local_mac' string локальный MAC\n\n'local_mask' string локальная маска подсети\n\n'current_action' string Текущая операция\n\n'is_running' int Запущена\n\n'isp' array Информация о панели управления:\n\n'license_type' string Название панели\n\n'ip' string IP\n\n'active_until' string Активна до даты\n\n'price' float Стоимость\n\n'link' string Ссылка на вход в панель\n\n'is_blocked' int Заблокирована\n\n'creation_time' string Дата создания\n\n'ext_ips' array Информация о доп. IP:\n\n'is_test' int Тестовый период\n\n'is_new' bool Новая услуга\n\n'datacenter' string Дата-центр\n\n'ordered_ip_count' int Количество адресов, заказанных на VPS\n\n'protected_ips'",
+        "name": "resultIndex",
+        "summary": "список VPS",
+        "value": [
+          {
+            "active": 0,
+            "billingId": "inn****_vps_4",
+            "blockUi": 1,
+            "category": "nvme",
+            "cpu": 2,
+            "current_action": "",
+            "datacenter": "Москва",
+            "disk": "10 ГБ",
+            "ext_ips": [],
+            "ip": "77.222.43.225",
+            "is_new": false,
+            "is_running": 0,
+            "is_test": 0,
+            "isp": [
+              {
+                "active_until": "",
+                "creation_time": "10-15",
+                "ip": "77.222.43.225",
+                "is_blocked": 0,
+                "license_type": "LEMP",
+                "link": "",
+                "price": 0
+              }
+            ],
+            "local_ip": null,
+            "local_mac": null,
+            "local_mask": null,
+            "mac": "00:16:3e:77:a2:26",
+            "name": "inn****_vps_4",
+            "ordered_ip_count": 2,
+            "os_distr_id": 102,
+            "os_distribution": "Ubuntu 22.04 LTS",
+            "parent_plan_id": null,
+            "plan_id": "4",
+            "plan_name": "KVM-10",
+            "plan_price": 349,
+            "protected_ips": [
+              "127.0.105.53"
+            ],
+            "ram": "1024",
+            "ts_create": "2023-06-26 15:38:20",
+            "uid": "a0a23dcee*************"
+          }
+        ]
+      },
+      "resultIntegerOne": {
+        "description": "Ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      },
+      "resultLoad": {
+        "description": "'mimetype' string MIME-тип данных (image/png;base64)\n\n'metadata' array мета-данные\n\n'content' string содержимое в base64",
+        "name": "resultLoad",
+        "summary": "resultLoad",
+        "value": {
+          "content": "i9JBn6w8NgMEydOrVdu3ZAgMDExMT3333XUX+YarX65OTk53jdsaMGcXFxXI3yvMCAgJWrFjRtWtXadw+/vjjJ0+elLtRnqfVar/++uukpCRp3Pbo0WPt2rVyN8rzOI6rrKycPHmyc9zOmjWrtLRU7nZ5BgKwO6ZNmxYbG5uZmWk0Gs+dOxcREaHIlZ8NGzYcPXo0NTW1qqoqJydn/vz5kydPLioqkrtdHnb79u2UlJRFixbl5uZWVFTs2bNn7969NR8zU4zk5OROnTpJ4zYjIyMkJESRK+3r168/ceLE/v37q6qqsrOzX3zxxUmTJinmV7bTzZs3Z82atWTJEmnc7ty5c+fOnTUf11GMyZMnJyQkZGVlSePW399/9uzZcjfKQ+TLhOjFgoKCpFywY8eOpZRWVFSEhobK3SjPS0lJ2bp1K6V06dKlly9fppQOGzbs2LFjcrfLww4ePChdx4yMjLfeeotSunHjxrlz58rdLg8TRdHPz89kMlFKx40bRyktKSmJjIyUu12el5yc/Nlnn1FKFy5c+P3331NKhwwZ8vXXX8vcLE9LTU196qmnKKWnT59etWoVpXT9+vXz5s2Tu10eJgiCVqu1Wq2iKErjtqCgICYmRu52eQYCsDsee+yxhQsXFhQU2O32vLy8BQsWjBw5Uu5Ged4HH3yQlJT03XffWSwWnU63d+/eqKiowsJCudvlYTk5OVFRUQcOHNDr9Waz+eLFi3379t2yZYvc7fK8pKSkJUuWSOM2Nzd33rx5Tz75pNyN8rz33ntvyJAhV65csVgsVVVVn3/+eVRUVGlpqdzt8rCbN2+2adPm4MGD0rjNysrq06fPjh075G6X5w0YMGDZsmWFhYXSuH3ppZekg1YUAAHYHfn5+SkpKbGxsdI9iZkzZxYVFcndKM8TBGHFihXdunVz3ktT3jRC8uWXXz766KPh4eEBAQE9evRYs2aNKIpyN8rzcnNza+5d+N3vfldSUiJ3ozxPEITly5cnJCT4+/tHRkYOGzbs1KlTcjeqWRw5csS5d6Fnz57r1q2Tu0XN4vbt2869C+3bt3/hhRcU8+cUdkEDAADIAJuw7hvOglYYnAWtMDgLWklwFjTUhrOgFQZnQSsMzoJWEpwFDf8fnAWtMDgLWmFwFrSS4CxoqA1nQSsMzoJWEpwFrTA4Cxpqw1nQSoKzoBUGZ0ErDM6Chp/hTF0l8ZEzdQnGrbL4yLilOAsaajl69Ojzzz/vfPmb3/zm8OHDMranmZjN5v79+5eXl0svd+zYoch5oVarnT59+qFDh6SXxcXF3bt31+l08raqORw6dKjmFRw/fnx6erqM7Wkmer2+b9++0n1uQsiWLVvmzp0rb5Oag1arnTx5srQ/gxBSVFTUq1cvg8Egb6s8juO4ffv2zZkzx/nOqFGjlHMovbyPIXupxMTE69evC4KgUqkopZmZmf369ZO7UZ63bNmylStXUkqfeeaZ1NRUURTj4+Ozs7PlbpeHXbp0qW/fvpTSXbt2TZkyhVK6cOHCNWvWyN0uz4uPj8/JybFYLH5+fpTSs2fPDho0SO5Ged7ixYv/+te/UkrHjx9/8OBBURTj4uJyc3PlbpeHXbhwYeDAgZTSbdu2TZ8+nVK6YMGC9evXy9ysZhAXF5eXl2cwGIKCgiilp0+fHjJkiNyN8gzMgN1x+/btuLg4o9EoiqLVak1MTLx27ZrcjfK8nJycjh07EkKMRqPZbOY4LiEhQXmPIeXk5MTFxRFCjEajyWQihCjyglJK8/LyOnToYDQa7Xa7w+FQZDdJfeO2a9euN27ckLtdHuYj41YQhKKiotjYWKPRKJ0IraRuYhOW68RmigAAAclJREFUOxITEw8dOmQwGCIiIg4cOMDzfO/eveVulOclJiamp6cnJSXdvHkzLS3tiSeeuHz5cs+ePeVul4clJiZmZGQUFhYeOnTo1q1bhYWFx48fT0pKkrtdHibFobS0tNLS0rCwsIMHD1qtVqWO2yNHjvTt2zc7O/vQoUNJSUlXr15V3i7oxMTEb775pqio6PDhw7m5uUVFRcePHx8xYoTc7fIwnuc7deqUnp6em5sbGhqalpam0+mUM27lnoJ7pWPHjkVHR/fu3TsrK6tbt24dOnQ4e/as3I3yvLKyskGDBkm/rKdNmxYaGiqtSCvPq6++GhIS8vLLL3/++eehoaGjR4+urq6Wu1Ged+TIkTZt2vTp0yczM7NLly4dO3a8cOGC3I3yvJKSkgEDBoSHhx8+fHjy5MmhoaHSirTyzJ8/Pzg4+Pe///1nn33WqlWrsWPHGo1GuRvleYcOHYqKinr44YczMzPj4+M7d+6clZUld6M8A7ugAQAAZIB7wAAAADJAAAYAAJABAjAAAIAMEIABAABkgAAMAAAgAwRgAAAAGSAAAwAAyAABGAAAQAYIwAAAADJAAAYAAJABAjAAAIAMEIABAABk8P8AR/bE+AkR63EAAAAASUVORK5CYII=",
+          "metadata": [],
+          "mimetype": "image/png;base64"
+        }
+      },
+      "resultLogs": {
+        "description": "'type' string тип операции\n\n'status' string статус операции\n\n'started_at' string дата и время начала операции в формате YYYY-MM-DD HH:MM:SS\n\n'ended_at' string дата и время окончания операции в формате YYYY-MM-DD HH:MM:SS",
+        "name": "resultLogs",
+        "summary": "resultLogs",
+        "value": [
+          {
+            "ended_at": "2023-03-15 13:43:03",
+            "started_at": "2023-03-15 13:42:03",
+            "status": "Завершена",
+            "type": "Старт"
+          },
+          {
+            "ended_at": "2023-03-15 13:41:03",
+            "started_at": "2023-03-15 13:40:02",
+            "status": "Завершена",
+            "type": "Стоп"
+          },
+          {
+            "ended_at": "2023-03-13 16:11:03",
+            "started_at": "2023-03-13 16:10:02",
+            "status": "Завершена",
+            "type": "Создание бэкапа"
+          },
+          {
+            "ended_at": "2023-03-13 16:05:03",
+            "started_at": "2023-03-13 16:04:02",
+            "status": "Завершена",
+            "type": "Удаление бэкапа"
+          },
+          {
+            "ended_at": "2023-03-13 15:50:03",
+            "started_at": "2023-03-13 15:49:02",
+            "status": "Завершена",
+            "type": "Создание бэкапа"
+          },
+          {
+            "ended_at": "2023-03-13 15:15:05",
+            "started_at": "2023-03-13 15:14:03",
+            "status": "Завершена",
+            "type": "Создание"
+          }
+        ]
+      },
+      "resultStringVps": {
+        "description": "создание/клонирование VPS",
+        "name": "resultStringVps",
+        "summary": "resultStringVps",
+        "value": "vhp****_vps_2"
+      },
+      "stringAlias": {
+        "description": "название VPS",
+        "name": "alias",
+        "summary": "alias",
+        "value": "hestiaVPS"
+      },
+      "stringFrom": {
+        "description": "дата начала",
+        "name": "from",
+        "summary": "from",
+        "value": "08-03-2023"
+      },
+      "stringPassword": {
+        "description": "пароль соответствующий требованиям безопасности",
+        "name": "password",
+        "summary": "пароль",
+        "value": "Gjus~8g^HOpd3eR-"
+      },
+      "stringSSHKey": {
+        "description": "публичный SSH-ключ",
+        "name": "sshKey",
+        "summary": "sshKey",
+        "value": "ssh-rsa ......."
+      },
+      "stringTo": {
+        "description": "дата окончания",
+        "name": "to",
+        "summary": "to",
+        "value": "15-03-2023"
+      },
+      "stringType": {
+        "description": "тип нагрузки ('cpu', 'hdd_ops', 'net')",
+        "name": "type",
+        "summary": "type",
+        "value": "hdd_ops"
+      },
+      "stringVps": {
+        "description": "Идентификатор VPS",
+        "name": "billingId",
+        "summary": "billingId",
+        "value": "vhp****_vps_1"
+      },
+      "stringWidth": {
+        "description": "ширина графика",
+        "name": "width ",
+        "summary": "width ",
+        "value": 640
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.182"
+  },
+  "methods": [
+    {
+      "description": "Список VPS",
+      "examples": [
+        {
+          "name": "exampleIndex",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultIndex"
+          }
+        }
+      ],
+      "links": [],
+      "name": "index",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultIndex"
+      }
+    },
+    {
+      "description": "Получение информации о первом заказе",
+      "examples": [
+        {
+          "name": "exampleGetFirstOrderInfo",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultGetFirstOrderInfo"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getFirstOrderInfo",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetFirstOrderInfo"
+      }
+    },
+    {
+      "description": "Проверка доступен ли заказ VPS",
+      "examples": [
+        {
+          "name": "exampleCreateEnable",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "createEnable",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Получение списка доступных дистрибутивов, ISP-лицензий, тарифных планов",
+      "examples": [
+        {
+          "name": "exampleGetAvailableConfig",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultGetAvailableConfig"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getAvailableConfig",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetAvailableConfig"
+      }
+    },
+    {
+      "description": "Клонирование VPS",
+      "examples": [
+        {
+          "name": "exampleCopy",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            },
+            {
+              "$ref": "#/components/examples/intVpsPlanId"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultStringVps"
+          }
+        }
+      ],
+      "links": [],
+      "name": "copy",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "новый тарифный план",
+          "name": "vpsPlanId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultStringVps"
+      }
+    },
+    {
+      "description": "Создание первого заказа с VPS",
+      "examples": [
+        {
+          "name": "exampleCreateFirst",
+          "params": [
+            {
+              "$ref": "#/components/examples/intDistributiveId"
+            },
+            {
+              "$ref": "#/components/examples/intVpsPlanId"
+            },
+            {
+              "$ref": "#/components/examples/intDatacenter"
+            },
+            {
+              "$ref": "#/components/examples/intPeriod"
+            },
+            {
+              "$ref": "#/components/examples/boolStartTestPeriod"
+            },
+            {
+              "$ref": "#/components/examples/intIpCountFirst"
+            },
+            {
+              "$ref": "#/components/examples/arrayProtectedIps"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/stringVps"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "удаление первого заказа VPS",
+          "method": "removeFirst",
+          "name": "removeFirst",
+          "params": {}
+        }
+      ],
+      "name": "createFirst",
+      "params": [
+        {
+          "description": "ID Дистрибутива",
+          "name": "distributiveId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "ID Тарифного плана",
+          "name": "vpsPlanId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "Датацентр",
+          "name": "datacenter",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "Название VPS",
+          "name": "alias",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Публичный SSH-ключ",
+          "name": "sshKey",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Имя ключа",
+          "name": "sshKeyName",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Подключить к локальной сети",
+          "name": "privateIp",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        },
+        {
+          "description": "Период оплаты (1 или 12 мес.)",
+          "name": "period",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "Начать тестовый период",
+          "name": "startTestPeriod",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        },
+        {
+          "description": "ID плана мониторинга",
+          "name": "monitoringPlanId",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "ID контакта мониторинга",
+          "name": "monitoringContactId",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "Кол-во заказанных вместе с VPS IP-адресов (для 1ого заказа: 0 или 1)",
+          "name": "ipCount",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "Массив ID тарифов защищенных IP для заказа (например, [1, 3, 3])",
+          "name": "protectedIps",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultStringVps"
+      }
+    },
+    {
+      "description": "Создание VPS",
+      "examples": [
+        {
+          "name": "exampleCreate",
+          "params": [
+            {
+              "$ref": "#/components/examples/intDistributiveId"
+            },
+            {
+              "$ref": "#/components/examples/intVpsPlanId"
+            },
+            {
+              "$ref": "#/components/examples/intDatacenter"
+            },
+            {
+              "$ref": "#/components/examples/stringAlias"
+            },
+            {
+              "$ref": "#/components/examples/stringSSHKey"
+            },
+            {
+              "$ref": "#/components/examples/idMonitoringPlan"
+            },
+            {
+              "$ref": "#/components/examples/idMonitoringContact"
+            },
+            {
+              "$ref": "#/components/examples/intIpCount"
+            },
+            {
+              "$ref": "#/components/examples/intProtectedIps"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultStringVps"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "удаление VPS",
+          "method": "remove",
+          "name": "remove",
+          "params": {
+            "billingId": "$params.billingId"
+          }
+        }
+      ],
+      "name": "create",
+      "params": [
+        {
+          "description": "ID Дистрибутива",
+          "name": "distributiveId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "ID Тарифного плана",
+          "name": "vpsPlanId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "датацентр",
+          "name": "datacenter",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "название VPS",
+          "name": "alias",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "публичный SSH-ключ",
+          "name": "sshKey",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "имя ключа",
+          "name": "sshKeyName",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "подключить к локальной сети",
+          "name": "privateIp",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        },
+        {
+          "description": "ID плана мониторинга",
+          "name": "monitoringPlanId",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "ID контакта мониторинга",
+          "name": "monitoringContactId",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "ID бэкапа",
+          "name": "remoteBackupId",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "кол-во заказанных вместе с VPS IP-адресов",
+          "name": "ipCount",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "массив ID тарифов защищенных IP для заказа (например, [1, 3, 3])",
+          "name": "protectedIps",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultStringVps"
+      }
+    },
+    {
+      "description": "Переименование VPS",
+      "examples": [
+        {
+          "name": "exampleRename",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            },
+            {
+              "$ref": "#/components/examples/stringAlias"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "rename",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "название VPS",
+          "name": "alias",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Запущена ли VPS в данный момент",
+      "examples": [
+        {
+          "name": "exampleIsRunning",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "isRunning",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Удаление VPS",
+      "examples": [
+        {
+          "name": "exampleRemove",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "cоздание VPS",
+          "method": "create",
+          "name": "create",
+          "params": {
+            "alias": "$params.alias",
+            "datacenter": "$params.datacenter",
+            "distributiveId": "$params.distributiveId",
+            "monitoringContactId": "$params.monitoringContactId",
+            "monitoringPlanId": "$params.monitoringPlanId",
+            "privateIp": "$params.privateIp",
+            "remoteBackupId": "$params.remoteBackupId",
+            "sshKey": "$params.sshKey",
+            "sshKeyName": "$params.sshKeyName",
+            "vpsPlanId": "$params.vpsPlanId"
+          }
+        }
+      ],
+      "name": "remove",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Удаление первого заказа.Доступно, если заказ ещё не был оплачен и услуга не стартовала",
+      "examples": [
+        {
+          "name": "exampleRemoveFirst",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "cоздание первого заказа с VPS",
+          "method": "createFirst",
+          "name": "createFirst",
+          "params": {
+            "alias": "$params.alias",
+            "datacenter": "$params.datacenter",
+            "distributiveId": "$params.distributiveId",
+            "monitoringContactId": "$params.monitoringContactId",
+            "monitoringPlanId": "$params.monitoringPlanId",
+            "period": "$params.period",
+            "privateIp": "$params.privateIp",
+            "sshKey": "$params.sshKey",
+            "sshKeyName": "$params.sshKeyName",
+            "startTestPeriod": "$params.startTestPeriod",
+            "vpsPlanId": "$params.vpsPlanId"
+          }
+        }
+      ],
+      "name": "removeFirst",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Загрузка - возвращает картинку в Base64",
+      "examples": [
+        {
+          "name": "exampleLoad",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            },
+            {
+              "$ref": "#/components/examples/stringType"
+            },
+            {
+              "$ref": "#/components/examples/stringFrom"
+            },
+            {
+              "$ref": "#/components/examples/stringTo"
+            },
+            {
+              "$ref": "#/components/examples/stringWidth"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultLoad"
+          }
+        }
+      ],
+      "links": [],
+      "name": "load",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "тип нагрузки ('cpu', 'hdd_ops', 'net')",
+          "name": "type",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "дата начала",
+          "name": "from",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "дата окончания",
+          "name": "to",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "ширина графика",
+          "name": "width",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultLoad"
+      }
+    },
+    {
+      "description": "Возвращает id тарифного плана конструктора VPS по значениям кол-ва ядер, ОЗУ, объема диска и категории",
+      "examples": [
+        {
+          "name": "exampleGetConstructorPlanId",
+          "params": [
+            {
+              "$ref": "#/components/examples/intCPU"
+            },
+            {
+              "$ref": "#/components/examples/intRam"
+            },
+            {
+              "$ref": "#/components/examples/intVolumeDisk"
+            },
+            {
+              "$ref": "#/components/examples/intCategory"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetConstructorPlanId"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getConstructorPlanId",
+      "params": [
+        {
+          "description": "кол-во ядер CPU",
+          "name": "cpu_cores",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "ОЗУ в гигабайтах",
+          "name": "ram",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "жесткий диск в гигабайтах",
+          "name": "volume_disk",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "id категории",
+          "name": "category_id",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetConstructorPlanId"
+      }
+    },
+    {
+      "description": "Изменение тарифного плана",
+      "examples": [
+        {
+          "name": "exampleChangePlan",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            },
+            {
+              "$ref": "#/components/examples/intVpsPlanId"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "changePlan",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "ID Тарифного плана",
+          "name": "planId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Включение VPS",
+      "examples": [
+        {
+          "name": "examplePowerOn",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "powerOn",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Выключение VPS",
+      "examples": [
+        {
+          "name": "examplePowerOff",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "powerOff",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Перезагрузка VPS",
+      "examples": [
+        {
+          "name": "exampleReboot",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "reboot",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Получение текущей операции по VPS",
+      "examples": [
+        {
+          "name": "exampleGetCurrentAction",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetCurrentAction"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getCurrentAction",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetCurrentAction"
+      }
+    },
+    {
+      "description": "Переустановка образа VPS",
+      "examples": [
+        {
+          "name": "exampleReinstallOs",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            },
+            {
+              "$ref": "#/components/examples/intDistributiveId"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "reinstallOs",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "ID Дистрибутива",
+          "name": "distributiveId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Получение логов операций",
+      "examples": [
+        {
+          "name": "exampleLogs",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringVps"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultLogs"
+          }
+        }
+      ],
+      "links": [],
+      "name": "logs",
+      "params": [
+        {
+          "description": "идентификатор машины",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultLogs"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции работы с VPS",
+      "name": "Vps",
+      "summary": "Объект VPS",
+      "url": "https://api.sweb.ru/vps"
+    }
+  ]
+}

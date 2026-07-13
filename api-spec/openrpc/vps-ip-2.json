@@ -1,0 +1,120 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultInt": {
+        "description": "1 - успешно, 0 - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "examples": {
+      "billingId": {
+        "description": "Идентификатор услуги",
+        "name": "billingId",
+        "summary": "billingId",
+        "value": "test_vps_1"
+      },
+      "integerOne": {
+        "description": "Ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.185"
+  },
+  "methods": [
+    {
+      "description": "Подключение VPS к локальной сети",
+      "examples": [
+        {
+          "name": "exampleAddLocal",
+          "params": [
+            {
+              "$ref": "#/components/examples/billingId"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "addLocal",
+      "params": [
+        {
+          "description": "Идентификатор услуги",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Удаление локального IP",
+      "examples": [
+        {
+          "name": "exampleAddLocal",
+          "params": [
+            {
+              "$ref": "#/components/examples/billingId"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "removeLocal",
+      "params": [
+        {
+          "description": "Идентификатор услуги",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции:\n\nсоздание и удаление IP",
+      "name": "Локальная сеть",
+      "summary": "IP для VPS",
+      "url": "https://api.sweb.ru/vps/ip"
+    }
+  ]
+}

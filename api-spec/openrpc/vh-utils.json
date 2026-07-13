@@ -1,0 +1,107 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultInt": {
+        "description": "1 - успешно, 0 - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "examples": {
+      "integerOne": {
+        "description": "Ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      },
+      "intperiod": {
+        "description": "3,8,24 часа",
+        "name": "period",
+        "summary": "period",
+        "value": "24"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.185"
+  },
+  "methods": [
+    {
+      "description": "Включение доступа по SSH",
+      "examples": [
+        {
+          "name": "exampleSshOn",
+          "params": [
+            {
+              "$ref": "#/components/examples/intperiod"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "sshOn",
+      "params": [
+        {
+          "description": "3, 8, 24 часа",
+          "name": "period",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Выключение доступа по SSH",
+      "examples": [
+        {
+          "name": "exampleSshOff",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "sshOff",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции:\n\nвключение/выключение SSH.",
+      "name": "SSH",
+      "summary": "Инструменты виртуального хостинга",
+      "url": "https://api.sweb.ru/vh/utils"
+    }
+  ]
+}

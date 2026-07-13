@@ -1,0 +1,549 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultInt": {
+        "description": "1 - успешно, 0 - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultboolean": {
+        "description": "true - включен, false - выключен",
+        "name": "resultBoolean",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "resultgetActiveReserves": {
+        "description": "'charge' float Остаток заблокированных средств\n\n'type' string Тип услуги\n\n'balance_type' string Тип налога баланса\n\n'info' Информация о блокировке\n\n'title' string Название услуги\n\n'endDate' string Дата окончания блокировки",
+        "name": "resultGetActiveReserves",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultgetBalance": {
+        "description": "'real_balance' float Реальные деньги\n\n'bonus_balance' float Бонусные деньги\n\n'cloud_balance' float Деньги на услуги cloud\n\n'other_balance' float Деньги на другие услуги\n\n'cloud_balance_view' float Сумма для отображения для баланса cloud\n\n'other_balance_view' float Сумма для отображения для баланса на другие услуги\n\n'credit_balance' float Общий долг\n\n'credit_cloud_balance' float Долг по услугам cloud\n\n'credit_other_balance' float Долг услугам other\n\n'type' int Тип биллинга\n\n'multiple_balance_enabled' bool Режим нескольких балансов (true - включен)",
+        "name": "resultGetBalance",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultgetPayRecommendations": {
+        "description": "'recommended_for_pay' array Массив рекомендаций\n\n'recommended_for_pay_balance' массив рекомендаций по балансу \n\n'exist_domain_bonus' int Количество доменных бонусов\n\n'total_frp_balance' int Реальный баланс\n\n'tariff_domain_bonus' int Бонусы за оплату тарифа\n\n'tariff_domain_bonus_tld' int Бонусы на конкретные зоны\n\n'domain_bonuses_by_tld' array Детализация по бонусам на конкретные зоны",
+        "name": "resultGetPayRecommendations",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultgetRecommendationTotalCost": {
+        "description": "Полная сумма, рекомендованная к оплате",
+        "name": "resultGetRecommendationTotalCost",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultgetRemainsDate": {
+        "description": "'d.m.Y'",
+        "name": "resultGetRemainsDate",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "resultgetRemainsDays": {
+        "description": "Количество дней до блокировки",
+        "name": "resultGetRemainsDays",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultgetUpcomingPaymentsVh": {
+        "description": "'name' string Название услуги\n\n'cost' int Стоимость\n\n'cost_str' string Стоимость строчкой\n\n'action' int (1 - если доступна регистрация за бонус, 0 - недоступна)\n\nДля не новых аккаунтов или новых с измененным первым заказов выводим рекомендации\n\nВозвращаемые значения в элементах массива\n\n'id' int Идентификатор рекомендации\n\n'name' string Название\n\n'date' string Дата\n\n'cost' int Цена\n\n'cost_str' string Цена в виде 100 р.\n\n'entity_type' string Тип услуги\n\n'action' int (по умолчанию 0)\n\n'checkbox_available' int Доступен ли чекбокс выбора (1 - доступен, 0 - не доступен)\n\n'service_id' string Идентификатор услуги\n\n'vat_type' string Тип налога\n\n'vat_name' string НДС\n\n'vat_value' int Ставка НДС",
+        "name": "resultGetUpcomingPaymentsVh",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultindex": {
+        "description": "'real_balance' float Реальные деньги\n\n'bonus_balance' float Бонусные деньги\n\n'cloud_balance' float Деньги на услуги cloud\n\n'other_balance' float Деньги на другие услуги\n\n'cloud_balance_view' float Сумма для отображения для баланса cloud\n\n'other_balance_view' float Сумма для отображения для баланса на другие услуги\n\n'credit_balance' float Общий долг\n\n'credit_cloud_balance' float Долг по услугам cloud\n\n'credit_other_balance' float Долг услугам other\n\n'type' int Тип биллинга\n\n'multiple_balance_enabled' bool Режим нескольких балансов (true - включен)\n\n'auto_payment_enable' int Подключен ли автоплатеж\n\n'isAutopaymentEnable' int Доступны ли автоплатежи\n\n'domainBonuses' int Количество доменных бонусов\n\n'status' string Статус аккаунта\n\n'blockInfo' string Причина блокировки аккаунта\n\n'blockedMoney' float Заблокированные деньги\n\n'deferment' ('show' показывать отсрочку, 'value' дней отсрочки)\n\n'edgeDate' string Дата с которой доступны документы",
+        "name": "resultIndex",
+        "schema": {
+          "type": "array"
+        }
+      }
+    },
+    "examples": {
+      "booleanpay": {
+        "description": "true - отображать рекомендации по пополнению баланса, false - не отображать",
+        "name": "addBalanceRecommendations",
+        "summary": "addBalanceRecommendations",
+        "value": "false"
+      },
+      "integerOne": {
+        "description": "Ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      },
+      "resultboolean": {
+        "description": "Включен или нет автоплатеж на аккаунте",
+        "name": "resultBoolean",
+        "summary": "resultboolean",
+        "value": false
+      },
+      "resultgetActiveReserves": {
+        "description": "Детальная информация о заблокированных средствах",
+        "name": "resultGetActiveReserves",
+        "summary": "resultgetActiveReserves",
+        "value": [
+          {
+            "balance_type": "cloud",
+            "charge": 2368.74,
+            "info": {
+              "endDate": "2027-01-20",
+              "title": "Тариф «‎Взлёт на 1 год»"
+            },
+            "type": "tariff"
+          },
+          {
+            "balance_type": "other",
+            "charge": "3120.00",
+            "info": {
+              "endDate": null,
+              "title": "Другое"
+            },
+            "type": "other"
+          }
+        ]
+      },
+      "resultgetBalance": {
+        "description": "Информация о балансе",
+        "name": "resultGetBalance",
+        "summary": "resultgetBalance",
+        "value": [
+          {
+            "bonus_balance": 0,
+            "cloud_balance": 1492,
+            "cloud_balance_view": 1492,
+            "credit_balance": 0,
+            "multiple_balance_enabled": true,
+            "other_balance": 52,
+            "other_balance_view": 52,
+            "real_balance": 1544,
+            "type": 1,
+            "vat_balance": {
+              "4": "1492.0000",
+              "5": "52.0000"
+            }
+          }
+        ]
+      },
+      "resultgetPayRecommendations": {
+        "description": "Рекомендации к оплате",
+        "name": "resultGetPayRecommendations",
+        "summary": "resultgetPayRecommendations",
+        "value": [
+          {
+            "domain_bonuses_by_tld": {
+              "any": 0
+            },
+            "exist_domain_bonus": 0,
+            "recommended_for_pay": [
+              {
+                "cost": 175,
+                "date": "не зарегистрирован",
+                "id": 1,
+                "name": "Домен test32132.ru (1 год)"
+              }
+            ],
+            "recommended_for_pay_balance": [],
+            "tariff_domain_bonus": 0,
+            "tariff_domain_bonus_tld": 0,
+            "total_frp_balance": 2800
+          }
+        ]
+      },
+      "resultgetRecommendationTotalCost": {
+        "description": "Полная сумма, рекомендованная к оплате",
+        "name": "resultGetRecommendationTotalCost",
+        "summary": "resultgetRecommendationTotalCost",
+        "value": 949
+      },
+      "resultgetRemainsDate": {
+        "description": "Дата, до которой хватит денег на счету",
+        "name": "resultGetRemainsDate",
+        "summary": "resultgetRemainsDate",
+        "value": "01.10.2023"
+      },
+      "resultgetRemainsDays": {
+        "description": "Количество дней до блокировки",
+        "name": "resultGetRemainsDays",
+        "summary": "resultgetRemainsDays",
+        "value": 15
+      },
+      "resultgetUpcomingPaymentsVh": {
+        "description": "Информация о предстоящих платежах для пользователей VH",
+        "name": "resultGetUpcomingPaymentsVh",
+        "summary": "resultgetUpcomingPaymentsVh",
+        "value": [
+          {
+            "action": 0,
+            "base_cost": "175",
+            "base_cost_str": "175 руб.",
+            "bonus_cost": 0,
+            "bonus_cost_str": "0 руб. (по акции)",
+            "checkbox_available": 0,
+            "cost": 0,
+            "cost_str": "0 руб. (по акции)",
+            "date": "не зарегистрирован",
+            "entity_type": "domain",
+            "id": 1,
+            "name": "Домен test526.ru (1 год)",
+            "ready_for_bonus": 1,
+            "service_id": "dyasyuc794_domain_1",
+            "tld": "ru",
+            "vat_name": "НДС 22%",
+            "vat_type": "other",
+            "vat_value": "22"
+          },
+          {
+            "action": 0,
+            "base_cost": "175",
+            "base_cost_str": "175 руб.",
+            "bonus_cost": 0,
+            "bonus_cost_str": "0 руб. (по акции)",
+            "checkbox_available": 1,
+            "cost": 175,
+            "cost_str": "175 руб.",
+            "date": "не зарегистрирован",
+            "entity_type": "domain",
+            "id": 2,
+            "name": "Домен test865.ru (1 год)",
+            "ready_for_bonus": 1,
+            "service_id": "dyasyuc794_domain_2",
+            "tld": "ru",
+            "vat_name": "НДС 22%",
+            "vat_type": "other",
+            "vat_value": "22"
+          },
+          {
+            "action": 0,
+            "checkbox_available": 0,
+            "cost": 199,
+            "cost_str": "199 р.",
+            "date": "19.02.2026",
+            "entity_type": "antivirus",
+            "id": 3,
+            "name": "Лечение антивирусом сайта dyasyuc794 (1 мес.)",
+            "service_id": "dyasyuc794_antivirus_dyasyuc794",
+            "type": "antivirus",
+            "vat_name": "НДС 22%",
+            "vat_type": "other",
+            "vat_value": "22"
+          },
+          {
+            "action": 0,
+            "checkbox_available": 0,
+            "cost": 199,
+            "cost_str": "199 р.",
+            "date": "19.02.2026",
+            "entity_type": "antivirus",
+            "id": 4,
+            "name": "Лечение антивирусом сайта Сайт 2 (1 мес.)",
+            "service_id": "dyasyuc794_antivirus_105875",
+            "type": "antivirus",
+            "vat_name": "НДС 22%",
+            "vat_type": "other",
+            "vat_value": "22"
+          },
+          {
+            "action": 0,
+            "checkbox_available": 1,
+            "cost": 5510,
+            "cost_str": "5510 р.",
+            "date": "остановлена",
+            "entity_type": "seo",
+            "id": 5,
+            "name": "SEO и реклама: test526.ru",
+            "service_id": "dyasyuc794_seo_5",
+            "vat_name": "НДС 22%",
+            "vat_type": "other",
+            "vat_value": "22"
+          }
+        ]
+      },
+      "resultindex": {
+        "description": "Информация о балансе",
+        "name": "resultIndex",
+        "summary": "resultIndex",
+        "value": [
+          {
+            "auto_payment_enable": 0,
+            "balance": {
+              "bonus_balance": 0,
+              "cloud_balance": 11886,
+              "cloud_balance_view": 11886,
+              "credit_balance": 0,
+              "other_balance": 11886,
+              "other_balance_view": 0,
+              "real_balance": 11886,
+              "type": 1,
+              "vat_balance": {
+                "2": "11886.0000"
+              }
+            },
+            "blockInfo": {
+              "days": 2274,
+              "days_date": "25.04.2032",
+              "days_word": "дня"
+            },
+            "blockedMoney": 36033,
+            "deferment": {
+              "show": false,
+              "value": 0
+            },
+            "domainBonuses": 7,
+            "edgeDate": "2024-08-30",
+            "isAutopaymentEnable": 1,
+            "status": "active"
+          }
+        ]
+      },
+      "turnOn": {
+        "description": "true - включить отсрочку, false - выключить отсрочку",
+        "name": "turnOn",
+        "summary": "turnOn",
+        "value": "false"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.185"
+  },
+  "methods": [
+    {
+      "description": "Информация о балансе",
+      "examples": [
+        {
+          "name": "exampleIndex",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultindex"
+          }
+        }
+      ],
+      "name": "index",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultindex"
+      }
+    },
+    {
+      "description": "Включен или нет автоплатеж на аккаунте",
+      "examples": [
+        {
+          "name": "exampleIsAutopaymentEnable",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultboolean"
+          }
+        }
+      ],
+      "name": "isAutopaymentEnable",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultboolean"
+      }
+    },
+    {
+      "description": "Получение рекомендаций к оплате",
+      "examples": [
+        {
+          "name": "exampleGetPayRecommendations",
+          "params": [
+            {
+              "$ref": "#/components/examples/booleanpay"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultgetPayRecommendations"
+          }
+        }
+      ],
+      "name": "getPayRecommendations",
+      "params": [
+        {
+          "description": "true - отображать рекомендации по пополнению баланса, false - не отображать",
+          "name": "addBalanceRecommendations",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetPayRecommendations"
+      }
+    },
+    {
+      "description": "Возвращает полную сумму, рекомендованную к оплате",
+      "examples": [
+        {
+          "name": "exampleGetRecommendationTotalCost",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultgetRecommendationTotalCost"
+          }
+        }
+      ],
+      "name": "getRecommendationTotalCost",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetRecommendationTotalCost"
+      }
+    },
+    {
+      "description": "Возвращает информацию о предстоящих платежах для пользователей VH",
+      "examples": [
+        {
+          "name": "exampleGetUpcomingPaymentsVh",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultgetUpcomingPaymentsVh"
+          }
+        }
+      ],
+      "name": "getUpcomingPaymentsVh",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetUpcomingPaymentsVh"
+      }
+    },
+    {
+      "description": "Включить/выключить отсрочку",
+      "examples": [
+        {
+          "name": "exampleChangeDeferment",
+          "params": [
+            {
+              "$ref": "#/components/examples/turnOn"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "changeDeferment",
+      "params": [
+        {
+          "description": "true - включить, false - выключить",
+          "name": "turnOn",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Дата, до которой хватит денег на счету",
+      "examples": [
+        {
+          "name": "exampleGetRemainsDate",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultgetRemainsDate"
+          }
+        }
+      ],
+      "name": "getRemainsDate",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetRemainsDate"
+      }
+    },
+    {
+      "description": "Количество дней до блокировки",
+      "examples": [
+        {
+          "name": "exampleGetRemainsDate",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultgetRemainsDays"
+          }
+        }
+      ],
+      "name": "getRemainsDays",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetRemainsDays"
+      }
+    },
+    {
+      "description": "Информация о балансе",
+      "examples": [
+        {
+          "name": "exampleGetBalance",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultgetBalance"
+          }
+        }
+      ],
+      "name": "getBalance",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetBalance"
+      }
+    },
+    {
+      "description": "Детальная информация о заблокированных средствах",
+      "examples": [
+        {
+          "name": "exampleGetActiveReserves",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultgetActiveReserves"
+          }
+        }
+      ],
+      "name": "getActiveReserves",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetActiveReserves"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции:\n\nинформация о балансе,\nрекомендации к оплате,\nуправление отсрочкой",
+      "name": "Pay",
+      "summary": "Оплата",
+      "url": "https://api.sweb.ru/pay"
+    }
+  ]
+}

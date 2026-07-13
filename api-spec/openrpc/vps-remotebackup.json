@@ -1,0 +1,406 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultCreate": {
+        "description": "'code' int Код\n\n'message' string Сообщение\n\n'data' array Данные",
+        "name": "resultCreate",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultIndex": {
+        "description": "'id' int ID\n\n'billing_id' string ID VPS\n\n'disk_size' int Размер диска VPS\n\n'size' int Размер\n\n'status' string Статус\n\n'os_distribution_id' string ID дистрибутива VPS\n\n'price' int Цена\n\n'name' string Название\n\n'comment' string Комментарий\n\n'ts_create' string Дата создания\n\n'can_perform_actions' bool Флаг есть ли доступ на выполнения действий\n\n'can_delete' bool Флаг возможности удаления\n\n'can_restore_self' bool Флаг самостоятельного восстановления\n\n'is_isp' bool Флаг, что на VPS установлен ispmanager\n\n'process_statuses' array:\n\n'billing_id' string Название VPS\n\n'status' string Статус",
+        "name": "resultIndex",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultIntEdit": {
+        "description": "1 - при успехе, 0 - при неуспешном сохранении изменений",
+        "name": "resultIntEdit",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultRemove": {
+        "description": "'code' int Код\n\n'message' string Сообщение\n\n'data' array Данные",
+        "name": "resultCreate",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultRestore": {
+        "description": "'code' int Код\n\n'message' string Сообщение\n\n'data' array Данные",
+        "name": "resultCreate",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultRestoreInto": {
+        "description": "'code' int Код\n\n'message' string Сообщение\n\n'data' array Данные",
+        "name": "resultCreate",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    "examples": {
+      "intRemoteBackupId": {
+        "description": "ID бэкапа",
+        "name": "remoteBackupId",
+        "summary": "remoteBackupId",
+        "value": 1
+      },
+      "resultCreate": {
+        "description": "'code' int Код\n\n'message' string Сообщение\n\n'data' array Данные",
+        "name": "resultCreate",
+        "summary": "создание бэкапа",
+        "value": {
+          "extendedResult": {
+            "code": 1,
+            "data": [],
+            "message": "Создание облачного бэкапа backup_test_vps_1 запущено"
+          }
+        }
+      },
+      "resultIndex": {
+        "description": "'id' int ID\n\n'billing_id' string ID VPS\n\n'disk_size' int Размер диска VPS\n\n'size' int Размер\n\n'status' string Статус\n\n'os_distribution_id' string ID дистрибутива VPS\n\n'price' int Цена\n\n'name' string Название\n\n'comment' string Комментарий\n\n'ts_create' string Дата создания\n\n'can_perform_actions' bool Флаг есть ли доступ на выполнения действий\n\n'can_delete' bool Флаг возможности удаления\n\n'can_restore_self' bool Флаг самостоятельного восстановления\n\n'is_isp' bool Флаг, что на VPS установлен ispmanager\n\n'process_statuses' array:\n\n'billing_id' string Название VPS\n\n'status' string Статус",
+        "name": "resultIndex",
+        "summary": "информация об облачных бэкапах",
+        "value": {
+          "billing_id": null,
+          "can_delete": true,
+          "can_perform_actions": true,
+          "can_restore_self": false,
+          "comment": "",
+          "disk_size": 10240,
+          "id": 123,
+          "is_isp": false,
+          "name": "backup_test_vps_1",
+          "os_distribution_id": "122",
+          "price": 10,
+          "process_statuses": [],
+          "size": 1706,
+          "status": "ready",
+          "ts_create": "2024-07-01 16:02:32"
+        }
+      },
+      "resultIntegerOne": {
+        "description": "ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      },
+      "resultRemove": {
+        "description": "'code' int Код\n\n'message' string Сообщение\n\n'data' array Данные",
+        "name": "resultRemove",
+        "summary": "удаление бэкапа",
+        "value": {
+          "extendedResult": {
+            "code": 1,
+            "data": [],
+            "message": "Удаление облачного бэкапа backup_test_vps_1 запущено"
+          }
+        }
+      },
+      "resultRestore": {
+        "description": "'code' int Код\n\n'message' string Сообщение\n\n'data' array Данные",
+        "name": "resultRestore",
+        "summary": "восстановление бэкапа",
+        "value": {
+          "extendedResult": {
+            "code": 1,
+            "data": [],
+            "message": "Восстановление облачного бэкапа backup_test_vps_1 на виртуальную машину test_vps_1 запущено"
+          }
+        }
+      },
+      "resultRestoreInto": {
+        "description": "'code' int Код\n\n'message' string Сообщение\n\n'data' array Данные",
+        "name": "resultRestoreInto",
+        "summary": "восстановление бэкапа на другой vps",
+        "value": {
+          "extendedResult": {
+            "code": 1,
+            "data": [],
+            "message": "Восстановление облачного бэкапа backup_test_vps_1 на виртуальную машину test_vps_2 запущено"
+          }
+        }
+      },
+      "stringBillingId": {
+        "description": "ID VPS",
+        "name": "billingId",
+        "summary": "billingId",
+        "value": "test_vps_1"
+      },
+      "stringBillingId2": {
+        "description": "ID VPS",
+        "name": "billingId",
+        "summary": "billingId",
+        "value": "test_vps_2"
+      },
+      "stringComment": {
+        "description": "комментарий ",
+        "name": "comment",
+        "summary": "comment",
+        "value": "тестовый бэкап vps"
+      },
+      "stringName": {
+        "description": "название",
+        "name": "name",
+        "summary": "name",
+        "value": "backup_test_vps_1"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.227"
+  },
+  "methods": [
+    {
+      "description": "Получение данных по бэкапам",
+      "examples": [
+        {
+          "name": "exampleIndex",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultIndex"
+          }
+        }
+      ],
+      "links": [],
+      "name": "index",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultIndex"
+      }
+    },
+    {
+      "description": "Создание бэкапа VPS",
+      "examples": [
+        {
+          "name": "exampleCreate",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringBillingId"
+            },
+            {
+              "$ref": "#/components/examples/stringName"
+            },
+            {
+              "$ref": "#/components/examples/stringComment"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultCreate"
+          }
+        }
+      ],
+      "links": [],
+      "name": "create",
+      "params": [
+        {
+          "description": "ID VPS",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "название",
+          "name": "name",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "комментарий",
+          "name": "comment",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultCreate"
+      }
+    },
+    {
+      "description": "Редактирование комментария к бэкапу",
+      "examples": [
+        {
+          "name": "exampleEdit",
+          "params": [
+            {
+              "$ref": "#/components/examples/intRemoteBackupId"
+            },
+            {
+              "$ref": "#/components/examples/stringComment"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "editComment",
+      "params": [
+        {
+          "description": "ID бэкапа",
+          "name": "remoteBackupId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "комментарий",
+          "name": "comment",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultIntEdit"
+      }
+    },
+    {
+      "description": "Восстановление из бэкапа в ту VPS, из которой бэкап создан",
+      "examples": [
+        {
+          "name": "exampleRestore",
+          "params": [
+            {
+              "$ref": "#/components/examples/intRemoteBackupId"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultRestore"
+          }
+        }
+      ],
+      "links": [],
+      "name": "restore",
+      "params": [
+        {
+          "description": "ID бэкапа",
+          "name": "remoteBackupId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultRestore"
+      }
+    },
+    {
+      "description": "Восстановление из бэкапа в существующую VPS",
+      "examples": [
+        {
+          "name": "exampleRestoreInto",
+          "params": [
+            {
+              "$ref": "#/components/examples/intRemoteBackupId"
+            },
+            {
+              "$ref": "#/components/examples/stringBillingId2"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultRestoreInto"
+          }
+        }
+      ],
+      "links": [],
+      "name": "restoreInto",
+      "params": [
+        {
+          "description": "ID бэкапа",
+          "name": "remoteBackupId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "ID VPS, в которую будет восстановление",
+          "name": "billingId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultRestoreInto"
+      }
+    },
+    {
+      "description": "Удаление бэкапа",
+      "examples": [
+        {
+          "name": "exampleRemove",
+          "params": [
+            {
+              "$ref": "#/components/examples/intRemoteBackupId"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultRemove"
+          }
+        }
+      ],
+      "links": [],
+      "name": "remove",
+      "params": [
+        {
+          "description": "ID бэкапа",
+          "name": "remoteBackupId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultRemove"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Объект управления облачными бэкапами VPS",
+      "name": "RemoteBackup",
+      "summary": "Работа с облачными бэкапами VPS",
+      "url": "https://api.sweb.ru/vps/remoteBackup"
+    }
+  ]
+}

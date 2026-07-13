@@ -1,0 +1,333 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultgetLoadTable": {
+        "description": "'list' string[]\n\n'hostingLevels' int[]\n\n'dbLevels' int[]\n\n'csv' string[]",
+        "name": "resultGetLoadTable",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultindex": {
+        "description": "'year' string\n\n'month' string",
+        "name": "resultIndex",
+        "schema": {
+          "type": "array"
+        }
+      }
+    },
+    "examples": {
+      "arrayindex": {
+        "description": "Список доступных периодов статистики",
+        "name": "resultIndex",
+        "summary": "resultIndex",
+        "value": [
+          {
+            "month": "11",
+            "year": "2022"
+          },
+          {
+            "month": "12",
+            "year": "2022"
+          },
+          {
+            "month": "1",
+            "year": "2023"
+          },
+          {
+            "month": "2",
+            "year": "2023"
+          },
+          {
+            "month": "3",
+            "year": "2023"
+          }
+        ]
+      },
+      "month": {
+        "description": "Месяц",
+        "name": "month",
+        "summary": "month",
+        "value": "3"
+      },
+      "resultgetLoadTable": {
+        "description": "Данные в виде таблицы",
+        "name": "resultGetLoadTable",
+        "summary": "resultGetLoadTable",
+        "value": [
+          {
+            "csv": {
+              "content": "MjAyMy0wNi0wMTswLjAwCjIwMjMtMDYtMDI7MC4wMAoyMDIzLTA2LTAzOzAuMDAKMjAyMy0wNi0wNDswLjAwCjIwMjMtMDYtMDU7MC4wMAoyMDIzLTA2LTA2OzAuMDAKMjAyMy0wNi0wNzswLjAwCjIwMjMtMDYtMDg7MC4wMAoyMDIzLTA2LTA5OzAuMDAKMjAyMy0wNi0xMDswLjAwCjIwMjMtMDYtMTE7MC4wMAoyMDIzLTA2LTEyOzAuMDAKMjAyMy0wNi0xMzswLjAwCjIwMjMtMDYtMTQ7MC4wMAoyMDIzLTA2LTE1OzAuMDAKMjAyMy0wNi0xNjswLjAwCjIwMjMtMDYtMTc7MC4wMAoyMDIzLTA2LTE4OzAuMDAKMjAyMy0wNi0xOTswLjAwCjIwMjMtMDYtMjA7MC4wMAoyMDIzLTA2LTIxOzAuMDAKMjAyMy0wNi0yMjswLjAwCjIwMjMtMDYtMjM7MC4wMAoyMDIzLTA2LTI0OzAuMDAKMjAyMy0wNi0yNTswLjAwCjIwMjMtMDYtMjY7MC4wMAoyMDIzLTA2LTI3OzAuMDAK",
+              "metadata": [],
+              "mimetype": "application/csv;base64",
+              "name": "loading_lina199302_6.csv"
+            },
+            "dbLevels": [
+              2000,
+              3000,
+              6000,
+              12000
+            ],
+            "hostingLevels": [
+              120,
+              260,
+              500,
+              1000
+            ],
+            "list": [
+              {
+                "cpu": "0.00",
+                "date": "2023-06-01",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-02",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-03",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-04",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-05",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-06",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-07",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-08",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-09",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-10",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-11",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-12",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-13",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-14",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-15",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-16",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-17",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-18",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-19",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-20",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-21",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-22",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-23",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-24",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-25",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-26",
+                "mysql": 0
+              },
+              {
+                "cpu": "0.00",
+                "date": "2023-06-27",
+                "mysql": 0
+              }
+            ]
+          }
+        ]
+      },
+      "type": {
+        "description": "Тип (cpu, mysql)",
+        "name": "type",
+        "summary": "type",
+        "value": "null"
+      },
+      "year": {
+        "description": "Год",
+        "name": "year",
+        "summary": "year",
+        "value": "2023"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.185"
+  },
+  "methods": [
+    {
+      "description": "Список доступных периодов статистики",
+      "examples": [
+        {
+          "name": "exampleIndex",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/arrayindex"
+          }
+        }
+      ],
+      "name": "index",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultindex"
+      }
+    },
+    {
+      "description": "Получение данных в виде таблицы",
+      "examples": [
+        {
+          "name": "exampleGetLoadTable",
+          "params": [
+            {
+              "$ref": "#/components/examples/year"
+            },
+            {
+              "$ref": "#/components/examples/month"
+            },
+            {
+              "$ref": "#/components/examples/type"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultgetLoadTable"
+          }
+        }
+      ],
+      "name": "getLoadTable",
+      "params": [
+        {
+          "description": "Год",
+          "name": "year",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "Месяц",
+          "name": "month",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "Тип (cpu, mysql)",
+          "name": "type",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetLoadTable"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции:\n\nполучение данных о нагрузке",
+      "name": "Нагрузка",
+      "summary": "Данные по нагрузке виртуального хостинга",
+      "url": "https://api.sweb.ru/vh/load"
+    }
+  ]
+}

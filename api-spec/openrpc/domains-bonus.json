@@ -1,0 +1,298 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultInt": {
+        "description": "1 - успешно, 0 - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultgetList": {
+        "description": "'id' int ID пакета бонусов\n\n'title' string Название\n\n'descr' string Описание\n\n'price' int Цена без скидки\n\n'price_old' int Цена без скидки\n\n'domains' int Колическтво доменов в пакете\n\n'price_for_domain' string Цена за домен",
+        "name": "resultgetList",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultindex": {
+        "description": "'bonuses' array Информация о бонусах\n\n'count' int Общее число бонусов\n\n'unusedCount' int Число неиспользованных бонусов",
+        "name": "resultIndex",
+        "schema": {
+          "type": "array"
+        }
+      }
+    },
+    "examples": {
+      "arraygetList": {
+        "description": "Доступные к покупке пакеты бонусов",
+        "name": "resultGetList",
+        "summary": "resultGetList",
+        "value": [
+          {
+            "descr": "Приобретение 100 доменных бонусов",
+            "domains": 100,
+            "id": 30,
+            "price": 17000,
+            "price_for_domain": "170 ₽ за домен",
+            "price_old": 40000,
+            "title": "100 доменных бонусов"
+          },
+          {
+            "descr": "Приобретение 50 доменных бонусов",
+            "domains": 50,
+            "id": 5,
+            "price": 9000,
+            "price_for_domain": "180 ₽ за домен",
+            "price_old": 20000,
+            "title": "50 доменных бонусов"
+          },
+          {
+            "descr": "Приобретение 25 доменных бонусов",
+            "domains": 25,
+            "id": 4,
+            "price": 5000,
+            "price_for_domain": "200 ₽ за домен",
+            "price_old": 10000,
+            "title": "25 доменных бонусов"
+          },
+          {
+            "descr": "Приобретение 10 доменных бонусов",
+            "domains": 10,
+            "id": 3,
+            "price": 2600,
+            "price_for_domain": "260 ₽ за домен",
+            "price_old": 4000,
+            "title": "10 доменных бонусов"
+          },
+          {
+            "descr": "Приобретение 5 доменных бонусов",
+            "domains": 5,
+            "id": 2,
+            "price": 1500,
+            "price_for_domain": "300 ₽ за домен",
+            "price_old": 2000,
+            "title": "5 доменных бонусов"
+          },
+          {
+            "descr": "Приобретение 3 доменных бонусов",
+            "domains": 3,
+            "id": 1,
+            "price": 1050,
+            "price_for_domain": "350 ₽ за домен",
+            "price_old": 1200,
+            "title": "3 доменных бонуса"
+          }
+        ]
+      },
+      "arrayindex": {
+        "description": "Информация о доменных бонусах",
+        "name": "resultIndex",
+        "summary": "resultIndex",
+        "value": [
+          {
+            "bonuses": [
+              {
+                "bonus_id": "0",
+                "bonus_title": null,
+                "customer_id": "testvps123",
+                "domain": null,
+                "id": "106067",
+                "payment_id": "4690785",
+                "tld": "online",
+                "ts_close": null,
+                "ts_create": "2023-01-30 16:53:49",
+                "type": "3",
+                "type_title": "Доменный бонус .ONLINE",
+                "use_type": null,
+                "used": "n",
+                "valid_till": "2024-01-30 23:59:59"
+              }
+            ],
+            "count": 1,
+            "unusedCount": 1
+          }
+        ]
+      },
+      "intbonusId": {
+        "description": "ID пакета бонусов",
+        "name": "bonusId",
+        "summary": "bonusId",
+        "value": 30
+      },
+      "integerOne": {
+        "description": "Ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      },
+      "intpage": {
+        "description": "Страница",
+        "name": "page",
+        "summary": "page",
+        "value": "0"
+      },
+      "stringorderBy": {
+        "description": "Сортировка null, valid_till, date_used",
+        "name": "orderBy",
+        "summary": "orderBy",
+        "value": "valid_till"
+      },
+      "stringorderType": {
+        "description": "Направление сортировки ASC, DESC",
+        "name": "orderType",
+        "summary": "orderType",
+        "value": "DESC"
+      },
+      "used": {
+        "description": "Фильтр по использованным null, true, false",
+        "name": "used",
+        "summary": "used",
+        "value": "false"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.185"
+  },
+  "methods": [
+    {
+      "description": "Получение информации о доменных бонусах",
+      "examples": [
+        {
+          "name": "exampleIndex",
+          "params": [
+            {
+              "$ref": "#/components/examples/intpage"
+            },
+            {
+              "$ref": "#/components/examples/stringorderBy"
+            },
+            {
+              "$ref": "#/components/examples/stringorderType"
+            },
+            {
+              "$ref": "#/components/examples/used"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/arrayindex"
+          }
+        }
+      ],
+      "name": "index",
+      "params": [
+        {
+          "description": "Страница",
+          "name": "page",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "Cортировка null, valid_till, date_used",
+          "name": "orderBy",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Направление сортировки ASC, DESC",
+          "name": "orderType",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Фильтр по использованным null, true, false",
+          "name": "used",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultindex"
+      }
+    },
+    {
+      "description": "Получение доступных к покупке пакетов бонусов",
+      "examples": [
+        {
+          "name": "exampleGetList",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/arraygetList"
+          }
+        }
+      ],
+      "name": "getList",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetList"
+      }
+    },
+    {
+      "description": "Покупка бонусов",
+      "examples": [
+        {
+          "name": "exampleBuy",
+          "params": [
+            {
+              "$ref": "#/components/examples/intbonusId"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "buy",
+      "params": [
+        {
+          "description": "ID пакета бонусов",
+          "name": "bonusId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции:\n\nинформация о доменных бонусах,\nпокупка.",
+      "name": "Доменные бонусы",
+      "summary": "Операции с доменными бонусами",
+      "url": "https://api.sweb.ru/domains/bonus"
+    }
+  ]
+}
