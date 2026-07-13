@@ -17,7 +17,7 @@
 //  1. maps each endpoint path to its const identifier by scanning the SDK for
 //     `<name>Endpoint = "/path"` declarations;
 //  2. finds every SDK .go file that references that const identifier (one object
-//     can span files — some /vps methods live in config.go as well as vps.go);
+//     can span files — the /vps methods live in vps/vps.go and vps/config.go);
 //  3. collects the Go string literals in those files (via go/scanner, so
 //     comments and identifiers are excluded);
 //  4. counts a spec method as implemented when its exact name appears among
@@ -151,8 +151,8 @@ func loadObjects(dir string) ([]object, error) {
 // sdkLiteralsByEndpoint maps each endpoint path to the set of Go string literals
 // found across the SDK files that reference that path's endpoint const.
 //
-// It works in three passes over the top-level SDK .go files (excluding tests and
-// the api-spec/ tree): find endpoint const declarations (path → const name),
+// It works in three passes over the SDK .go files across the module (excluding
+// tests and the api-spec/ tree): find endpoint const declarations (path → const name),
 // find which files reference each const identifier, then union the string
 // literals of those files per path.
 func sdkLiteralsByEndpoint(dir string) (map[string]map[string]bool, error) {
@@ -199,23 +199,33 @@ func sdkLiteralsByEndpoint(dir string) (map[string]map[string]bool, error) {
 	return result, nil
 }
 
-// sdkGoFiles lists the top-level SDK .go source files, skipping _test.go files
-// and anything under the api-spec/ tree (spec tooling, not the SDK surface).
+// sdkGoFiles lists the SDK .go source files, walking the whole module tree,
+// skipping _test.go files and anything under the api-spec/ tree (spec tooling,
+// not the SDK surface). Since the per-service restructure the endpoint consts
+// and their method literals live in service subpackages (vps/, ip/, …), so the
+// walk must recurse rather than read only the root.
 func sdkGoFiles(dir string) ([]string, error) {
-	entries, err := os.ReadDir(dir)
-	if err != nil {
-		return nil, fmt.Errorf("read sdk dir: %w", err)
-	}
 	var files []string
-	for _, e := range entries {
-		if e.IsDir() {
-			continue
+	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
 		}
-		name := e.Name()
+		if d.IsDir() {
+			// Skip the spec tooling tree and hidden dirs (e.g. .git).
+			if path != dir && (d.Name() == "api-spec" || strings.HasPrefix(d.Name(), ".")) {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		name := d.Name()
 		if !strings.HasSuffix(name, ".go") || strings.HasSuffix(name, "_test.go") {
-			continue
+			return nil
 		}
-		files = append(files, filepath.Join(dir, name))
+		files = append(files, path)
+		return nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("walk sdk dir: %w", err)
 	}
 	sort.Strings(files)
 	return files, nil
