@@ -54,6 +54,12 @@ type Client struct {
 	DNS *DNSService
 	// Domains groups domain/subdomain operations (endpoint /domains).
 	Domains *DomainsService
+	// Monitoring groups monitoring-tariff operations (endpoint /monitoring).
+	Monitoring *MonitoringService
+	// MonitoringChecks groups monitoring-check operations (endpoint /monitoring/checks).
+	MonitoringChecks *MonitoringChecksService
+	// MonitoringContacts groups monitoring-contact operations (endpoint /monitoring/contacts).
+	MonitoringContacts *MonitoringContactsService
 }
 
 // Option configures a Client.
@@ -97,6 +103,9 @@ func New(opts ...Option) *Client {
 	c.RemoteBackup = &RemoteBackupService{c: c}
 	c.DNS = &DNSService{c: c}
 	c.Domains = &DomainsService{c: c}
+	c.Monitoring = &MonitoringService{c: c}
+	c.MonitoringChecks = &MonitoringChecksService{c: c}
+	c.MonitoringContacts = &MonitoringContactsService{c: c}
 	return c
 }
 
