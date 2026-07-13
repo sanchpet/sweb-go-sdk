@@ -15,6 +15,10 @@ run = "golangci-lint run"
 description = "Format Go sources"
 run = "gofmt -w ."
 
+[tasks.coverage]
+description = "Report SDK method coverage per API object (writes api-spec/COVERAGE.md)"
+run = "go run ./api-spec/coverage"
+
 [tasks.ci]
 description = "Everything CI runs"
 depends = ["lint", "test"]
