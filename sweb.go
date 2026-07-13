@@ -19,13 +19,29 @@ import (
 	"github.com/sanchpet/sweb-go-sdk/dbaas"
 	"github.com/sanchpet/sweb-go-sdk/dns"
 	"github.com/sanchpet/sweb-go-sdk/domains"
+	"github.com/sanchpet/sweb-go-sdk/domains/bonus"
+	"github.com/sanchpet/sweb-go-sdk/domains/persons"
 	"github.com/sanchpet/sweb-go-sdk/internal/transport"
 	"github.com/sanchpet/sweb-go-sdk/ip"
 	"github.com/sanchpet/sweb-go-sdk/monitoring"
 	"github.com/sanchpet/sweb-go-sdk/monitoring/checks"
 	"github.com/sanchpet/sweb-go-sdk/monitoring/contacts"
+	"github.com/sanchpet/sweb-go-sdk/pay"
 	"github.com/sanchpet/sweb-go-sdk/remotebackup"
+	"github.com/sanchpet/sweb-go-sdk/sites"
 	"github.com/sanchpet/sweb-go-sdk/ssl"
+	"github.com/sanchpet/sweb-go-sdk/tariff"
+	vhbackup "github.com/sanchpet/sweb-go-sdk/vh/backup"
+	"github.com/sanchpet/sweb-go-sdk/vh/cron"
+	"github.com/sanchpet/sweb-go-sdk/vh/ddg"
+	"github.com/sanchpet/sweb-go-sdk/vh/diskusage"
+	"github.com/sanchpet/sweb-go-sdk/vh/hosting"
+	"github.com/sanchpet/sweb-go-sdk/vh/load"
+	"github.com/sanchpet/sweb-go-sdk/vh/mail"
+	"github.com/sanchpet/sweb-go-sdk/vh/partner"
+	"github.com/sanchpet/sweb-go-sdk/vh/referral"
+	"github.com/sanchpet/sweb-go-sdk/vh/ssh"
+	vhssl "github.com/sanchpet/sweb-go-sdk/vh/ssl"
 	"github.com/sanchpet/sweb-go-sdk/vps"
 )
 
@@ -82,6 +98,39 @@ type Client struct {
 	MonitoringChecks *checks.Service
 	// MonitoringContacts groups monitoring-contact operations (endpoint /monitoring/contacts).
 	MonitoringContacts *contacts.Service
+
+	// Mail groups shared-hosting email operations (endpoint /vh/mail).
+	Mail *mail.Service
+	// HostingDB groups shared-hosting database operations (endpoint /vh/hosting).
+	HostingDB *hosting.Service
+	// Sites groups shared-hosting website operations (endpoint /sites).
+	Sites *sites.Service
+	// VHSSL groups shared-hosting SSL-certificate operations (endpoint /vh/ssl).
+	VHSSL *vhssl.Service
+	// VHBackup groups shared-hosting account-backup operations (endpoint /vh/backup).
+	VHBackup *vhbackup.Service
+	// Cron groups shared-hosting crontab operations (endpoint /vh/cron).
+	Cron *cron.Service
+	// DDoSGuard groups DDoS-Guard operations (endpoint /vh/ddg).
+	DDoSGuard *ddg.Service
+	// HostingLoad groups shared-hosting server-load operations (endpoint /vh/load).
+	HostingLoad *load.Service
+	// SSH groups shared-hosting SSH-toggle operations (endpoint /vh/utils).
+	SSH *ssh.Service
+	// DiskUsage groups shared-hosting disk-usage operations (endpoint /vh/utils/diskUsage).
+	DiskUsage *diskusage.Service
+	// Tariff groups tariff / server-info operations (endpoint /tariff).
+	Tariff *tariff.Service
+	// Pay groups billing operations (endpoint /pay).
+	Pay *pay.Service
+	// Persons groups domain-registrant-person operations (endpoint /domains/persons).
+	Persons *persons.Service
+	// Bonus groups domain-bonus operations (endpoint /domains/bonus).
+	Bonus *bonus.Service
+	// PartnerProgram groups partner-program operations (endpoint /vh/partnerProgram).
+	PartnerProgram *partner.Service
+	// ReferralProgram groups referral-program operations (endpoint /vh/referralProgram).
+	ReferralProgram *referral.Service
 }
 
 // New builds a Client. A token (WithToken) and/or credentials (WithCredentials)
@@ -102,6 +151,22 @@ func New(opts ...Option) *Client {
 		Monitoring:         monitoring.New(t),
 		MonitoringChecks:   checks.New(t),
 		MonitoringContacts: contacts.New(t),
+		Mail:               mail.New(t),
+		HostingDB:          hosting.New(t),
+		Sites:              sites.New(t),
+		VHSSL:              vhssl.New(t),
+		VHBackup:           vhbackup.New(t),
+		Cron:               cron.New(t),
+		DDoSGuard:          ddg.New(t),
+		HostingLoad:        load.New(t),
+		SSH:                ssh.New(t),
+		DiskUsage:          diskusage.New(t),
+		Tariff:             tariff.New(t),
+		Pay:                pay.New(t),
+		Persons:            persons.New(t),
+		Bonus:              bonus.New(t),
+		PartnerProgram:     partner.New(t),
+		ReferralProgram:    referral.New(t),
 	}
 }
 

@@ -20,7 +20,11 @@ func TestFacadeWiring(t *testing.T) {
 	)
 	if c.VPS == nil || c.IP == nil || c.Backup == nil || c.RemoteBackup == nil ||
 		c.DNS == nil || c.Domains == nil || c.Balancer == nil || c.DBaaS == nil ||
-		c.SSL == nil || c.Monitoring == nil || c.MonitoringChecks == nil || c.MonitoringContacts == nil {
+		c.SSL == nil || c.Monitoring == nil || c.MonitoringChecks == nil || c.MonitoringContacts == nil ||
+		c.Mail == nil || c.HostingDB == nil || c.Sites == nil || c.VHSSL == nil ||
+		c.VHBackup == nil || c.Cron == nil || c.DDoSGuard == nil || c.HostingLoad == nil ||
+		c.SSH == nil || c.DiskUsage == nil || c.Tariff == nil || c.Pay == nil ||
+		c.Persons == nil || c.Bonus == nil || c.PartnerProgram == nil || c.ReferralProgram == nil {
 		t.Fatal("New left a service field nil")
 	}
 	if c.Token() != "tok" {
