@@ -1,0 +1,78 @@
+name: API spec drift
+
+# Regenerate the OpenRPC snapshot from the upstream docs bundle on a schedule.
+# When SpaceWeb changes the API, the snapshot changes here — this opens a PR with
+# the new snapshot and a tracking issue so the SDK can react.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays, 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BRANCH: api-spec/drift
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v4
+        with:
+          install: true
+          cache: true
+
+      - name: Regenerate snapshot
+        run: go run ./api-spec/gen
+
+      - name: Detect drift
+        id: drift
+        run: |
+          if git diff --quiet -- api-spec/openrpc; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No drift — snapshot matches upstream."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- api-spec/openrpc
+          fi
+
+      - name: Open PR and tracking issue
+        if: steps.drift.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git switch -C "$BRANCH"
+          git add api-spec/openrpc
+          git commit --signoff -m "chore(api-spec): sync OpenRPC snapshot with upstream"
+          git push -f origin "$BRANCH"
+
+          # Note: PRs opened with the default GITHUB_TOKEN do not trigger further
+          # workflow runs (GitHub's recursion guard), so CI will not run on this
+          # PR automatically. The diff is data, reviewed by a human; swap in a PAT
+          # if CI-on-drift is wanted.
+          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            gh pr create \
+              --head "$BRANCH" \
+              --title "chore(api-spec): sync OpenRPC snapshot with upstream" \
+              --body "The SpaceWeb API documentation changed upstream. This PR regenerates the OpenRPC snapshot to match. Review the diff under \`api-spec/openrpc/\` to see what changed in the API surface, then update the SDK as needed."
+          else
+            echo "PR for $BRANCH already open — force-pushed the refreshed snapshot."
+          fi
+
+          gh label create api-drift --color FBCA04 --description "Upstream API spec changed" --force
+          if [ -z "$(gh issue list --label api-drift --state open --json number --jq '.[].number')" ]; then
+            gh issue create \
+              --title "Upstream SpaceWeb API spec changed" \
+              --label api-drift \
+              --body "The scheduled drift check found changes in the upstream API spec. See the open PR from branch \`$BRANCH\` for the diff, decide what SDK/CLI/provider work it implies, then close this issue."
+          else
+            echo "Tracking issue already open."
+          fi

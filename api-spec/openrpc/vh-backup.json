@@ -1,0 +1,552 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultInt": {
+        "description": "1 - успешно, 0 - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultdownloadFile": {
+        "description": "'file':\n\n'mimetype' string MIME-тип данных\n\n'metadata' array Метаданные\n\n'content' string Контент\n\n'name' string Имя файла",
+        "name": "resultDownloadFile",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultgetList": {
+        "description": "'date' string Дата бэкапа\n\n'mysql' int Если null, то значит идет подсчет баз\n\n'files' int Если null, то значит идёт подсчет файлов\n\n'backupFilesExists' bool\n\n'warnQuota' bool Предупреждение о превышении квоты",
+        "name": "resultGetList",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultgetListFiles": {
+        "description": "'name' string Имя файла\n\n'dir' bool\n\n'size' string Размер",
+        "name": "resultGetListFiles",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultgetListMysql": {
+        "description": "'name' string Имя файла\n\n 'dir' bool",
+        "name": "resultGetListMysql",
+        "schema": {
+          "type": "array"
+        }
+      }
+    },
+    "examples": {
+      "arraydownloadFile": {
+        "description": "Одиночный файл из бэкапа",
+        "name": "resultDownloadFile",
+        "summary": "resultDownloadFile",
+        "value": [
+          {
+            "file": {
+              "content": "H4sICFd/gGQAA2xpbmExOTkzMDJfbXlzcWur/D1U9VJ6L377Gqp8KJUglL6Fql5J6uzOje3CFE+O4C++TqdBAwoAAA==",
+              "metadata": [],
+              "mimetype": "application/gzip;base64",
+              "name": "test_mysql57_2023-06-07_16-00.sql.gz"
+            }
+          }
+        ]
+      },
+      "arrayfiles": {
+        "description": "массив информации о файлах (в каждом элементе массив с 2мя значениями), которые нужно восстановить. files[][0] - 0 или 1 (0 - файл; 1 - папка). Тип того, что требуется восстановить. files[][1] - конкатенированные путь к директорию и имя файла (например, / и .authfile. Получится '/.authfile')",
+        "name": "files",
+        "summary": "files",
+        "value": [
+          [
+            0,
+            "/test_mysql57_2023-06-07_16-00.sql.gz"
+          ]
+        ]
+      },
+      "arraygetListFiles": {
+        "description": "Содержимое папки внутри бэкапа за конкретную дату",
+        "name": "resultGetListFiles",
+        "summary": "resultGetListFiles",
+        "value": [
+          {
+            "dir": false,
+            "name": ".htaccess",
+            "size": "0 B"
+          },
+          {
+            "dir": true,
+            "name": "cgi-bin/",
+            "size": "4 KB"
+          },
+          {
+            "dir": false,
+            "name": "index.html",
+            "size": "309,89 KB"
+          }
+        ]
+      },
+      "arraygetListMysql": {
+        "description": "Список содержимого бэкапа баз данных за конкретный день",
+        "name": "resultGetListMysql",
+        "summary": "resultGetListMysql",
+        "value": [
+          {
+            "dir": true,
+            "name": "test1234"
+          }
+        ]
+      },
+      "integerOne": {
+        "description": "Ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      },
+      "resultgetList": {
+        "description": "Полный спискок бэкапов (файлы и базы с группировкой по дням)",
+        "name": "resultGetList",
+        "summary": "resultGetList",
+        "value": [
+          {
+            "backupFilesExists": true,
+            "date": "23.06.2023",
+            "files": 18,
+            "mysql": 1,
+            "warnQuota": false
+          },
+          {
+            "backupFilesExists": true,
+            "date": "22.06.2023",
+            "files": 18,
+            "mysql": 1,
+            "warnQuota": false
+          },
+          {
+            "backupFilesExists": true,
+            "date": "21.06.2023",
+            "files": 18,
+            "mysql": 1,
+            "warnQuota": false
+          },
+          {
+            "backupFilesExists": true,
+            "date": "20.06.2023",
+            "files": 18,
+            "mysql": 1,
+            "warnQuota": false
+          },
+          {
+            "backupFilesExists": true,
+            "date": "19.06.2023",
+            "files": 18,
+            "mysql": 1,
+            "warnQuota": false
+          },
+          {
+            "backupFilesExists": true,
+            "date": "18.06.2023",
+            "files": 18,
+            "mysql": 1,
+            "warnQuota": false
+          },
+          {
+            "backupFilesExists": true,
+            "date": "17.06.2023",
+            "files": 18,
+            "mysql": 1,
+            "warnQuota": false
+          },
+          {
+            "backupFilesExists": true,
+            "date": "01.06.2023",
+            "files": null,
+            "mysql": 0,
+            "warnQuota": false
+          },
+          {
+            "backupFilesExists": true,
+            "date": "01.05.2023",
+            "files": null,
+            "mysql": 0,
+            "warnQuota": false
+          }
+        ]
+      },
+      "stringdatabases": {
+        "description": "",
+        "name": "databases",
+        "summary": "databases",
+        "value": [
+          "test123"
+        ]
+      },
+      "stringdate": {
+        "description": "дата бэкапа (по сути это его папка на сервере, поэтому формат строгий)",
+        "name": "date",
+        "summary": "date",
+        "value": "2023-02-27"
+      },
+      "stringdir": {
+        "description": "директория",
+        "name": "dir",
+        "summary": "dir",
+        "value": "/"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.185"
+  },
+  "methods": [
+    {
+      "description": "Получение полного списка бэкапов (файлы и базы с группировкой по дням)",
+      "examples": [
+        {
+          "name": "exampleGetList",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultgetList"
+          }
+        }
+      ],
+      "name": "getList",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetList"
+      }
+    },
+    {
+      "description": "Ставит задание на создание копий всех баз и файлов домашней директории",
+      "examples": [
+        {
+          "name": "exampleMakeAccountCopy",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "makeAccountCopy",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Одиночные и массовые действия 'Восстановить' над файлами из бэкапа",
+      "examples": [
+        {
+          "name": "exampleRestoreFiles",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringdate"
+            },
+            {
+              "$ref": "#/components/examples/arrayfiles"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "restoreFiles",
+      "params": [
+        {
+          "description": "Дата бэкапа (по сути это его папка на сервере, поэтому формат строгий)",
+          "name": "date",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Массив информации о файлах (в каждом элементе массив с 2мя значениями), которые нужно восстановить. files[][0] - 0 или 1 (0 - файл; 1 - папка). Тип того, что требуется восстановить. files[][1] - конкатенированные 'путь к директорию' и 'имя файла' (например, '/' и '.authfile'. Получится '/.authfile')",
+          "name": "files",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Скачивание одиночного файла из бэкапа",
+      "examples": [
+        {
+          "name": "exampleDownloadFile",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringdate"
+            },
+            {
+              "$ref": "#/components/examples/arrayfiles"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/arraydownloadFile"
+          }
+        }
+      ],
+      "name": "downloadFile",
+      "params": [
+        {
+          "description": "Дата бэкапа (по сути это его папка на сервере, поэтому формат строгий)",
+          "name": "date",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Массив информации о файлах (в каждом элементе массив с 2мя значениями), которые нужно восстановить. files[][0] - 0 или 1 (0 - файл; 1 - папка). Тип того, что требуется восстановить. files[][1] - конкатенированные 'путь к директорию' и 'имя файла' (например, '/' и '.authfile'. Получится '/.authfile')",
+          "name": "files",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultdownloadFile"
+      }
+    },
+    {
+      "description": "Метод для получения содержимого папки внутри бэкапа за конкретную дату",
+      "examples": [
+        {
+          "name": "exampleGetListFiles",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringdate"
+            },
+            {
+              "$ref": "#/components/examples/stringdir"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/arraygetListFiles"
+          }
+        }
+      ],
+      "name": "getListFiles",
+      "params": [
+        {
+          "description": "Дата бэкапа (по сути это его папка на сервере, поэтому формат строгий)",
+          "name": "date",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Директория",
+          "name": "dir",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetListFiles"
+      }
+    },
+    {
+      "description": "Получение списка содержимого бэкапа баз данных за конкретный день",
+      "examples": [
+        {
+          "name": "exampleGetListMysql",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringdate"
+            },
+            {
+              "$ref": "#/components/examples/stringdir"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/arraygetListMysql"
+          }
+        }
+      ],
+      "name": "getListMysql",
+      "params": [
+        {
+          "description": "Дата бэкапа (по сути это его папка на сервере, поэтому формат строгий)",
+          "name": "date",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Директория",
+          "name": "dir",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultgetListMysql"
+      }
+    },
+    {
+      "description": "Одиночные и массовые действия 'Получить бэкап' над файлами из бэкапа",
+      "examples": [
+        {
+          "name": "exampleReceiveFiles",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringdate"
+            },
+            {
+              "$ref": "#/components/examples/arrayfiles"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "receiveFiles",
+      "params": [
+        {
+          "description": "Дата бэкапа (по сути это его папка на сервере, поэтому формат строгий)",
+          "name": "date",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Массив информации о файлах (в каждом элементе массив с 2мя значениями), которые нужно восстановить. files[][0] - 0 или 1 (0 - файл; 1 - папка). Тип того, что требуется восстановить. files[][1] - конкатенированные 'путь к директорию' и 'имя файла' (например, '/' и '.authfile'. Получится '/.authfile')",
+          "name": "files",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Одиночные и массовые действия 'Получить бэкап' над одной или несколькими базами данных",
+      "examples": [
+        {
+          "name": "exampleListMysql",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringdate"
+            },
+            {
+              "$ref": "#/components/examples/stringdatabases"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "receiveMysql",
+      "params": [
+        {
+          "description": "Дата бэкапа (по сути это его папка на сервере, поэтому формат строгий)",
+          "name": "date",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Массив с именами баз данных",
+          "name": "databases",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Одиночные и массовые действия 'Восстановить' над таблицами и базами данных",
+      "examples": [
+        {
+          "name": "exampleRestoreMysql",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringdate"
+            },
+            {
+              "$ref": "#/components/examples/stringdatabases"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/integerOne"
+          }
+        }
+      ],
+      "name": "restoreMysql",
+      "params": [
+        {
+          "description": "Дата бэкапа (по сути это его папка на сервере, поэтому формат строгий)",
+          "name": "date",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "Имя базы данных",
+          "name": "databases",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции:\n\nсоздание и управление бэкапами, восстановление из бэкапа файлов и БД, скачивание бэкапов",
+      "name": "Бэкапы",
+      "summary": "Бэкапы для виртуального хостинга",
+      "url": "https://api.sweb.ru/vh/backup"
+    }
+  ]
+}

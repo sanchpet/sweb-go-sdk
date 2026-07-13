@@ -1,0 +1,1373 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultActivate": {
+        "description": "1 - проверка включена",
+        "name": "resultActivate",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultActivateList": {
+        "description": "1 - проверки включены",
+        "name": "resultActivateList",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultCreate": {
+        "description": "1 - успешное создание, 0 - не успешное создание",
+        "name": "resultCreate",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultDeactivate": {
+        "description": "1 - проверка отключена",
+        "name": "resultDeactivate",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultDeactivateList": {
+        "description": "1 - проверки отключены",
+        "name": "resultDeactivateList",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultEdit": {
+        "description": "1 - успешное редактирование, 0 - не успешное редактирование",
+        "name": "resultEdit",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultGetFullCheckInfo": {
+        "description": "'id' int ID проверки\n\n'type' int ID типа проверки\n\n'name' string Название проверки\n\n'status' boolean Cтатус проверки: true - активна; false - отключена\n\n'lastResult' boolean Результат последней проверки: null - проверки ещё не было; true - OK, false - проверка не прошла (неуспех)\n\n'settings' array Массив настроек проверки:\n\n'type' string Алиас типа настройки\n\n'value' string Значение настройки\n\n'contacts' array Массив контактов проверки(описание элементов см. в методе index API monitoring/contacts):\n\n'id' int ID контакта\n\n'type' string Алиас типа контакта\n\n'name' string Имя контакта\n\n'value' string Значение\n\n'verified' boolean Подтвержден или нет контакт\n\nВозможные значения settings[].type алиасов настроек:\n\n'target' - цель проверки (URL или IP), есть у всех проверок\n\n'interval' - интервал проверки (есть у всех проверок)\n\n'keyword' - ключевое слово (может быть несколько ключевых слов)\n\n'keyword_mode' - режим проверки ключевых слов (один режим для всех ключевых слов)\n\n'port' - порт (может быть только у типа проверки Порт)\n\n'ssl' - использовать SSL (настройка либо отсутствует, что означает выключена, либо присутствует со значением 1)",
+        "name": "resultGetFullCheckInfo",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetInfo": {
+        "description": "'types' array Все доступные типы проверок (см. описание метода getTypes())\n\n'intervals' array Доступные интервалы проверок (см. описание метода getIntervals())\n\n'keywordModes' array Доступные режимы проверки ключевых слов (см. описание метода getKeywordModes())\n\n'ports' array Список портов с названиями (см. описание метода getPorts())\n\n'availableSms' int Кол-во оставшихся sms в периоде\n\n'currentSms' int Кол-во отправленных sms в периоде\n\n'totalSms' int Кол-во sms по тарифу в периоде\n\n'availableChecks' int Кол-во доступных проверок по тарифу\n\n'currentChecks' int Кол-во активных проверок\n\n'totalChecks' int Кол-во проверок\n\n'active' boolean Активна ли услуга\n\n'expired' string|null Дата окончания услуги\n\n'tariff' array|null Информация о тарифе ",
+        "name": "resultGetInfo",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetIntervals": {
+        "description": "'id' string ID интервала проверки\n\n'name' string Название интервала проверки\n\n'time' string Длительность интервала проверки в минутах",
+        "name": "resultGetIntervals",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultGetKeywordModes": {
+        "description": "'id' string ID режима\n\n'name' string Название режима",
+        "name": "resultGetKeywordModes",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultGetPorts": {
+        "description": "'name' string Сокращенное название порта\n\n'nameFull' string Полное название порта\n\n'value' string Значение порта",
+        "name": "resultGetPorts",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultGetTypes": {
+        "description": "'id' string ID типа проверки\n\n'code' string Алиас типа проверки (например, 'ping' или 'http' или 'port')\n\n'name' string Название типа проверки (например, 'Ping')",
+        "name": "resultGetTypes",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultHistory": {
+        "description": "'list' array Список событий:\n\nid string - id события\n\ncheck_id string - id проверки\n\nts string дата события\n\nsuccess string y - успешно, n - не успешно\n\n'filterInfo' array Массив информация для пагинации:\n\npage - текущий номер страницы (начиная с 1) с данными в объекте list\n\nperPage - текущее выбранное кол.-во записей на одну страницу\n\ntotalCount - всего кол-во записей",
+        "name": "resultHistory",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultIndex": {
+        "description": "'list' array список контактов со следующими свойствами:\n\n'id' string ID проверки\n\n'name' string Название проверки\n\n'type' int Тип проверки (1 - Ping; 2 - Http; 3 - Port)\n\n'status' boolean Cтатус проверки: true - активна; false - отключена\n\n'disabled' boolean Блокировка: true - заблокирована; false - не заблокирована\n\n'lastResult' boolean|null Результат последней проверки: null - проверки ещё не было; true - OK; false - проверка не прошла (неуспех)\n\n'tsLastResult' string|null Разница времени между tsLastResult и текущим временем по МСК в формате 'ЧЧЧЧЧ:ММ:СС' кол.-во часов может быть любое, в зависимости от того, сколько суток разница\n\n'tsDeltaResult' array список контактов со следующими свойствами:\n\n'filterInfo' array массив информация для пагинации:\n\npage - текущий номер страницы (начиная с 1) с данными в объекте list\n\nperPage - текущее выбранное кол-во записей на одну страницу\n\n\totalCount - всего кол-во записей",
+        "name": "resultIndex",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultRemove": {
+        "description": "1 - проверка удалена",
+        "name": "resultRemove",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultRemoveList": {
+        "description": "1 - проверки удалены",
+        "name": "resultRemoveList",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "examples": {
+      "arrayContactIds": {
+        "description": "массив id подтвержденных контактов для уведомлений",
+        "name": "contactIds",
+        "summary": "contactIds",
+        "value": [
+          1,
+          2
+        ]
+      },
+      "arrayIds": {
+        "description": "id проверок",
+        "name": "ids",
+        "summary": "ids",
+        "value": [
+          1,
+          2
+        ]
+      },
+      "intID": {
+        "description": "id проверки",
+        "name": "id",
+        "summary": "id",
+        "value": 1
+      },
+      "intInterval": {
+        "description": "id интервала проверки (одно из возвращаемых методом getIntervals)",
+        "name": "interval",
+        "summary": "interval",
+        "value": 1
+      },
+      "intPage": {
+        "description": "номер страницы. если задан, то используется пагинация",
+        "name": "page",
+        "summary": "page",
+        "value": 1
+      },
+      "intPerPage": {
+        "description": "текущее выбранное кол.-во записей на одну страницу",
+        "name": "perPage",
+        "summary": "perPage",
+        "value": 2
+      },
+      "intType": {
+        "description": "id типа проверки (одно из возвращаемых методом getTypes)",
+        "name": "type",
+        "summary": "type",
+        "value": 1
+      },
+      "resultActivate": {
+        "description": "1 - проверка включена",
+        "name": "resultActivate",
+        "summary": "resultActivate",
+        "value": 1
+      },
+      "resultActivateList": {
+        "description": "1 - проверки включена",
+        "name": "resultActivateList",
+        "summary": "resultActivateList",
+        "value": 1
+      },
+      "resultCreate": {
+        "description": "1 - успешное создание, 0 - не успешное создание",
+        "name": "resultCreate",
+        "summary": "resultCreate",
+        "value": 1
+      },
+      "resultDeactivate": {
+        "description": "1 - проверка отключена",
+        "name": "resultDeactivate",
+        "summary": "resultDeactivate",
+        "value": 1
+      },
+      "resultDeactivateList": {
+        "description": "1 - проверки отключены",
+        "name": "resultDeactivateList",
+        "summary": "resultDeactivateList",
+        "value": 1
+      },
+      "resultEdit": {
+        "description": "1 - успешное редактирование, 0 - не успешное редактирование",
+        "name": "resultEdit",
+        "summary": "resultEdit",
+        "value": 1
+      },
+      "resultGetFullCheckInfo": {
+        "description": "'id' int ID проверки\n\n'type' int ID типа проверки\n\n'name' string Название проверки\n\n'status' boolean Cтатус проверки: true - активна; false - отключена\n\n'lastResult' boolean Результат последней проверки: null - проверки ещё не было; true - OK, false - проверка не прошла (неуспех)\n\n'settings' array Массив настроек проверки:\n\n'type' string Алиас типа настройки\n\n'value' string Значение настройки\n\n'contacts' array Массив контактов проверки(описание элементов см. в методе index API monitoring/contacts):\n\n'id' int ID контакта\n\n'type' string Алиас типа контакта\n\n'name' string Имя контакта\n\n'value' string Значение\n\n'verified' boolean Подтвержден или нет контакт\n\nВозможные значения settings[].type алиасов настроек:\n\n'target' - цель проверки (URL или IP), есть у всех проверок\n\n'interval' - интервал проверки (есть у всех проверок)\n\n'keyword' - ключевое слово (может быть несколько ключевых слов)\n\n'keyword_mode' - режим проверки ключевых слов (один режим для всех ключевых слов)\n\n'port' - порт (может быть только у типа проверки Порт)\n\n'ssl' - использовать SSL (настройка либо отсутствует, что означает выключена, либо присутствует со значением 1)",
+        "name": "resultGetFullCheckInfo",
+        "summary": "подробная информация о проверке",
+        "value": {
+          "contacts": [
+            {
+              "id": 3205,
+              "name": "Малышева Инна Александровна",
+              "type": "email",
+              "value": "imalysheva@sweb.ru",
+              "verified": true
+            }
+          ],
+          "id": 1,
+          "lastResult": true,
+          "name": "sweb.ru",
+          "settings": [
+            {
+              "type": "target",
+              "value": "192.168.122.75"
+            },
+            {
+              "type": "interval",
+              "value": "4"
+            }
+          ],
+          "status": true,
+          "type": 1
+        }
+      },
+      "resultGetInfo": {
+        "description": "'types' array Все доступные типы проверок (см. описание метода getTypes())\n\n'intervals' array Доступные интервалы проверок (см. описание метода getIntervals())\n\n'keywordModes' array Доступные режимы проверки ключевых слов (см. описание метода getKeywordModes())\n\n'ports' array Список портов с названиями (см. описание метода getPorts())\n\n'availableSms' int Кол-во оставшихся sms в периоде\n\n'currentSms' int Кол-во отправленных sms в периоде\n\n'totalSms' int Кол-во sms по тарифу в периоде\n\n'availableChecks' int Кол-во доступных проверок по тарифу\n\n'currentChecks' int Кол-во активных проверок\n\n'totalChecks' int Кол-во проверок\n\n'active' boolean Активна ли услуга\n\n'expired' string|null Дата окончания услуги\n\n'tariff' array|null Информация о тарифе ",
+        "name": "resultGetInfo",
+        "summary": "общая информация для отображения настроек проверками",
+        "value": {
+          "active": true,
+          "availableChecks": 0,
+          "availableSms": 6,
+          "currentChecks": 1,
+          "currentSms": 0,
+          "disabled": false,
+          "expired": "29.10.2025",
+          "intervals": [
+            {
+              "id": "1",
+              "name": "1 мин",
+              "time": "1"
+            },
+            {
+              "id": "2",
+              "name": "2 мин",
+              "time": "2"
+            },
+            {
+              "id": "3",
+              "name": "5 мин",
+              "time": "5"
+            },
+            {
+              "id": "4",
+              "name": "10 мин",
+              "time": "10"
+            },
+            {
+              "id": "5",
+              "name": "15 мин",
+              "time": "15"
+            },
+            {
+              "id": "6",
+              "name": "30 мин",
+              "time": "30"
+            },
+            {
+              "id": "7",
+              "name": "1 час",
+              "time": "60"
+            },
+            {
+              "id": "8",
+              "name": "2 часа",
+              "time": "120"
+            },
+            {
+              "id": "9",
+              "name": "6 часов",
+              "time": "360"
+            },
+            {
+              "id": "10",
+              "name": "12 часов",
+              "time": "720"
+            },
+            {
+              "id": "11",
+              "name": "1 день",
+              "time": "1440"
+            },
+            {
+              "id": "12",
+              "name": "7 дней",
+              "time": "10080"
+            }
+          ],
+          "keywordModes": [
+            {
+              "id": "1",
+              "name": "на странице должны быть все слова"
+            },
+            {
+              "id": "2",
+              "name": "на странице должно быть хотя бы одно слово"
+            },
+            {
+              "id": "3",
+              "name": "на странице не должно быть всех слов"
+            },
+            {
+              "id": "4",
+              "name": "на странице не должно быть хотя бы одного слова"
+            }
+          ],
+          "ports": [
+            {
+              "name": "FTP",
+              "nameFull": "File Transfer Protocol",
+              "value": "21"
+            },
+            {
+              "name": "SSH",
+              "nameFull": "Secure Shell",
+              "value": "22"
+            },
+            {
+              "name": "TELNET",
+              "nameFull": "TELecommunication NETwork",
+              "value": "23"
+            },
+            {
+              "name": "SMTP",
+              "nameFull": "Simple Mail Transfer Protocol",
+              "value": "25"
+            },
+            {
+              "name": "DNS",
+              "nameFull": "Domain Name System",
+              "value": "53"
+            },
+            {
+              "name": "Finger",
+              "nameFull": "Finger",
+              "value": "79"
+            },
+            {
+              "name": "WWW",
+              "nameFull": "Web-сервер",
+              "value": "80"
+            },
+            {
+              "name": "POP3",
+              "nameFull": "Post Office Protocol Version 3",
+              "value": "110"
+            },
+            {
+              "name": "Sun RPC",
+              "nameFull": "Sun RPC",
+              "value": "111"
+            },
+            {
+              "name": "NNTP",
+              "nameFull": "Network News Transfer Protocol",
+              "value": "119"
+            },
+            {
+              "name": "NetBIOS",
+              "nameFull": "Network Basic Input/Output System",
+              "value": "139"
+            },
+            {
+              "name": "HTTPS",
+              "nameFull": "Hypertext Transfer Protocol Secure",
+              "value": "443"
+            },
+            {
+              "name": "rLogin",
+              "nameFull": "Remote LOGIN",
+              "value": "513"
+            }
+          ],
+          "tariff": {
+            "checks": 1,
+            "id": 1,
+            "name": "Базовый",
+            "sms": 6
+          },
+          "totalChecks": 1,
+          "totalSms": 6,
+          "types": [
+            {
+              "code": "ping",
+              "id": "1",
+              "name": "Ping "
+            },
+            {
+              "code": "http",
+              "id": "2",
+              "name": "HTTP"
+            },
+            {
+              "code": "port",
+              "id": "3",
+              "name": "Порт"
+            }
+          ]
+        }
+      },
+      "resultGetIntervals": {
+        "description": "'id'string ID интервала проверки\n\n'name' string Название интервала проверки\n\n'time' string Длительность интервала проверки в минутах",
+        "name": "resultGetIntervals",
+        "summary": "список всех доступных интервалов проверок",
+        "value": [
+          {
+            "id": "1",
+            "name": "1 мин",
+            "time": "1"
+          },
+          {
+            "id": "2",
+            "name": "2 мин",
+            "time": "2"
+          },
+          {
+            "id": "3",
+            "name": "5 мин",
+            "time": "5"
+          },
+          {
+            "id": "4",
+            "name": "10 мин",
+            "time": "10"
+          },
+          {
+            "id": "5",
+            "name": "15 мин",
+            "time": "15"
+          },
+          {
+            "id": "6",
+            "name": "30 мин",
+            "time": "30"
+          },
+          {
+            "id": "7",
+            "name": "1 час",
+            "time": "60"
+          },
+          {
+            "id": "8",
+            "name": "2 часа",
+            "time": "120"
+          },
+          {
+            "id": "9",
+            "name": "6 часов",
+            "time": "360"
+          },
+          {
+            "id": "10",
+            "name": "12 часов",
+            "time": "720"
+          },
+          {
+            "id": "11",
+            "name": "1 день",
+            "time": "1440"
+          },
+          {
+            "id": "12",
+            "name": "7 дней",
+            "time": "10080"
+          }
+        ]
+      },
+      "resultGetKeywordModes": {
+        "description": "'id' string ID режима\n\n'name' string Название режима",
+        "name": "resultGetKeywordModes",
+        "summary": "список  всех доступных режимов проверки ключевых слов",
+        "value": [
+          {
+            "id": "1",
+            "name": "на странице должны быть все слова"
+          },
+          {
+            "id": "2",
+            "name": "на странице должно быть хотя бы одно слово"
+          },
+          {
+            "id": "3",
+            "name": "на странице не должно быть всех слов"
+          },
+          {
+            "id": "4",
+            "name": "на странице не должно быть хотя бы одного слова"
+          }
+        ]
+      },
+      "resultGetPorts": {
+        "description": "'name' string Сокращенное название порта\n\n'nameFull' string Полное название порта\n\n'value' string Значение порта",
+        "name": "resultGetPorts",
+        "summary": "список рекомендуемых портов для проверки",
+        "value": [
+          {
+            "name": "FTP",
+            "nameFull": "File Transfer Protocol",
+            "value": "21"
+          },
+          {
+            "name": "SSH",
+            "nameFull": "Secure Shell",
+            "value": "22"
+          },
+          {
+            "name": "TELNET",
+            "nameFull": "TELecommunication NETwork",
+            "value": "23"
+          },
+          {
+            "name": "SMTP",
+            "nameFull": "Simple Mail Transfer Protocol",
+            "value": "25"
+          },
+          {
+            "name": "DNS",
+            "nameFull": "Domain Name System",
+            "value": "53"
+          },
+          {
+            "name": "Finger",
+            "nameFull": "Finger",
+            "value": "79"
+          },
+          {
+            "name": "WWW",
+            "nameFull": "Web-сервер",
+            "value": "80"
+          },
+          {
+            "name": "POP3",
+            "nameFull": "Post Office Protocol Version 3",
+            "value": "110"
+          },
+          {
+            "name": "Sun RPC",
+            "nameFull": "Sun RPC",
+            "value": "111"
+          },
+          {
+            "name": "NNTP",
+            "nameFull": "Network News Transfer Protocol",
+            "value": "119"
+          },
+          {
+            "name": "NetBIOS",
+            "nameFull": "Network Basic Input/Output System",
+            "value": "139"
+          },
+          {
+            "name": "HTTPS",
+            "nameFull": "Hypertext Transfer Protocol Secure",
+            "value": "443"
+          },
+          {
+            "name": "rLogin",
+            "nameFull": "Remote LOGIN",
+            "value": "513"
+          }
+        ]
+      },
+      "resultGetTypes": {
+        "description": "'id'string ID типа проверки\n\n'code' string Алиас типа проверки (например, 'ping' или 'http' или 'port')\n\n'name' string Название типа проверки (например, 'Ping')",
+        "name": "resultGetTypes",
+        "summary": "список всех доступных проверок",
+        "value": [
+          {
+            "code": "ping",
+            "id": "1",
+            "name": "Ping"
+          },
+          {
+            "code": "http",
+            "id": "2",
+            "name": "HTTP"
+          },
+          {
+            "code": "port",
+            "id": "3",
+            "name": "Порт"
+          }
+        ]
+      },
+      "resultHistory": {
+        "description": "'list' array Список событий:\n\nid string - id события\n\ncheck_id string - id проверки\n\nts string дата события\n\nsuccess string y - успешно, n - не успешно\n\n'filterInfo' array Массив информация для пагинации:\n\npage - текущий номер страницы (начиная с 1) с данными в объекте list\n\nperPage - текущее выбранное кол.-во записей на одну страницу\n\ntotalCount - всего кол-во записей",
+        "name": "resultHistory",
+        "summary": "resultHistory",
+        "value": {
+          "filterInfo": {
+            "page": 1,
+            "perPage": 20,
+            "totalCount": 0
+          },
+          "list": []
+        }
+      },
+      "resultIndex": {
+        "description": "'list' array список контактов со следующими свойствами:\n\n'id' int ID проверки\n\n'name' string Название проверки\n\n'type' int Тип проверки (1 - Ping; 2 - Http; 3 - Port)\n\n'status' boolean Cтатус проверки: true - активна; false - отключена\n\n'disabled' boolean Блокировка: true - заблокирована; false - не заблокирована\n\n'lastResult' boolean|null Результат последней проверки: null - проверки ещё не было; true - OK; false - проверка не прошла (неуспех)\n\n'tsLastResult' string|null Разница времени между tsLastResult и текущим временем по МСК в формате 'ЧЧЧЧЧ:ММ:СС' кол.-во часов может быть любое, в зависимости от того, сколько суток разница\n\n'tsDeltaResult' array список контактов со следующими свойствами:\n\n'filterInfo' array массив информация для пагинации:\n\npage - текущий номер страницы (начиная с 1) с данными в объекте list\n\nperPage - текущее выбранное кол-во записей на одну страницу\n\n\n\ntotalCount - всего кол-во записей",
+        "name": "resultIndex",
+        "summary": "список проверок",
+        "value": {
+          "filterInfo": {
+            "page": 1,
+            "perPage": 2,
+            "totalCount": 1
+          },
+          "list": [
+            {
+              "disabled": false,
+              "id": "339",
+              "lastResult": true,
+              "name": "sweb.ru",
+              "status": true,
+              "tsDeltaResult": null,
+              "tsLastResult": null,
+              "type": "1"
+            }
+          ]
+        }
+      },
+      "resultRemove": {
+        "description": "1 - проверка удалена",
+        "name": "resultRemove",
+        "summary": "resultRemove",
+        "value": 1
+      },
+      "resultRemoveList": {
+        "description": "1 - проверки удалены",
+        "name": "resultRemoveList",
+        "summary": "resultRemoveList",
+        "value": 1
+      },
+      "stringCode": {
+        "description": "код подтверждения",
+        "name": "code",
+        "summary": "code",
+        "value": "611021"
+      },
+      "stringContactId": {
+        "description": "id контакта",
+        "name": "contactId",
+        "summary": "contactId",
+        "value": "1"
+      },
+      "stringFinDate": {
+        "description": "история по дату",
+        "name": "finishDate",
+        "summary": "finishDate",
+        "value": "29-09-2025"
+      },
+      "stringName": {
+        "description": "название проверки, не должно совпадать с другими",
+        "name": "name",
+        "summary": "name",
+        "value": "тест"
+      },
+      "stringOrderDirect": {
+        "description": "тип сортировки, по умолчанию asc",
+        "name": "orderDirect",
+        "summary": "orderDirect",
+        "value": "desc"
+      },
+      "stringOrderField": {
+        "description": "поле сортировки, по умолчанию id",
+        "name": "orderField",
+        "summary": "orderField",
+        "value": "type"
+      },
+      "stringStartDate": {
+        "description": "история с даты",
+        "name": "startDate",
+        "summary": "startDate",
+        "value": "29-08-2025"
+      },
+      "stringTarget": {
+        "description": "значение цели проверки (URL или IP)",
+        "name": "target",
+        "summary": "target",
+        "value": "ip"
+      },
+      "stringType": {
+        "description": "тип контакта: 1 - электронная почта, 2 - телефон, 3 - ID телеграм-аккаунта",
+        "name": "type",
+        "summary": "type",
+        "value": "phone"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.227"
+  },
+  "methods": [
+    {
+      "description": "Получение списка проверок",
+      "examples": [
+        {
+          "name": "exampleIndex",
+          "params": [
+            {
+              "$ref": "#/components/examples/intPage"
+            },
+            {
+              "$ref": "#/components/examples/intPerPage"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIndex"
+          }
+        }
+      ],
+      "links": [],
+      "name": "index",
+      "params": [
+        {
+          "description": "номер страницы. если задан, то используется пагинация",
+          "name": "page",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "кол-во единиц на странице, не больше 20",
+          "name": "perPage",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultIndex"
+      }
+    },
+    {
+      "description": "Получение всех доступных типов проверок",
+      "examples": [
+        {
+          "name": "exampleGetTypes",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultGetTypes"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getTypes",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetTypes"
+      }
+    },
+    {
+      "description": "Получение всех доступных интервалов проверок",
+      "examples": [
+        {
+          "name": "exampleGetIntervals",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultGetIntervals"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getIntervals",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetIntervals"
+      }
+    },
+    {
+      "description": "Получение рекомендуемых портов для проверки",
+      "examples": [
+        {
+          "name": "exampleGetPorts",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultGetPorts"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getPorts",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetPorts"
+      }
+    },
+    {
+      "description": "Получение всех доступных режимов проверки ключевых слов",
+      "examples": [
+        {
+          "name": "exampleGetKeywordModes",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultGetKeywordModes"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getKeywordModes",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetKeywordModes"
+      }
+    },
+    {
+      "description": "Общая информация для отображения настроек проверками",
+      "examples": [
+        {
+          "name": "exampleGetInfo",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultGetInfo"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getInfo",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetInfo"
+      }
+    },
+    {
+      "description": "Получение подробной информации о проверке",
+      "examples": [
+        {
+          "name": "exampleGetFullCheckInfo",
+          "params": [
+            {
+              "$ref": "#/components/examples/intID"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetFullCheckInfo"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getFullCheckInfo",
+      "params": [
+        {
+          "description": "id проверки",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetFullCheckInfo"
+      }
+    },
+    {
+      "description": "Создание проверки",
+      "examples": [
+        {
+          "name": "exampleCreate",
+          "params": [
+            {
+              "$ref": "#/components/examples/intType"
+            },
+            {
+              "$ref": "#/components/examples/stringTarget"
+            },
+            {
+              "$ref": "#/components/examples/stringName"
+            },
+            {
+              "$ref": "#/components/examples/intInterval"
+            },
+            {
+              "$ref": "#/components/examples/arrayContactIds"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultCreate"
+          }
+        }
+      ],
+      "links": [],
+      "name": "create",
+      "params": [
+        {
+          "description": "id типа проверки (одно из возвращаемых методом getTypes)",
+          "name": "type",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "значение цели проверки (URL или IP)",
+          "name": "target",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "название проверки, не должно совпадать с другими",
+          "name": "name",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "id интервала проверки (одно из возвращаемых методом getIntervals)",
+          "name": "interval",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "массив id подтвержденных контактов для уведомлений",
+          "name": "contactIds",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        },
+        {
+          "description": "порт (только для типа проверки id=3 'Порт')",
+          "name": "port",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "использовать ssl (только для типа проверки id=3 'Порт')",
+          "name": "ssl",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        },
+        {
+          "description": "массив ключевых слов (только для типа проверки id=2 'Http')",
+          "name": "keywords",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        },
+        {
+          "description": "режим проверки ключевых слов (только для типа проверки id=2 'Http')",
+          "name": "keywordMode",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultCreate"
+      }
+    },
+    {
+      "description": "Редактирование проверки",
+      "examples": [
+        {
+          "name": "exampleEdit",
+          "params": [
+            {
+              "$ref": "#/components/examples/intID"
+            },
+            {
+              "$ref": "#/components/examples/stringTarget"
+            },
+            {
+              "$ref": "#/components/examples/stringName"
+            },
+            {
+              "$ref": "#/components/examples/intInterval"
+            },
+            {
+              "$ref": "#/components/examples/arrayContactIds"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultEdit"
+          }
+        }
+      ],
+      "links": [],
+      "name": "edit",
+      "params": [
+        {
+          "description": "id редактируемой проверки",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "значение цели проверки (URL или IP)",
+          "name": "target",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "название проверки, не должно совпадать с другими",
+          "name": "name",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "id интервала проверки (одно из возвращаемых методом getIntervals)",
+          "name": "interval",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "массив id подтвержденных контактов для уведомлений",
+          "name": "contactIds",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        },
+        {
+          "description": "порт (только для типа проверки id=3 'Порт')",
+          "name": "port",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "использовать ssl (только для типа проверки id=3 'Порт')",
+          "name": "ssl",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        },
+        {
+          "description": "массив ключевых слов (только для типа проверки id=2 'Http')",
+          "name": "keywords",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        },
+        {
+          "description": "режим проверки ключевых слов (только для типа проверки id=2 'Http')",
+          "name": "keywordMode",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultEdit"
+      }
+    },
+    {
+      "description": "Включение одной проверки",
+      "examples": [
+        {
+          "name": "exampleActivate",
+          "params": [
+            {
+              "$ref": "#/components/examples/intID"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultActivate"
+          }
+        }
+      ],
+      "links": [],
+      "name": "activate",
+      "params": [
+        {
+          "description": "id проверки",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultActivate"
+      }
+    },
+    {
+      "description": "Включение списка проверок",
+      "examples": [
+        {
+          "name": "exampleActivateList",
+          "params": [
+            {
+              "$ref": "#/components/examples/arrayIds"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultActivateList"
+          }
+        }
+      ],
+      "links": [],
+      "name": "activateList",
+      "params": [
+        {
+          "description": "id проверок",
+          "name": "ids",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultActivateList"
+      }
+    },
+    {
+      "description": "Отключение одной проверки",
+      "examples": [
+        {
+          "name": "exampleDeactivate",
+          "params": [
+            {
+              "$ref": "#/components/examples/intID"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultDeactivate"
+          }
+        }
+      ],
+      "links": [],
+      "name": "deactivate",
+      "params": [
+        {
+          "description": "id проверки",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultDeactivate"
+      }
+    },
+    {
+      "description": "Отключение списка проверок",
+      "examples": [
+        {
+          "name": "exampleDeactivateList",
+          "params": [
+            {
+              "$ref": "#/components/examples/arrayIds"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultDeactivateList"
+          }
+        }
+      ],
+      "links": [],
+      "name": "deactivateList",
+      "params": [
+        {
+          "description": "id проверок",
+          "name": "ids",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultDeactivateList"
+      }
+    },
+    {
+      "description": "Удаление проверки",
+      "examples": [
+        {
+          "name": "exampleRemove",
+          "params": [
+            {
+              "$ref": "#/components/examples/intID"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultRemove"
+          }
+        }
+      ],
+      "links": [],
+      "name": "remove",
+      "params": [
+        {
+          "description": "id проверки",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultRemove"
+      }
+    },
+    {
+      "description": "Удаление списка проверок",
+      "examples": [
+        {
+          "name": "exampleRemoveList",
+          "params": [
+            {
+              "$ref": "#/components/examples/arrayIds"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultRemoveList"
+          }
+        }
+      ],
+      "links": [],
+      "name": "removeList",
+      "params": [
+        {
+          "description": "id проверок",
+          "name": "ids",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultRemoveList"
+      }
+    },
+    {
+      "description": "История проверок",
+      "examples": [
+        {
+          "name": "exampleHistory",
+          "params": [
+            {
+              "$ref": "#/components/examples/intID"
+            },
+            {
+              "$ref": "#/components/examples/stringStartDate"
+            },
+            {
+              "$ref": "#/components/examples/stringFinDate"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultHistory"
+          }
+        }
+      ],
+      "links": [],
+      "name": "history",
+      "params": [
+        {
+          "description": "id проверки",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "история с даты",
+          "name": "startDate",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "история по дату",
+          "name": "finishDate",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "номер страницы. если задан, то используется пагинация",
+          "name": "page",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "кол-во единиц на странице, не больше 20",
+          "name": "perPage",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultHistory"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Объект управления проверками сервиса Мониторинг",
+      "name": "Monitoring",
+      "summary": "Объект управления проверками сервиса Мониторинг",
+      "url": "https://api.sweb.ru/monitoring/checks"
+    }
+  ]
+}

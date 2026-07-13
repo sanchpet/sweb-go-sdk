@@ -1,0 +1,438 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultCountAllDomains": {
+        "description": "кол-во доменов клиента (за исключением технических)",
+        "name": "resultCountAllDomains",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultDisable": {
+        "description": "'fqdn' string название домена в Punycode\n\n'fqdnReadable' string читабельное название домена\n\n'isOnOurNs' bool домен на NS Spaceweb\n\n'expire' string дата истечения оплаты в формате dd.mm.yy",
+        "name": "resultDisable",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultEnable": {
+        "description": "'fqdn' string название домена в Punycode\n\n'fqdnReadable' string читабельное название домена\n\n'isOnOurNs' bool домен на NS Spaceweb\n\n'ip' string новый IP адрес",
+        "name": "resultEnable",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultEnableInfo": {
+        "description": "'domains' array массив доменов доступных для подключения услуги c элементами:\n\n'fqdn' string FQDN в Punycode,\n\n'fqdnReadable' string читабельный FQDN,\n\n'ssl' array|null информация по SSL сертификату домена или null при его отсутствии,\n\n'isOnOurNs' bool сомен на NS Spaceweb\n\n'price' float|int стоимость подключения услуги",
+        "name": "resultEnableInfo",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetPrice": {
+        "description": "стоимость услуги для текущего тарифного плана пользователя",
+        "name": "resultGetPrice",
+        "schema": {
+          "type": "number"
+        }
+      },
+      "resultIndex": {
+        "description": "'fqdn' string название домена в Punycode\n\n'fqdnReadable' string читабельное название домена\n\n'ip' string|null IP адрес или null если услуга не подключена\n\n'expired' string|null дата истечения оплаты в формате yyyy-mm-dd или null если услуга не подключена\n\n'blocked' string|null дата блокировки услуги в формате yyyy-mm-dd или null если услуга не подключена\n\n'status' string статус слуги (disabled - не подключена, active - подключена, active_blocked - заблокирована клиентом, blocked - заблокирована за неуплату)",
+        "name": "resultIndex",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultPriceWidget": {
+        "description": "'current' float|int стоимость услуги на текущем тарифе\n\n'new' float|int стоимость услуги при переходе на тариф другой линейки",
+        "name": "resultPriceWidget",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    "examples": {
+      "intPage": {
+        "description": "текущая страница (начиная с 1)",
+        "name": "page",
+        "summary": "page",
+        "value": 1
+      },
+      "intPerPage": {
+        "description": "кол-во доменов на странице",
+        "name": "perPage",
+        "summary": "perPage",
+        "value": 20
+      },
+      "resultCountAllDomains": {
+        "description": "кол-во доменов клиента (за исключением технических)",
+        "name": "resultCountAllDomains",
+        "summary": "кол-во доменов клиента (за исключением технических)",
+        "value": 21
+      },
+      "resultDisable": {
+        "description": "отключить/заблокировать услугу для домена",
+        "name": "resultDisable",
+        "summary": "отключить/заблокировать услугу для домена",
+        "value": {
+          "expire": "10.07.24",
+          "fqdn": "test.ru",
+          "fqdnReadable": "test.ru",
+          "isOnOurNs": false
+        }
+      },
+      "resultEnable": {
+        "description": "Подключить/разблокировать услугу для домена",
+        "name": "resultEnable",
+        "summary": "подключить/разблокировать услугу для домена",
+        "value": {
+          "fqdn": "test.ru",
+          "fqdnReadable": "test.ru",
+          "ip": "77.222.44.8",
+          "isOnOurNs": false
+        }
+      },
+      "resultEnableInfo": {
+        "description": "возвращает данные для страницы подключения услуги",
+        "name": "resultEnableInfo",
+        "summary": "возвращает данные для страницы подключения услуги",
+        "value": {
+          "domains": [
+            {
+              "fqdn": "test1.ru",
+              "fqdnReadable": "test1.ru",
+              "isOnOurNs": true,
+              "ssl": {
+                "isFilled": true,
+                "isOur": true
+              }
+            },
+            {
+              "fqdn": "test2.com",
+              "fqdnReadable": "test2.com",
+              "isOnOurNs": false,
+              "ssl": null
+            }
+          ],
+          "price": 290
+        }
+      },
+      "resultGetPrice": {
+        "description": "возвращает стоимость услуги для текущего тарифного плана пользователя",
+        "name": "resultGetPrice",
+        "summary": "возвращает стоимость услуги для текущего тарифного плана пользователя",
+        "value": 290
+      },
+      "resultIndex": {
+        "description": "получение списка сайтов с информацией о подключенными услугами DDG",
+        "name": "resultIndex",
+        "summary": "получение списка сайтов с информацией о подключенными услугами DDG",
+        "value": [
+          {
+            "blocked": "2024-06-10",
+            "expired": "2024-07-10",
+            "fqdn": "testdomen.shop",
+            "fqdnReadable": "testdomen.shop",
+            "ip": "77.222.44.5",
+            "status": "active_blocked"
+          },
+          {
+            "blocked": null,
+            "expired": "2024-06-29",
+            "fqdn": "domentest.ru",
+            "fqdnReadable": "domentest.ru",
+            "ip": "77.222.44.3",
+            "status": "active"
+          },
+          {
+            "blocked": null,
+            "expired": null,
+            "fqdn": "itomen.ru",
+            "fqdnReadable": "itomen.ru",
+            "ip": null,
+            "status": "disabled"
+          }
+        ]
+      },
+      "resultPriceWidget": {
+        "description": "'current' float|int стоимость услуги на текущем тарифе\n\n'new' float|int стоимость услуги при переходе на тариф другой линейки",
+        "name": "resultPriceWidget",
+        "summary": "цены на услугу для виджета 'Смена тарифа'",
+        "value": {
+          "current": "290",
+          "new": "990"
+        }
+      },
+      "stringDomain": {
+        "description": "название домена",
+        "name": "domain",
+        "summary": "domain",
+        "value": "test.ru"
+      },
+      "stringOrderDirect": {
+        "description": "направление сортировки: 'ASC' или 'DESC'",
+        "name": "orderDirect",
+        "summary": "orderDirect",
+        "value": "ASC"
+      },
+      "stringOrderField": {
+        "description": "вариант сортировки: 'fqdn' или 'status' (по умолчанию)",
+        "name": "orderField",
+        "summary": "orderField",
+        "value": "status"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Float": {
+        "type": "number"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.232"
+  },
+  "methods": [
+    {
+      "description": "Получение списка доменов с информацией о подключенных услугах",
+      "examples": [
+        {
+          "name": "exampleIndex",
+          "params": [
+            {
+              "$ref": "#/components/examples/intPage"
+            },
+            {
+              "$ref": "#/components/examples/intPerPage"
+            },
+            {
+              "$ref": "#/components/examples/stringOrderField"
+            },
+            {
+              "$ref": "#/components/examples/stringOrderDirect"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIndex"
+          }
+        }
+      ],
+      "links": [],
+      "name": "index",
+      "params": [
+        {
+          "description": "текущая страница (начиная с 1)",
+          "name": "page",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "кол-во доменов на странице",
+          "name": "perPage",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "поле сортировки: по статусу 'status' (по умолчанию) или по названию домена 'fqdn'",
+          "name": "orderField",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "'ASC' (по умолчанию) или 'DESC'",
+          "name": "orderDirect",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultIndex"
+      }
+    },
+    {
+      "description": "Возвращает кол-во доменов клиента (за исключением технических). Используется для пагинации на главной",
+      "examples": [
+        {
+          "name": "exampleCountAllDomains",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultCountAllDomains"
+          }
+        }
+      ],
+      "links": [],
+      "name": "countAllDomains",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultCountAllDomains"
+      }
+    },
+    {
+      "description": "Подключить/разблокировать услугу для домена",
+      "examples": [
+        {
+          "name": "exampleEnable",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultEnable"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "Отключить/заблокировать услугу для домена",
+          "method": "disable",
+          "name": "disable",
+          "params": {
+            "domain": "$params.domain"
+          }
+        }
+      ],
+      "name": "enable",
+      "params": [
+        {
+          "description": "название домена",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultEnable"
+      }
+    },
+    {
+      "description": "Отключить/заблокировать услугу для домена",
+      "examples": [
+        {
+          "name": "exampleDisable",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultDisable"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "Подключить/разблокировать услугу для домен",
+          "method": "enable",
+          "name": "enable",
+          "params": {
+            "domain": "$params.domain"
+          }
+        }
+      ],
+      "name": "disable",
+      "params": [
+        {
+          "description": "название домена",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultDisable"
+      }
+    },
+    {
+      "description": "Возвращает данные для страницы подключения услуги",
+      "examples": [
+        {
+          "name": "exampleEnableInfo",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultEnableInfo"
+          }
+        }
+      ],
+      "links": [],
+      "name": "enableInfo",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultEnableInfo"
+      }
+    },
+    {
+      "description": "Цены на услугу для виджета 'Смена тарифа'",
+      "examples": [
+        {
+          "name": "examplePriceWidget",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultPriceWidget"
+          }
+        }
+      ],
+      "links": [],
+      "name": "priceWidget",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultPriceWidget"
+      }
+    },
+    {
+      "description": "Возвращает стоимость услуги для текущего тарифного плана пользователя",
+      "examples": [
+        {
+          "name": "exampleGetPrice",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultGetPrice"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getPrice",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetPrice"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Методы данного объекта доступны только для VH клиентов на нехостинговых тарифах",
+      "name": "DDG",
+      "summary": "Объект услуги 'Защита от DDoS'",
+      "url": "https://api.sweb.ru/vh/ddg"
+    }
+  ]
+}

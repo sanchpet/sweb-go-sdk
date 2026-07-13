@@ -1,0 +1,267 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultIndex": {
+        "description": "'list' array Список реферальных сайтов:\n\n'id' string ID реферального сайта\n\n'partner_id' string ID партнера\n\n'domain' string домен\n\n'verification_code' string код подтверждения\n\n'confirmed' bool подтвержден или нет сайт\n\n'created' string дата и время сохранения записи в формате YYYY-MM-DD HH:MM:SS\n\n'clientsCount' int кол-во клиентов\n\n'confirmationFile' array массив с информацией о файле для подтверждения:\n\n'mimetype' string MIME-тип данных\n\n'metadata' array метаданные\n\n'content' string контент в base64\n\n'name' string название файла\n\n'filterInfo' array Информация о странице:\n\n'page' int текущий номер странцы\n\n'limit' int кол-во элементов на странице\n\n'totalCount' int общее кол-во реферальных сайтов",
+        "name": "resultIndex",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultInt": {
+        "description": "1 - успешно, 0 - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "examples": {
+      "intID": {
+        "description": "id сайта",
+        "name": "id",
+        "summary": "id",
+        "value": 1664
+      },
+      "intLimit": {
+        "description": "количество записей на странице",
+        "name": "limit",
+        "summary": "limit",
+        "value": 20
+      },
+      "intPage": {
+        "description": "номер страницы, начиная с 1",
+        "name": "page",
+        "summary": "page",
+        "value": 1
+      },
+      "resultIndex": {
+        "description": "'list' array Список реферальных сайтов:\n\n'id' string ID реферального сайта\n\n'partner_id' string ID партнера\n\n'domain' string домен\n\n'verification_code' string код подтверждения\n\n'confirmed' bool подтвержден или нет сайт\n\n'created' string дата и время сохранения записи в формате YYYY-MM-DD HH:MM:SS\n\n'clientsCount' int кол-во клиентов\n\n'confirmationFile' array массив с информацией о файле для подтверждения:\n\n'mimetype' string MIME-тип данных\n\n'metadata' array метаданные\n\n'content' string контент в base64\n\n'name' string название файла\n\n'filterInfo' array Информация о странице:\n\n'page' int текущий номер странцы\n\n'limit' int кол-во элементов на странице\n\n'totalCount' int общее кол-во реферальных сайтов",
+        "name": "resultIndex",
+        "summary": "список реферальных сайтов клиента",
+        "value": {
+          "filterInfo": {
+            "limit": 20,
+            "page": 1,
+            "totalCount": 2
+          },
+          "list": [
+            {
+              "clientsCount": 0,
+              "confirmationFile": {
+                "content": "YmIwZTliNjhmYWZjNWM4YTg1NjYxZDI4ZDc1MWMwYmQ=",
+                "metadata": [],
+                "mimetype": "application/plain;base64",
+                "name": "bb0e9b68fafc5c8a85661d28d751c0bd.txt"
+              },
+              "confirmed": true,
+              "created": "2019-12-09 12:35:07",
+              "domain": "2rush.ru",
+              "id": "911",
+              "partner_id": "3523",
+              "verification_code": "bb0e9b68fafc5c8a85661d28d751c0bd"
+            }
+          ]
+        }
+      },
+      "resultIntegerOne": {
+        "description": "ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      },
+      "stringDomen": {
+        "description": "домен",
+        "name": "domain",
+        "summary": "domain",
+        "value": "mysite.ru"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.185"
+  },
+  "methods": [
+    {
+      "description": "Возвращает список реферальных сайтов клиента",
+      "examples": [
+        {
+          "name": "exampleIndex",
+          "params": [
+            {
+              "$ref": "#/components/examples/intPage"
+            },
+            {
+              "$ref": "#/components/examples/intLimit"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIndex"
+          }
+        }
+      ],
+      "links": [],
+      "name": "index",
+      "params": [
+        {
+          "description": "номер страницы, начиная с 1",
+          "name": "page",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "количество записей на странице",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultIndex"
+      }
+    },
+    {
+      "description": "Удаляет реферальный сайт клиента",
+      "examples": [
+        {
+          "name": "exampleRemoveReferralSite",
+          "params": [
+            {
+              "$ref": "#/components/examples/intID"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "добавляет реферальный сайт",
+          "method": "addReferralSite",
+          "name": "addReferralSite",
+          "params": {
+            "domain": "$params.domain"
+          }
+        }
+      ],
+      "name": "removeReferralSite",
+      "params": [
+        {
+          "description": "идентификатор сайта",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Попытка подтверждения реферального сайта",
+      "examples": [
+        {
+          "name": "exampleConfirmReferralSite",
+          "params": [
+            {
+              "$ref": "#/components/examples/intID"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "confirmReferralSite",
+      "params": [
+        {
+          "description": "id реферального сайта",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Добавляет реферальный сайт",
+      "examples": [
+        {
+          "name": "exampleAddReferralSite",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomen"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "удаляет реферальный сайт",
+          "method": "removeReferralSite",
+          "name": "removeReferralSite",
+          "params": {
+            "id": "$params.id"
+          }
+        }
+      ],
+      "name": "addReferralSite",
+      "params": [
+        {
+          "description": "домен реферального сайта",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции:\n\nдобавление и управление сайтами с реферальными ссылками",
+      "name": "Реферальные сайты",
+      "summary": "Реферальные сайты",
+      "url": "https://api.sweb.ru/vh/referralProgram"
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resulGetTasksInfo": {
+        "description": "'activeTasksCount' int Есть активные задачи сейчас\n\n'lastDoneTaskDate' string Дата последнего обновления",
+        "name": "resulGetTasksInfo",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultIndex": {
+        "description": "'tariffQuota' float Квора по тарифу Мб\n\n'realQuota' float реальная квота Мб\n\n'dbQuota' float базы Мб\n\n'mailQuota' float почта Мб\n\n'filesQuota' float файлы Мб\n\n'filesNum' int кол-во файлов",
+        "name": "resultIndex",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultInt": {
+        "description": "1 - успешно, 0 - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultString": {
+        "description": "емейл для уведомлений о превышении занимаемого места",
+        "name": "resultString",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "examples": {
+      "resulGetTasksInfo": {
+        "description": "'activeTasksCount' int Есть активные задачи сейчас\n\n'lastDoneTaskDate' string Дата последнего обновления",
+        "name": "resulGetTasksInfo",
+        "summary": "информация о задачах на подсчет занимаемого места",
+        "value": {
+          "activeTasksCount": "0",
+          "lastDoneTaskDate": "2023-02-28 23:52:26"
+        }
+      },
+      "resultIndex": {
+        "description": "массив используемого места",
+        "name": "resultIndex",
+        "summary": "список бэкендов",
+        "value": [
+          {
+            "dbQuota": 0,
+            "filesNum": 36,
+            "filesQuota": 1,
+            "mailQuota": 0,
+            "realQuota": 1,
+            "tariffQuota": 5000
+          }
+        ]
+      },
+      "resultIntegerOne": {
+        "description": "ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      },
+      "resultStringEmail": {
+        "description": "емейл для уведомлений",
+        "name": "email",
+        "summary": "email",
+        "value": "test@gmail.com"
+      },
+      "stringEmail": {
+        "description": "новый емейл",
+        "name": "email",
+        "summary": "email",
+        "value": "newtestemail@gmail.com"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.185"
+  },
+  "methods": [
+    {
+      "description": "Возвращаем информацию по используемому месту",
+      "examples": [
+        {
+          "name": "exampleIndex",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultIndex"
+          }
+        }
+      ],
+      "links": [],
+      "name": "index",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultIndex"
+      }
+    },
+    {
+      "description": "Информация о задачах на подсчет занимаемого места",
+      "examples": [
+        {
+          "name": "exampleGetTasksInfo",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resulGetTasksInfo"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getTasksInfo",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resulGetTasksInfo"
+      }
+    },
+    {
+      "description": "Создание задачи на подсчет данных",
+      "examples": [
+        {
+          "name": "exampleStartTask",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "startTask",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Получение емейла для уведомлений о превышении занимаемого места",
+      "examples": [
+        {
+          "name": "exampleGetEmail",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultStringEmail"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getEmail",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultString"
+      }
+    },
+    {
+      "description": "Смена емейла для уведомлений о занимаемом месте",
+      "examples": [
+        {
+          "name": "exampleChangeEmail",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringEmail"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "changeEmail",
+      "params": [
+        {
+          "description": "новый емейл",
+          "name": "email",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции:\n\nполучение информации об использовании диска,\nуправление email для уведомлений",
+      "name": "Квота",
+      "summary": "Использование дискового пространства",
+      "url": "https://api.sweb.ru/vh/utils/diskUsage"
+    }
+  ]
+}

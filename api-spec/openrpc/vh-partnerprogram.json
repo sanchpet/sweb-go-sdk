@@ -1,0 +1,2051 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultCheckLogin": {
+        "description": "проверка логина для нового пользователя",
+        "name": "resultCheckLogin",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "resultCreateOrder": {
+        "description": "'login' string Логин\n\n'password' string Пароль",
+        "name": "resultCreateOrder",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetAdvertMaterials": {
+        "description": "'sizes' string размеры в пикселях\n\n'filesize' string размер файла\n\n'code' string html-код для вставки\n\n'link' string ссылка с баннера",
+        "name": "resultGetAdvertMaterials",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultGetLinkStatistic": {
+        "description": "'png' array данные для вывода в виде изображения в формате png:\n\n'mimetype' string MIME тип image/png;base64\n\n'metadata' array мета-данные\n\n'content' string содержимое в base64\n\n'name' string название файла\n\n'csv' array данные для вывода в виде таблицы в формате csv:\n\n'mimetype' string MIME тип application/csv;base64\n\n'metadata' array мета-данные\n\n'content' string содержимое в base64\n\n'name' string название файла\n\n'data' array данные для вывода гистограммы:\n\n0: string дата\n\n1: int кол-во переходов\n\n2: int кол-во регистраций\n\n3: int кол-во оплативших клиентов",
+        "name": "resultGetLinkStatistic",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetPartnerClientCard": {
+        "description": "'type' int тип клиента (1 - VH; 2 - VPS)\n\n'login' string сокращенный логин привлеченного клиента\n\n'id' string id клиента\n\n'contractNumber' string номер договора, если присутствует\n\n'regDate' string дата регистрации\n\n'planName' array названия тарифных планов клиента. У клиента VH один тариф / у клиентов VPS может быть несколько\n\n'amountsPeriod' float общая сумма начислений за клиента\n\n'amountsLastMonth' float сумма начислений за последний месяц\n\n'attraction' string способ привлечения\n\n'status' int статус клиента (0 - заблокирован; 1 - активный; 2 - тестовый)\n\n'comment' string комментарий",
+        "name": "resultGetPartnerClientCard",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetPartnerClientLogEvents": {
+        "description": "'list' array список событий:\n\n'ts' string дата события\n\n'eventName' string описание события\n\n'filterInfo' array параметры вывода лога событий:\n\n'page' int номер текущей страницы\n\n'perPage' int кол-во элементов на странице\n\n'totalCount' int общее кол-во элементов",
+        "name": "resultGetPartnerClientLogEvents",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetPartnerClientLogFinance": {
+        "description": "'list' array список событий:\n\n'ts' string дата события\n\n'eventName' string описание события\n\n'payment' string сумма вознаграждения\n\n'lock' string заблокированная сумма\n\n'withdrawal' string выведенная сумма\n\n'filterInfo' array параметры вывода лога событий:\n\n'page' int номер текущей страницы\n\n'perPage' int кол-во элементов на странице\n\n'totalCount' int общее кол-во элементов",
+        "name": "resultGetPartnerClientLogFinance",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetPartnerClientsList": {
+        "description": "'list' array массив клиентов:\n\n'type' int тип клиента (1 - VH; 2 - VPS)\n\n'id' int id привлеченного клиента\n\n'cust_login' string сокращенный логин привлеченного клиента\n\n'ts' string дата регистрации\n\n'plan' array названия тарифных планов клиента. У клиента VH один тариф / у клиентов VPS может быть несколько\n\n'status' int статус привлеченного клиента. 0 - заблокирован; 1 - активный; 2 - тестовый\n\n'pays_month' float Начислено за последний месяц\n\n'pays_all' float Начислено всего\n\n'is_promo' bool промо тариф или нет. Вознаграждение начисляется если пользователь не промо\n\n'filterInfo' array массив параметров вывода списка клиентов:\n\n'page' int номер текущей страницы\n\n'perPage' int кол-во элементов на странице\n\n'totalCount' int общее кол-во элементов\n\n'filterStatus' int статус привлеченных клиентов, см. 'status' (-1 - все клиенты без фильтрации)\n\n",
+        "name": "resultGetPartnerClientsList",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetRequisitesWithdrawal": {
+        "description": "'reqCheckAccount' string расчетный счет(реквизиты для вывода)\n\n'reqBankName' string наименование банка(реквизиты для вывода)\n\n'reqBIC' string БИК(реквизиты для вывода)\n\n'reqCorrAccount' string К/С(реквизиты для вывода)\n\n'reqUserName' string ваши ФИО(реквизиты для вывода)\n\n'balance' float партнерский баланс\n\n'orderTypes' array доступные типы вывода средств:\n\n'hosting' array для оплаты хостинга\n\n'score' array на расчетный счет\n\n'balance' array на баланс\n\nКаждый тип вывода средств содержит элементы:\n\n'type' string id типа вывода (1 - для оплаты хостинга; 2 - на баланс; 3 - на расчетный счет)\n\n'typeName' string алиас типа вывода (hosting, score, balance)\n\n'name' string название способа вывода средств\n\n'description' string описание данного способа вывода\n\n'enable' bool доступность способа\n\n'error' string ошибки, если присутствуют\n\n'minimumAmount' int минимально разрешенная сумма на вывод\n\n'sort' int порядковый номер для сортировки отображения",
+        "name": "resultGetRequisitesWithdrawal",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetStatistic": {
+        "description": "'png' array данные для вывода в виде изображения в формате png:\n\n'mimetype' string MIME тип image/png;base64\n\n'metadata' array мета-данные\n\n'content' string содержимое в base64\n\n'name' string название файла\n\n'csv' array данные для вывода в виде таблицы в формате csv:\n\n'mimetype' string MIME тип application/csv;base64\n\n'metadata' array мета-данные\n\n'content' string содержимое в base64\n\n'name' string название файла\n\n'data' array данные для вывода гистограммы:\n\n0: string дата\n\n1: int кол-во регистраций\n\n2: int кол-во оплативших клиентов\n\n",
+        "name": "resultGetStatistic",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetTypesAdvertMaterials": {
+        "description": "'name' string название рекламного баннера\n\n'value' string размеры в пикселях (либо значение all, означает все размеры)",
+        "name": "resultGetTypesAdvertMaterials",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultInt": {
+        "description": "1 - успешно, 0 - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultStandardPlans": {
+        "description": "'id' int ID тарифа\n\n'name' string Название\n\n'sites' int Количество сайтов\n\n'disk' int Место в ГБ\n\n'dbCount' int Количество баз данных \u003e=512 = бесконечность\n\n'mailCount' int Количество почтовых ящиков \u003e=1024 = бесконечность\n\n'ftpCount' int Количество FTP-аккаунтов \u003e=1024 = бесконечность\n\n'period' array периоды оплаты:\n\n'length' int Период в месяцах\n\n'price' int Стоимость за период\n\n'ssl' int Количество SSL в подарок\n\n'domain' int Количество доменов в подарок\n\n'domainZone' string Доменные зоны, которые идут в подарок",
+        "name": "resultStandardPlans",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultVipPlans": {
+        "description": "'id' int ID тарифа\n\n'name' string Название\n\n'sites' int Количество сайтов\n\n'disk' int Место в ГБ\n\n'dbCount' int Количество баз данных \u003e=512 = бесконечность\n\n'mailCount' int Количество почтовых ящиков \u003e=1024 = бесконечность\n\n'ftpCount' int Количество FTP-аккаунтов \u003e=1024 = бесконечность\n\n'period' array периоды оплаты:\n\n'length' int Период в месяцах\n\n'price' int Стоимость за период\n\n'ssl' int Количество SSL в подарок\n\n'domain' int Количество доменов в подарок\n\n'domainZone' string Доменные зоны, которые идут в подарок",
+        "name": "resultVipPlans",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultVpsOsConfig": {
+        "description": "'vpsPlans' array Тарифные планы\n\nКаждый тарифный план содержит массив значений:\n\n'id' int id тарифного плана\n\n'ts_create' string дата и время создания в формате YYYY-MM-DD HH:MM:SS\n\n'ts_update' string дата и время обновления в формате YYYY-MM-DD HH:MM:SS\n\n'billing_id' string id услуги\n\n'category_id' string id категории тарифного плана\n\n'name' string название тарифа\n\n'price_per_month' int стоимость одного месяца при помесячной оплате\n\n'parent_plan_id' int|null id родительского тарифного плана\n\n'cpu_cores' string кол-во ядер\n\n'ram' string кол-во оперативной памяти\n\n'disk_type' string тип диска\n\n'volume_disk' string ёмкость диска\n\n'units' string кол-во занимаемых юнитов\n\n'is_promo' string является ли промо-трифом (0 - не является)\n\n'package_duration' string длительность пакета в месяцах\n\n'constructor' string относится ли тариф к категории Конструктор сайтов (N - не относится)\n\n'year_price_per_month' int стоимость одного месяца в годовом пакете\n\n'category' string название категории тарифного плана\n\n'datacenters' array массив из id дата-центров\n\n'price_per_month_promo' int стоимость месяца промо-версии тарифа при помесячной оплате\n\n'year_price_per_month_promo' int стоимость месяца промо-версии тарифа в годовом пакете\n\n'selectOs' array Операционные системы\n\nКаждая ОС содержит массив значений:\n\n'id' string id операционной системы\n\n'name' string название ОС\n\n'description' string более подробное название ОС\n\n'order' string порядковый номер для сортировки в списке\n\n'url' string|null ссылка на страницу с информацией об ОС\n\n'full_description' string|null полное подробное описание\n\n'plan_id' string id тарифного плана по умолчанию\n\n'os_distribution_id' string id сборки\n\n'panel_type' array массив названий доступных панелей управления (empty- без ПУ)\n\n'selectPanel' array Панели управления\n\nКаждая панель управления содержит массив значений:\n\n'id' string id панели управления\n\n'name' string алиас названия\n\n'description' string полное название\n\n'order' string порядковый номер для сортировки в списке\n\n'creation_time' string|null диапазон времени установки (в минутах)\n\n'url' string|null ссылка на страницу с информацией о панели управления\n\n'full_description' string|null полное подробне описание\n\n'plan_id' string id тарифного плана по умолчанию для данной панели\n\n'os_distribution_id' string id сборки\n\n'action' int действует ли акция на данную панель управления (0 - нет акции)\n\n'price' int текущая стоимость панели управления в месяц с учетом активности акции (0 - бесплатно)\n\n'old_price' int базовая стоимость панели управления без акции\n\n'osPanel' array Дистрибутивы (операционная система+панель) distributive передается в createOrderVps\n\nКаждый дистрибутив содержит массив значений:\n\n'distributive' string id дистрибутива\n\n'os' string id операционной системы\n\n'panel' string id панели\n\n'availablePlanIds' array массив из id тарифных планов доступных с этим дистрибутивом\n\n'minRam' int минимальное кол-во ОЗУ (Гб)\n\n'minStorage' int минимальный объем на диске\n\n'datacenters' array Доступные дата-центры\n\nКаждый дата-центр содержит массив значений:\n\n'id' string id дата-центра\n\n'name' string алиас названия (например, spb, msk)\n\n'location' string название местоположения (например, Санкт-Петербург)\n\n'site_name' string название дата-центра для пользователей\n\n'categories' array Категории тарифных планов\n\nКаждая категория содержит массив значений:\n\n'id' string id категории\n\n'slug' string алиас категории\n\n'name' string название категории для пользователей\n\n'prior' string порядковый номер для сортировки в списке\n\n",
+        "name": "resultVpsOsConfig",
+        "schema": {
+          "type": "array"
+        }
+      }
+    },
+    "examples": {
+      "floatCountMoney": {
+        "description": "сумма к выводу",
+        "name": "countMoney",
+        "summary": "countMoney",
+        "value": 199.01
+      },
+      "intDatacenter": {
+        "description": "Дата-центр",
+        "name": "datacenter",
+        "summary": "datacenter",
+        "value": 1
+      },
+      "intDistributiveId": {
+        "description": "ID дистрибутива",
+        "name": "distributiveId",
+        "summary": "distributiveId",
+        "value": 32
+      },
+      "intFilterStatus": {
+        "description": "статус, по которому нужно отфильтровать",
+        "name": "filterStatus",
+        "summary": "filterStatus",
+        "value": -1
+      },
+      "intMonth": {
+        "description": "месяц",
+        "name": "month",
+        "summary": "month",
+        "value": 3
+      },
+      "intOrderType": {
+        "description": "1 - вывод на расчетный счет; 2 - вывод на баланс, 3 - скидка на хостинг (только для физ. лиц)",
+        "name": "orderType",
+        "summary": "orderType",
+        "value": 3
+      },
+      "intPage": {
+        "description": "номер страницы с 1",
+        "name": "page",
+        "summary": "page",
+        "value": 1
+      },
+      "intPeriod": {
+        "description": "период оплаты",
+        "name": "period",
+        "summary": "period",
+        "value": 1
+      },
+      "intTarif": {
+        "description": "ID тарифного плана",
+        "name": "tariffId",
+        "summary": "tariffId",
+        "value": 123
+      },
+      "intYear": {
+        "description": "год",
+        "name": "year",
+        "summary": "year",
+        "value": 2023
+      },
+      "resultCheckLogin": {
+        "description": "проверка логина для нового пользователя",
+        "name": "resultCheckLogin",
+        "summary": "checkLogin",
+        "value": true
+      },
+      "resultCreateOrder": {
+        "description": "'login' string Логин\n\n'password' string Пароль",
+        "name": "resultCreateOrder",
+        "summary": "resultCreateOrder",
+        "value": {
+          "login": "in****ly82",
+          "password": "......"
+        }
+      },
+      "resultGetAdvertMaterials": {
+        "description": "'sizes' string размеры в пикселях\n\n'filesize' string размер файла\n\n'code' string html-код для вставки\n\n'link' string ссылка с баннера",
+        "name": "resultAdvertMaterials",
+        "summary": "список всех банеров указанного типа",
+        "value": [
+          {
+            "code": "\u003cimg src=\"https://s.sweb.ru/img/fast-support-1.gif\" alt=\"fast-support-160х600\" /\u003e",
+            "filesize": "29 КБ",
+            "sizes": "160x600"
+          },
+          {
+            "code": "\u003cimg src=\"https://s.sweb.ru/img/secure-hosting-1.gif\" alt=\"secure-hosting-160x600\" /\u003e",
+            "filesize": "40,4 КБ",
+            "sizes": "160x600"
+          },
+          {
+            "code": "\u003cimg src=\"https://s.sweb.ru/img/vps-banner-160х600.gif\" alt=\"vps-banner-160х600\" /\u003e",
+            "filesize": "84,04 КБ",
+            "sizes": "160x600"
+          }
+        ]
+      },
+      "resultGetLinkStatistic": {
+        "description": "'png' array данные для вывода в виде изображения в формате png:\n\n'mimetype' string MIME тип image/png;base64\n\n'metadata' array мета-данные\n\n'content' string содержимое в base64\n\n'name' string название файла\n\n'csv' array данные для вывода в виде таблицы в формате csv:\n\n'mimetype' string MIME тип application/csv;base64\n\n'metadata' array мета-данные\n\n'content' string содержимое в base64\n\n'name' string название файла\n\n'data' array данные для вывода гистограммы:\n\n0: string дата\n\n1: int кол-во переходов\n\n2: int кол-во регистраций\n\n3: int кол-во оплативших клиентов",
+        "name": "resultGetLinkStatistic",
+        "summary": "статистика по реф. сайтам в виде графика и таблицы csv",
+        "value": {
+          "csv": {
+            "content": "5ODy4Dvv5fDl9e7k+zvw5ePo8fLw4Pbo6Dsi7u/r4PLo4vjo5SDq6+jl7fL7IgoyMDIzLTAzLTAxOzA7MDswCjIwMjMtMDMtMDI7MDswOzAKMjAyMy0wMy0wMzswOzA7MAoyMDIzLTAzLTA0OzA7MDswCjIwMjMtMDMtMDU7MDswOzAKMjAyMy0wMy0wNjswOzA7MAoyMDIzLTAzLTA3OzA7MDswCjIwMjMtMDMtMDg7MDswOzAKMjAyMy0wMy0wOTswOzA7MAoyMDIzLTAzLTEwOzA7MDswCjIwMjMtMDMtMTE7MDswOzAKMjAyMy0wMy0xMjswOzA7MAoyMDIzLTAzLTEzOzA7MDswCjIwMjMtMDMtMTQ7MDswOzAKMjAyMy0wMy0xNTswOzA7MAoyMDIzLTAzLTE2OzA7MDswCjIwMjMtMDMtMTc7MDswOzAKMjAyMy0wMy0xODswOzA7MAoyMDIzLTAzLTE5OzA7MDswCjIwMjMtMDMtMjA7MDswOzAKMjAyMy0wMy0yMTswOzA7MAoyMDIzLTAzLTIyOzA7MDswCjIwMjMtMDMtMjM7MDswOzAKMjAyMy0wMy0yNDswOzA7MAoyMDIzLTAzLTI1OzA7MDswCjIwMjMtMDMtMjY7MDswOzAKMjAyMy0wMy0yNzswOzA7MAoyMDIzLTAzLTI4OzA7MDswCjIwMjMtMDMtMjk7MDswOzAKMjAyMy0wMy0zMDswOzA7MAoyMDIzLTAzLTMxOzA7MDswCg==",
+            "metadata": [],
+            "mimetype": "application/csv;base64",
+            "name": "loading_2023_3.csv"
+          },
+          "data": [
+            [
+              "2023-03-01",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-02",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-03",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-04",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-22",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-23",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-24",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-25",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-26",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-27",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-28",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-29",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-30",
+              0,
+              0,
+              0
+            ],
+            [
+              "2023-03-31",
+              0,
+              0,
+              0
+            ]
+          ],
+          "png": {
+            "content": "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",
+            "metadata": [],
+            "mimetype": "image/png;base64",
+            "name": "mysql-2023-3.png"
+          }
+        }
+      },
+      "resultGetPartnerClientCard": {
+        "description": "'type' int тип клиента (1 - VH; 2 - VPS)\n\n'login' string сокращенный логин привлеченного клиента\n\n'id' string id клиента\n\n'contractNumber' string номер договора, если присутствует\n\n'regDate' string дата регистрации\n\n'planName' array названия тарифных планов клиента. У клиента VH один тариф / у клиентов VPS может быть несколько\n\n'amountsPeriod' float общая сумма начислений за клиента\n\n'amountsLastMonth' float сумма начислений за последний месяц\n\n'attraction' string способ привлечения\n\n'status' int статус клиента (0 - заблокирован; 1 - активный; 2 - тестовый)\n\n'comment' string комментарий",
+        "name": "resultGetPartnerClientCard",
+        "summary": "resultGetPartnerClientCard",
+        "value": {
+          "amountsLastMonth": 0,
+          "amountsPeriod": 0,
+          "attraction": "MIMAIDAZ",
+          "comment": "",
+          "contractNumber": "",
+          "id": "1e19f8c50471077460087273b9026331",
+          "login": "in****ly82",
+          "planName": [
+            "Взлёт"
+          ],
+          "regDate": "14.03.2023",
+          "status": 2,
+          "type": 1
+        }
+      },
+      "resultGetPartnerClientLogEvents": {
+        "description": "'list' array список событий:\n\n'ts' string дата события\n\n'eventName' string описание события\n\n'filterInfo' array параметры вывода лога событий:\n\n'page' int номер текущей страницы\n\n'perPage' int кол-во элементов на странице\n\n'totalCount' int общее кол-во элементов",
+        "name": "resultGetPartnerClientLogEvents",
+        "summary": "resultGetPartnerClientLogEvents",
+        "value": {
+          "filterInfo": {
+            "page": 1,
+            "perPage": 20,
+            "totalCount": 1
+          },
+          "list": [
+            {
+              "eventName": "регистрация клиента in****ly82 (#726460)",
+              "ts": "14.03.2023"
+            }
+          ]
+        }
+      },
+      "resultGetPartnerClientLogFinance": {
+        "description": "'list' array список событий:\n\n'ts' string дата события\n\n'eventName' string описание события\n\n'payment' string сумма вознаграждения\n\n'lock' string заблокированная сумма\n\n'withdrawal' string выведенная сумма\n\n'filterInfo' array параметры вывода лога событий:\n\n'page' int номер текущей страницы\n\n'perPage' int кол-во элементов на странице\n\n'totalCount' int общее кол-во элементов",
+        "name": "resultGetPartnerClientLogFinance",
+        "summary": "resultGetPartnerClientLogFinance",
+        "value": {
+          "filterInfo": {
+            "page": 1,
+            "perPage": 20,
+            "totalCount": 201
+          },
+          "list": [
+            {
+              "eventName": "оплата тарифа хостинга за 1 мес.",
+              "lock": "",
+              "payment": "",
+              "ts": "14.03.2023",
+              "withdrawal": 199
+            },
+            {
+              "eventName": "отклонена заявка на вывод",
+              "lock": "",
+              "payment": "",
+              "ts": "27.02.2023",
+              "withdrawal": ""
+            },
+            {
+              "eventName": "отклонена заявка на вывод",
+              "lock": "",
+              "payment": "",
+              "ts": "27.02.2023",
+              "withdrawal": ""
+            },
+            {
+              "eventName": "оплата тарифа хостинга за 1 мес.",
+              "lock": "",
+              "payment": "",
+              "ts": "27.02.2023",
+              "withdrawal": 199
+            },
+            {
+              "eventName": "отправлена заявка на вывод",
+              "lock": 390,
+              "payment": "",
+              "ts": "22.02.2023",
+              "withdrawal": ""
+            }
+          ]
+        }
+      },
+      "resultGetPartnerClientsList": {
+        "description": "'list' array массив клиентов:\n\n'type' int тип клиента (1 - VH; 2 - VPS)\n\n'id' int id привлеченного клиента\n\n'cust_login' string сокращенный логин привлеченного клиента\n\n'ts' string дата регистрации\n\n'plan' array названия тарифных планов клиента. У клиента VH один тариф / у клиентов VPS может быть несколько\n\n'status' int статус привлеченного клиента. 0 - заблокирован; 1 - активный; 2 - тестовый\n\n'pays_month' float Начислено за последний месяц\n\n'pays_all' float Начислено всего\n\n'is_promo' bool промо тариф или нет. Вознаграждение начисляется если пользователь не промо\n\n'filterInfo' array массив параметров вывода списка клиентов:\n\n'page' int номер текущей страницы\n\n'perPage' int кол-во элементов на странице\n\n'totalCount' int общее кол-во элементов\n\n'filterStatus' int статус привлеченных клиентов, см. 'status' (-1 - все клиенты без фильтрации)\n\n",
+        "name": "resultGetPartnerClientsList",
+        "summary": "отфильтрованные данные в виде массива с детализацией по клиентам партнера",
+        "value": {
+          "filterInfo": {
+            "filterStatus": -1,
+            "page": 1,
+            "perPage": 20,
+            "totalCount": 1
+          },
+          "list": [
+            {
+              "cust_login": "in****ly82",
+              "id": "1e19f8c50471077460087273b9026331",
+              "is_promo": false,
+              "pays_all": 0,
+              "pays_month": 0,
+              "plan": [
+                "Взлёт"
+              ],
+              "status": 2,
+              "ts": "14.03.2023",
+              "type": 1
+            }
+          ]
+        }
+      },
+      "resultGetRequisitesWithdrawal": {
+        "description": "'reqCheckAccount' string расчетный счет(реквизиты для вывода)\n\n'reqBankName' string наименование банка(реквизиты для вывода)\n\n'reqBIC' string БИК(реквизиты для вывода)\n\n'reqCorrAccount' string К/С(реквизиты для вывода)\n\n'reqUserName' string ваши ФИО(реквизиты для вывода)\n\n'balance' float партнерский баланс\n\n'orderTypes' array доступные типы вывода средств:\n\n'hosting' array для оплаты хостинга\n\n'score' array на расчетный счет\n\n'balance' array на баланс\n\nКаждый тип вывода средств содержит элементы:\n\n'type' string id типа вывода (1 - для оплаты хостинга; 2 - на баланс; 3 - на расчетный счет)\n\n'typeName' string алиас типа вывода (hosting, score, balance)\n\n'name' string название способа вывода средств\n\n'description' string описание данного способа вывода\n\n'enable' bool доступность способа\n\n'error' string ошибки, если присутствуют\n\n'minimumAmount' int минимально разрешенная сумма на вывод\n\n'sort' int порядковый номер для сортировки отображения",
+        "name": "resultGetRequisitesWithdrawal",
+        "summary": "сохраненные ранее реквизиты для вывода средств",
+        "value": {
+          "balance": 2878.44,
+          "orderTypes": {
+            "hosting": {
+              "description": "от 199 Б за тариф «Взлёт»",
+              "enable": true,
+              "error": "",
+              "maximumMonthAmount": 14,
+              "minimumAmount": 199,
+              "name": "Оплата тарифа хостинга (логин itstest)",
+              "sort": 1,
+              "type": "3",
+              "typeName": "hosting"
+            },
+            "score": {
+              "description": "от 390 рублей, в течение 5 рабочих дней",
+              "enable": true,
+              "error": "",
+              "minimumAmount": 390,
+              "name": "На расчетный счет",
+              "sort": 2,
+              "type": "1",
+              "typeName": "score"
+            }
+          },
+          "reqBIC": "044030858",
+          "reqBankName": "Петербургский Филиал АО ЮниКредит Банка",
+          "reqCheckAccount": "40702810500024452823",
+          "reqCorrAccount": "30101810800000000858",
+          "reqUserName": "Иванов Петр Сидорович"
+        }
+      },
+      "resultGetStatistic": {
+        "description": "'png' array данные для вывода в виде изображения в формате png:\n\n'mimetype' string MIME тип image/png;base64\n\n'metadata' array мета-данные\n\n'content' string содержимое в base64\n\n'name' string название файла\n\n'csv' array данные для вывода в виде таблицы в формате csv:\n\n'mimetype' string MIME тип application/csv;base64\n\n'metadata' array мета-данные\n\n'content' string содержимое в base64\n\n'name' string название файла\n\n'data' array данные для вывода гистограммы:\n\n0: string дата\n\n1: int кол-во регистраций\n\n2: int кол-во оплативших клиентов\n\n",
+        "name": "resultGetStatistic",
+        "summary": "статистика по реф. сайтам в виде графика и таблицы csv",
+        "value": {
+          "csv": {
+            "content": "5ODy4Dvw5ePo8fLw4Pbo6Dsi7u/r4PLo4vjo5SDq6+jl7fL7IgoyMDIzLTAzLTAxOzA7MAoyMDIzLTAzLTAyOzA7MAoyMDIzLTAzLTAzOzA7MAoyMDIzLTAzLTA0OzA7MAoyMDIzLTAzLTA1OzA7MAoyMDIzLTAzLTA2OzA7MAoyMDIzLTAzLTA3OzA7MAoyMDIzLTAzLTA4OzA7MAoyMDIzLTAzLTA5OzA7MAoyMDIzLTAzLTEwOzA7MAoyMDIzLTAzLTExOzA7MAoyMDIzLTAzLTEyOzA7MAoyMDIzLTAzLTEzOzA7MAoyMDIzLTAzLTE0OzA7MAoyMDIzLTAzLTE1OzA7MAoyMDIzLTAzLTE2OzA7MAoyMDIzLTAzLTE3OzA7MAoyMDIzLTAzLTE4OzA7MAoyMDIzLTAzLTE5OzA7MAoyMDIzLTAzLTIwOzA7MAoyMDIzLTAzLTIxOzA7MAoyMDIzLTAzLTIyOzA7MAoyMDIzLTAzLTIzOzA7MAoyMDIzLTAzLTI0OzA7MAoyMDIzLTAzLTI1OzA7MAoyMDIzLTAzLTI2OzA7MAoyMDIzLTAzLTI3OzA7MAoyMDIzLTAzLTI4OzA7MAoyMDIzLTAzLTI5OzA7MAoyMDIzLTAzLTMwOzA7MAoyMDIzLTAzLTMxOzA7MAo=",
+            "metadata": [],
+            "mimetype": "application/csv;base64",
+            "name": "loading_hosters.ru_2023_3.csv"
+          },
+          "data": [
+            [
+              "2023-03-01",
+              0,
+              0
+            ],
+            [
+              "2023-03-02",
+              0,
+              0
+            ],
+            [
+              "2023-03-03",
+              0,
+              0
+            ],
+            [
+              "2023-03-04",
+              0,
+              0
+            ],
+            [
+              "2023-03-05",
+              0,
+              0
+            ],
+            [
+              "2023-03-06",
+              0,
+              0
+            ],
+            [
+              "2023-03-07",
+              0,
+              0
+            ],
+            [
+              "2023-03-08",
+              0,
+              0
+            ],
+            [
+              "2023-03-09",
+              0,
+              0
+            ],
+            [
+              "2023-03-10",
+              0,
+              0
+            ],
+            [
+              "2023-03-11",
+              0,
+              0
+            ],
+            [
+              "2023-03-12",
+              0,
+              0
+            ],
+            [
+              "2023-03-13",
+              0,
+              0
+            ],
+            [
+              "2023-03-14",
+              0,
+              0
+            ],
+            [
+              "2023-03-15",
+              0,
+              0
+            ],
+            [
+              "2023-03-16",
+              0,
+              0
+            ],
+            [
+              "2023-03-17",
+              0,
+              0
+            ],
+            [
+              "2023-03-18",
+              0,
+              0
+            ],
+            [
+              "2023-03-19",
+              0,
+              0
+            ],
+            [
+              "2023-03-20",
+              0,
+              0
+            ],
+            [
+              "2023-03-21",
+              0,
+              0
+            ],
+            [
+              "2023-03-22",
+              0,
+              0
+            ],
+            [
+              "2023-03-23",
+              0,
+              0
+            ],
+            [
+              "2023-03-24",
+              0,
+              0
+            ],
+            [
+              "2023-03-25",
+              0,
+              0
+            ],
+            [
+              "2023-03-26",
+              0,
+              0
+            ],
+            [
+              "2023-03-27",
+              0,
+              0
+            ],
+            [
+              "2023-03-28",
+              0,
+              0
+            ],
+            [
+              "2023-03-29",
+              0,
+              0
+            ],
+            [
+              "2023-03-30",
+              0,
+              0
+            ],
+            [
+              "2023-03-31",
+              0,
+              0
+            ]
+          ],
+          "png": {
+            "content": "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",
+            "metadata": [],
+            "mimetype": "image/png;base64",
+            "name": "mysql-2023-3.png"
+          }
+        }
+      },
+      "resultGetTypesAdvertMaterials": {
+        "description": "массив типов рекламных материалов",
+        "name": "resultGetTypesAdvertMaterials",
+        "summary": "'name' string название рекламного баннера\n\n'value' string размеры в пикселях (либо значение all, означает все размеры)",
+        "value": [
+          {
+            "name": "Все",
+            "value": "all"
+          },
+          {
+            "name": "160x600",
+            "value": "160x600"
+          },
+          {
+            "name": "240x400",
+            "value": "240x400"
+          },
+          {
+            "name": "300x250",
+            "value": "300x250"
+          },
+          {
+            "name": "468x60",
+            "value": "468x60"
+          },
+          {
+            "name": "720-720",
+            "value": "720-720"
+          },
+          {
+            "name": "728x90",
+            "value": "728x90"
+          },
+          {
+            "name": "728х90",
+            "value": "728х90"
+          }
+        ]
+      },
+      "resultIntegerOne": {
+        "description": "ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      },
+      "resultStandardPlans": {
+        "description": "массив доступных стандартных тарифов",
+        "name": "resultStandardPlans",
+        "summary": "список доступных стандартных тарифов",
+        "value": [
+          {
+            "dbCount": 512,
+            "disk": 5,
+            "ftpCount": 1025,
+            "id": "7110",
+            "mailCount": 1025,
+            "name": "Взлёт",
+            "period": [
+              {
+                "domain": 0,
+                "domainZone": "",
+                "length": 1,
+                "price": 199,
+                "ssl": 1
+              },
+              {
+                "domain": 1,
+                "domainZone": ".ru, .рф, .online, .shop, .spb.ru",
+                "length": 12,
+                "price": 1908,
+                "ssl": 1
+              }
+            ],
+            "sites": 5
+          },
+          {
+            "dbCount": 512,
+            "disk": 10,
+            "ftpCount": 1025,
+            "id": "7112",
+            "mailCount": 1025,
+            "name": "Ракета",
+            "period": [
+              {
+                "domain": 0,
+                "domainZone": "",
+                "length": 1,
+                "price": 339,
+                "ssl": 1
+              },
+              {
+                "domain": 2,
+                "domainZone": ".ru, .рф, .online, .shop, .spb.ru",
+                "length": 12,
+                "price": 3348,
+                "ssl": 1
+              }
+            ],
+            "sites": 10
+          },
+          {
+            "dbCount": 512,
+            "disk": 15,
+            "ftpCount": 1025,
+            "id": "7114",
+            "mailCount": 1025,
+            "name": "Космос",
+            "period": [
+              {
+                "domain": 0,
+                "domainZone": "",
+                "length": 1,
+                "price": 549,
+                "ssl": 1
+              },
+              {
+                "domain": 3,
+                "domainZone": ".ru, .рф, .online, .shop, .spb.ru",
+                "length": 12,
+                "price": 5748,
+                "ssl": 1
+              }
+            ],
+            "sites": 20
+          }
+        ]
+      },
+      "resultVipPlans": {
+        "description": "массив доступных VIP тарифов",
+        "name": "resultVipPlans",
+        "summary": "список доступных VIP тарифов",
+        "value": [
+          {
+            "dbCount": 512,
+            "disk": 20,
+            "ftpCount": 1025,
+            "id": "7116",
+            "mailCount": 1025,
+            "name": "Реактивный-20",
+            "period": [
+              {
+                "domain": 0,
+                "domainZone": "",
+                "length": 1,
+                "price": 999,
+                "ssl": 1
+              },
+              {
+                "domain": 4,
+                "domainZone": ".ru, .рф, .online, .shop, .spb.ru",
+                "length": 12,
+                "price": 9588,
+                "ssl": 1
+              }
+            ],
+            "sites": 20
+          },
+          {
+            "dbCount": 512,
+            "disk": 40,
+            "ftpCount": 1025,
+            "id": "7250",
+            "mailCount": 1025,
+            "name": "Реактивный-40",
+            "period": [
+              {
+                "domain": 0,
+                "domainZone": "",
+                "length": 1,
+                "price": 1999,
+                "ssl": 1
+              },
+              {
+                "domain": 5,
+                "domainZone": ".ru, .рф, .online, .shop, .spb.ru",
+                "length": 12,
+                "price": 18588,
+                "ssl": 1
+              }
+            ],
+            "sites": 2500
+          },
+          {
+            "dbCount": 512,
+            "disk": 80,
+            "ftpCount": 1025,
+            "id": "7254",
+            "mailCount": 1025,
+            "name": "Реактивный-80",
+            "period": [
+              {
+                "domain": 0,
+                "domainZone": "",
+                "length": 1,
+                "price": 2999,
+                "ssl": 1
+              },
+              {
+                "domain": 6,
+                "domainZone": ".ru, .рф, .online, .shop, .spb.ru",
+                "length": 12,
+                "price": 28188,
+                "ssl": 1
+              }
+            ],
+            "sites": 2500
+          }
+        ]
+      },
+      "resultVpsOsConfig": {
+        "description": "'vpsPlans' array Тарифные планы\n\nКаждый тарифный план содержит массив значений:\n\n'id' int id тарифного плана\n\n'ts_create' string дата и время создания в формате YYYY-MM-DD HH:MM:SS\n\n'ts_update' string дата и время обновления в формате YYYY-MM-DD HH:MM:SS\n\n'billing_id' string id услуги\n\n'category_id' string id категории тарифного плана\n\n'name' string название тарифа\n\n'price_per_month' int стоимость одного месяца при помесячной оплате\n\n'parent_plan_id' int|null id родительского тарифного плана\n\n'cpu_cores' string кол-во ядер\n\n'ram' string кол-во оперативной памяти\n\n'disk_type' string тип диска\n\n'volume_disk' string ёмкость диска\n\n'units' string кол-во занимаемых юнитов\n\n'is_promo' string является ли промо-трифом (0 - не является)\n\n'package_duration' string длительность пакета в месяцах\n\n'constructor' string относится ли тариф к категории Конструктор сайтов (N - не относится)\n\n'year_price_per_month' int стоимость одного месяца в годовом пакете\n\n'category' string название категории тарифного плана\n\n'datacenters' array массив из id дата-центров\n\n'price_per_month_promo' int стоимость месяца промо-версии тарифа при помесячной оплате\n\n'year_price_per_month_promo' int стоимость месяца промо-версии тарифа в годовом пакете\n\n'selectOs' array Операционные системы\n\nКаждая ОС содержит массив значений:\n\n'id' string id операционной системы\n\n'name' string название ОС\n\n'description' string более подробное название ОС\n\n'order' string порядковый номер для сортировки в списке\n\n'url' string|null ссылка на страницу с информацией об ОС\n\n'full_description' string|null полное подробное описание\n\n'plan_id' string id тарифного плана по умолчанию\n\n'os_distribution_id' string id сборки\n\n'panel_type' array массив названий доступных панелей управления (empty- без ПУ)\n\n'selectPanel' array Панели управления\n\nКаждая панель управления содержит массив значений:\n\n'id' string id панели управления\n\n'name' string алиас названия\n\n'description' string полное название\n\n'order' string порядковый номер для сортировки в списке\n\n'creation_time' string|null диапазон времени установки (в минутах)\n\n'url' string|null ссылка на страницу с информацией о панели управления\n\n'full_description' string|null полное подробне описание\n\n'plan_id' string id тарифного плана по умолчанию для данной панели\n\n'os_distribution_id' string id сборки\n\n'action' int действует ли акция на данную панель управления (0 - нет акции)\n\n'price' int текущая стоимость панели управления в месяц с учетом активности акции (0 - бесплатно)\n\n'old_price' int базовая стоимость панели управления без акции\n\n'osPanel' array Дистрибутивы (операционная система+панель) distributive передается в createOrderVps\n\nКаждый дистрибутив содержит массив значений:\n\n'distributive' string id дистрибутива\n\n'os' string id операционной системы\n\n'panel' string id панели\n\n'availablePlanIds' array массив из id тарифных планов доступных с этим дистрибутивом\n\n'minRam' int минимальное кол-во ОЗУ (Гб)\n\n'minStorage' int минимальный объем на диске\n\n'datacenters' array Доступные дата-центры\n\nКаждый дата-центр содержит массив значений:\n\n'id' string id дата-центра\n\n'name' string алиас названия (например, spb, msk)\n\n'location' string название местоположения (например, Санкт-Петербург)\n\n'site_name' string название дата-центра для пользователей\n\n'categories' array Категории тарифных планов\n\nКаждая категория содержит массив значений:\n\n'id' string id категории\n\n'slug' string алиас категории\n\n'name' string название категории для пользователей\n\n'prior' string порядковый номер для сортировки в списке\n\n",
+        "name": "resultVpsOsConfig",
+        "summary": "список доступных дистрибутивов, ISP-лицензий, тарифных планов",
+        "value": {
+          "categories": [
+            {
+              "id": "1",
+              "name": "VPS/VDS на NVMe (быстрые)",
+              "prior": "1",
+              "slug": "nvme"
+            },
+            {
+              "id": "4",
+              "name": "Конфигуратор VPS/VDS",
+              "prior": "4",
+              "slug": "kit"
+            }
+          ],
+          "datacenters": [
+            {
+              "id": "1",
+              "location": "Санкт-Петербург",
+              "name": "spb",
+              "site_name": "Дата-центр в СПБ"
+            },
+            {
+              "id": "2",
+              "location": "Москва",
+              "name": "msk",
+              "site_name": "Дата-центр в Москве"
+            }
+          ],
+          "osPanel": [
+            {
+              "availablePlanIds": [
+                4,
+                5,
+                6,
+                12,
+                14,
+                26,
+                28,
+                34,
+                38,
+                42
+              ],
+              "distributive": "8",
+              "minRam": 0,
+              "minStorage": 0,
+              "os": "4",
+              "panel": "7"
+            },
+            {
+              "availablePlanIds": [
+                4,
+                5,
+                6,
+                12,
+                14,
+                26,
+                28,
+                34,
+                38,
+                42
+              ],
+              "distributive": "68",
+              "minRam": 0,
+              "minStorage": 0,
+              "os": "15",
+              "panel": "12"
+            },
+            {
+              "availablePlanIds": [
+                5,
+                6,
+                12,
+                14,
+                26,
+                28,
+                34,
+                38,
+                42
+              ],
+              "distributive": "89",
+              "minRam": 2,
+              "minStorage": 0,
+              "os": "20",
+              "panel": "15"
+            }
+          ],
+          "selectOs": [
+            {
+              "description": "Ubuntu 20.04 LTS",
+              "full_description": null,
+              "id": "20",
+              "name": "ubuntu-20-04",
+              "order": "1",
+              "os_distribution_id": "32",
+              "panel_type": [
+                "empty",
+                "isp",
+                "docker",
+                "nodejs",
+                "rocket",
+                "gitlab",
+                "hestia",
+                "nextcloud",
+                "fastpanel",
+                "minecraft"
+              ],
+              "plan_id": "4",
+              "url": null
+            },
+            {
+              "description": "BitrixVM 7",
+              "full_description": "Готовое решение для продуктов на 1С-Битрикс",
+              "id": "19",
+              "name": "bitrix-auto-centos-7",
+              "order": "104",
+              "os_distribution_id": "30",
+              "panel_type": [
+                "empty"
+              ],
+              "plan_id": "6",
+              "url": "https://sweb.ru/vds/bitrix/"
+            }
+          ],
+          "selectPanel": [
+            {
+              "action": 0,
+              "creation_time": null,
+              "description": "Без ПО",
+              "full_description": null,
+              "id": "7",
+              "name": "empty",
+              "old_price": 0,
+              "order": "0",
+              "os_distribution_id": "0",
+              "plan_id": "5",
+              "price": 0,
+              "url": null
+            },
+            {
+              "action": 0,
+              "creation_time": "20-30",
+              "description": "ISPmanager 6 Lite",
+              "full_description": "Популярная панель управления сервером, 10 сайтов",
+              "id": "4",
+              "name": "vps_isp6_lite",
+              "old_price": 300,
+              "order": "2",
+              "os_distribution_id": "77",
+              "plan_id": "5",
+              "price": 300,
+              "url": "https://help.sweb.ru/entry/728/"
+            },
+            {
+              "action": 0,
+              "creation_time": "10-15",
+              "description": "FASTPANEL",
+              "full_description": "Бесплатная панель управления сервером",
+              "id": "14",
+              "name": "fastpanel",
+              "old_price": 0,
+              "order": "6",
+              "os_distribution_id": "76",
+              "plan_id": "5",
+              "price": 0,
+              "url": "https://help.sweb.ru/entry/1223/"
+            },
+            {
+              "action": 0,
+              "creation_time": "10-15",
+              "description": "Minecraft JE Server",
+              "full_description": "Сервер игры Minecraft Java Edition",
+              "id": "15",
+              "name": "minecraft",
+              "old_price": 0,
+              "order": "11",
+              "os_distribution_id": "89",
+              "plan_id": "6",
+              "price": 0,
+              "url": "https://sweb.ru/vds/minecraft/"
+            }
+          ],
+          "vpsPlans": [
+            {
+              "billing_id": "597",
+              "category": "nvme",
+              "category_id": "1",
+              "constructor": "N",
+              "cpu_cores": "2",
+              "datacenters": [
+                1,
+                2
+              ],
+              "disk_type": "NVMe",
+              "id": 4,
+              "is_promo": "0",
+              "name": "KVM-10",
+              "package_duration": "1",
+              "parent_plan_id": null,
+              "price_per_month": 349,
+              "price_per_month_promo": 239,
+              "ram": "1024",
+              "ts_create": "2015-09-29 13:43:43",
+              "ts_update": "2021-09-22 11:48:03",
+              "units": "1",
+              "volume_disk": "10 ГБ",
+              "year_price_per_month": 299,
+              "year_price_per_month_promo": 239
+            },
+            {
+              "billing_id": "1606",
+              "category": "turbo",
+              "category_id": "3",
+              "constructor": "N",
+              "cpu_cores": "4",
+              "datacenters": [
+                1,
+                2
+              ],
+              "disk_type": "NVMe",
+              "id": 42,
+              "is_promo": "0",
+              "name": "TURBO-160",
+              "package_duration": "1",
+              "parent_plan_id": null,
+              "price_per_month": 4099,
+              "price_per_month_promo": 2639,
+              "ram": "8192",
+              "ts_create": "2021-11-22 14:18:18",
+              "ts_update": null,
+              "units": "16",
+              "volume_disk": "160 ГБ",
+              "year_price_per_month": 3299,
+              "year_price_per_month_promo": 2639
+            }
+          ]
+        }
+      },
+      "stringClientID": {
+        "description": "MD5 логина клиента партнера",
+        "name": "clientId",
+        "summary": "clientId",
+        "value": "1e19f8c50471077460087273b9026331"
+      },
+      "stringComment": {
+        "description": "комментарий к клиенту",
+        "name": "comment",
+        "summary": "comment",
+        "value": "тест"
+      },
+      "stringEmail": {
+        "description": "Email",
+        "name": "email",
+        "summary": "email",
+        "value": "test@gmail.com"
+      },
+      "stringINN": {
+        "description": "ИНН",
+        "name": "inn",
+        "summary": "inn",
+        "value": "702304877363"
+      },
+      "stringLogin": {
+        "description": "логин для нового пользователя",
+        "name": "stringLogin",
+        "summary": "login",
+        "value": "newlogin123"
+      },
+      "stringRegAddress": {
+        "description": "адрес регистрации",
+        "name": "regAddress",
+        "summary": "regAddress",
+        "value": "проспект Мира, 1"
+      },
+      "stringReqBIC": {
+        "description": "наименование банка",
+        "name": "reqBIC",
+        "summary": "reqBIC",
+        "value": "044030899"
+      },
+      "stringReqBankName": {
+        "description": "наименование банка",
+        "name": "reqBankName",
+        "summary": "reqBankName",
+        "value": "Петербургский филиал АЮ ЮниКредит"
+      },
+      "stringReqCheckAccount": {
+        "description": "расчетный счет",
+        "name": "reqCheckAccount",
+        "summary": "reqCheckAccount",
+        "value": "40700010500024458823"
+      },
+      "stringReqCorrAccount": {
+        "description": "к/с",
+        "name": "reqCorrAccount",
+        "summary": "reqCorrAccount",
+        "value": "30101810800000000858"
+      },
+      "stringReqPayPurpose": {
+        "description": "назначение платежа",
+        "name": "reqPayPurpose",
+        "summary": "reqPayPurpose",
+        "value": "Вывод средств"
+      },
+      "stringReqUserName": {
+        "description": "сумма к выводу",
+        "name": "reqUserName",
+        "summary": "reqUserName",
+        "value": "Малышева Инна Александровна"
+      },
+      "stringSite": {
+        "description": "реферальный сайт",
+        "name": "site",
+        "summary": "site",
+        "value": "mysite.ru"
+      },
+      "stringSnils": {
+        "description": "СНИЛС",
+        "name": "snils",
+        "summary": "snils",
+        "value": "121-012-345 10"
+      },
+      "stringType": {
+        "description": "тип баннера, соответствует значению value из ответа метода getTypesAdvertMaterials()",
+        "name": "type",
+        "summary": "type",
+        "value": "160x600"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Float": {
+        "type": "number"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.185"
+  },
+  "methods": [
+    {
+      "description": "Создание заказа для стандартных тарифных планов",
+      "examples": [
+        {
+          "name": "exampleCreateOrderVh",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringEmail"
+            },
+            {
+              "$ref": "#/components/examples/intTarif"
+            },
+            {
+              "$ref": "#/components/examples/intPeriod"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultCreateOrder"
+          }
+        }
+      ],
+      "links": [],
+      "name": "createOrderVh",
+      "params": [
+        {
+          "description": "Email",
+          "name": "email ",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "ID тарифного плана",
+          "name": "tariffId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "период оплаты",
+          "name": "period",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "желаемый логин (необязательно)",
+          "name": "login",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "желаемый пароль (необязательно)",
+          "name": "password",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultCreateOrder"
+      }
+    },
+    {
+      "description": "Проверка логина для нового пользователя",
+      "examples": [
+        {
+          "name": "exampleCheckLogin",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringLogin"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultCheckLogin"
+          }
+        }
+      ],
+      "links": [],
+      "name": "checkLogin",
+      "params": [
+        {
+          "description": "логин",
+          "name": "login",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultCheckLogin"
+      }
+    },
+    {
+      "description": "Создание заказа для VIP тарифных планов",
+      "examples": [
+        {
+          "name": "exampleCreateOrderVip",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringEmail"
+            },
+            {
+              "$ref": "#/components/examples/intTarif"
+            },
+            {
+              "$ref": "#/components/examples/intPeriod"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultCreateOrder"
+          }
+        }
+      ],
+      "links": [],
+      "name": "createOrderVip",
+      "params": [
+        {
+          "description": "Email",
+          "name": "email ",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "ID тарифного плана",
+          "name": "tariffId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "период оплаты",
+          "name": "period",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "желаемый логин (необязательно)",
+          "name": "login",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "желаемый пароль (необязательно)",
+          "name": "password",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultCreateOrder"
+      }
+    },
+    {
+      "description": "Создание заказа для VPS тарифных планов",
+      "examples": [
+        {
+          "name": "exampleCreateOrderVPS",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringEmail"
+            },
+            {
+              "$ref": "#/components/examples/intTarif"
+            },
+            {
+              "$ref": "#/components/examples/intDistributiveId"
+            },
+            {
+              "$ref": "#/components/examples/intPeriod"
+            },
+            {
+              "$ref": "#/components/examples/intDatacenter"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultCreateOrder"
+          }
+        }
+      ],
+      "links": [],
+      "name": "createOrderVps",
+      "params": [
+        {
+          "description": "Email",
+          "name": "email ",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "ID тарифного плана",
+          "name": "tariffId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "ID дистрибутива ОС из vpsOsConfig",
+          "name": "distributiveId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "период оплаты",
+          "name": "period",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "желаемый логин (необязательно)",
+          "name": "login",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "желаемый пароль (необязательно)",
+          "name": "password",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "датацентр",
+          "name": "datacenter",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultCreateOrder"
+      }
+    },
+    {
+      "description": "Получение списка доступных стандартных тарифов",
+      "examples": [
+        {
+          "name": "exampleStandardPlans",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultStandardPlans"
+          }
+        }
+      ],
+      "links": [],
+      "name": "standardPlans",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultStandardPlans"
+      }
+    },
+    {
+      "description": "Получение списка доступных VIP тарифов",
+      "examples": [
+        {
+          "name": "exampleVipPlans",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultVipPlans"
+          }
+        }
+      ],
+      "links": [],
+      "name": "vipPlans",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultVipPlans"
+      }
+    },
+    {
+      "description": "Получение списка доступных дистрибутивов, ISP-лицензий, тарифных планов",
+      "examples": [
+        {
+          "name": "exampleVpsOsConfig",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultVpsOsConfig"
+          }
+        }
+      ],
+      "links": [],
+      "name": "vpsOsConfig",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultVpsOsConfig"
+      }
+    },
+    {
+      "description": "Нажатие на кнопку 'Стать партнером'. Создает партнера без реквизитов",
+      "examples": [
+        {
+          "name": "exampleVpsOsConfig",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "startPartnership",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Заполнение реквизитов партнера",
+      "examples": [
+        {
+          "name": "exampleFillPartnerRequisites",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringINN"
+            },
+            {
+              "$ref": "#/components/examples/stringSnils"
+            },
+            {
+              "$ref": "#/components/examples/stringRegAddress"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "fillPartnerRequisites",
+      "params": [
+        {
+          "description": "ИНН",
+          "name": "inn",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "СНИЛС",
+          "name": "snils",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "адрес регистрации",
+          "name": "regAddress",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Запрос типов рекламных материалов",
+      "examples": [
+        {
+          "name": "exampleGetTypesAdvertMaterials",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultGetTypesAdvertMaterials"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getTypesAdvertMaterials",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetTypesAdvertMaterials"
+      }
+    },
+    {
+      "description": "Возвращает все банеры указанного типа",
+      "examples": [
+        {
+          "name": "exampleGetAdvertMaterials",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringType"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetAdvertMaterials"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getAdvertMaterials",
+      "params": [
+        {
+          "description": "тип баннера, соответствует значению value из ответа метода getTypesAdvertMaterials()",
+          "name": "type",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetAdvertMaterials"
+      }
+    },
+    {
+      "description": "Получение отфильтрованных данных в виде массива с детализацией по клиентам партнера",
+      "examples": [
+        {
+          "name": "exampleGetPartnerClientsList",
+          "params": [
+            {
+              "$ref": "#/components/examples/intFilterStatus"
+            },
+            {
+              "$ref": "#/components/examples/intPage"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetPartnerClientsList"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getPartnerClientsList",
+      "params": [
+        {
+          "description": "статус привлеченного клиента, по которому нужно отфильтровать",
+          "name": "filterStatus",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "номер страницы с 1",
+          "name": "page",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetPartnerClientsList"
+      }
+    },
+    {
+      "description": "Получение подробной информации о клиенте",
+      "examples": [
+        {
+          "name": "exampleGetPartnerClientCard",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringClientID"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetPartnerClientCard"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getPartnerClientCard",
+      "params": [
+        {
+          "description": "MD5 логина клиента партнера",
+          "name": "clientId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetPartnerClientCard"
+      }
+    },
+    {
+      "description": "Сохраняет изменение комментария к клиенту партнера",
+      "examples": [
+        {
+          "name": "exampleSavePartnerClientComment",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringClientID"
+            },
+            {
+              "$ref": "#/components/examples/stringComment"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "savePartnerClientComment",
+      "params": [
+        {
+          "description": "MD5 логина клиента партнера",
+          "name": "clientId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "комментарий к клиенту",
+          "name": "comment",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Выводит лог событий по клиентам партнера с пагинацией",
+      "examples": [
+        {
+          "name": "exampleGetPartnerClientLogEvents",
+          "params": [
+            {
+              "$ref": "#/components/examples/intPage"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetPartnerClientLogEvents"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getPartnerClientLogEvents",
+      "params": [
+        {
+          "description": "номер страницы с 1",
+          "name": "page",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetPartnerClientLogEvents"
+      }
+    },
+    {
+      "description": "Выводит лог детализацию по балансу по клиентам партнера с пагинацией (события, которые касаются финансов)",
+      "examples": [
+        {
+          "name": "exampleGetPartnerClientLogFinance",
+          "params": [
+            {
+              "$ref": "#/components/examples/intPage"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetPartnerClientLogFinance"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getPartnerClientLogFinance",
+      "params": [
+        {
+          "description": "номер страницы с 1",
+          "name": "page",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetPartnerClientLogFinance"
+      }
+    },
+    {
+      "description": "Отправка заказа на вывод партнерского вознаграждения",
+      "examples": [
+        {
+          "name": "exampleSendWithdrawalOrder",
+          "params": [
+            {
+              "$ref": "#/components/examples/intOrderType"
+            },
+            {
+              "$ref": "#/components/examples/floatCountMoney"
+            },
+            {
+              "$ref": "#/components/examples/stringReqUserName"
+            },
+            {
+              "$ref": "#/components/examples/stringReqPayPurpose"
+            },
+            {
+              "$ref": "#/components/examples/stringReqCheckAccount"
+            },
+            {
+              "$ref": "#/components/examples/stringReqBankName"
+            },
+            {
+              "$ref": "#/components/examples/stringReqBIC"
+            },
+            {
+              "$ref": "#/components/examples/stringReqCorrAccount"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "sendWithdrawalOrder",
+      "params": [
+        {
+          "description": "1 - вывод на расчетный счет; 2 - вывод на баланс, 3 - скидка на хостинг (только для физ. лиц)",
+          "name": "orderType",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "сумма к выводу",
+          "name": "countMoney",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Float"
+          }
+        },
+        {
+          "description": "ваши Ф.И.О. (обязательно только для физ. лица при выводе на р/с)",
+          "name": "reqUserName",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "назначение платежа",
+          "name": "reqPayPurpose",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "расчетный счет",
+          "name": "reqCheckAccount",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "наименование банка",
+          "name": "reqBankName",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "БИК",
+          "name": "reqBIC",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "к/с",
+          "name": "reqCorrAccount",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Возвращает сохраненные ранее реквизиты для вывода средств. Зависит от типа аккаунта",
+      "examples": [
+        {
+          "name": "exampleGetRequisitesWithdrawal",
+          "params": [],
+          "result": {
+            "$ref": "#/components/examples/resultGetRequisitesWithdrawal"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getRequisitesWithdrawal",
+      "params": [],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetRequisitesWithdrawal"
+      }
+    },
+    {
+      "description": "Возвращает статистику по реферальным сайтам",
+      "examples": [
+        {
+          "name": "exampleGetStatistic",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringSite"
+            },
+            {
+              "$ref": "#/components/examples/intYear"
+            },
+            {
+              "$ref": "#/components/examples/intMonth"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetStatistic"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getStatistic",
+      "params": [
+        {
+          "description": "реферальный сайт",
+          "name": "site",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "год",
+          "name": "year",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "месяц",
+          "name": "month",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetStatistic"
+      }
+    },
+    {
+      "description": "Возвращает статистику по реферальной ссылке",
+      "examples": [
+        {
+          "name": "exampleGetLinkStatistic",
+          "params": [
+            {
+              "$ref": "#/components/examples/intYear"
+            },
+            {
+              "$ref": "#/components/examples/intMonth"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetLinkStatistic"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getLinkStatistics",
+      "params": [
+        {
+          "description": "год",
+          "name": "year",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "месяц",
+          "name": "month",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetLinkStatistic"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции:\n\nинформация о тарифах,\n\nсписок привлеченных клиентов,\n\nстатистика и выплаты",
+      "name": "Партнерская программа",
+      "summary": "Партнерская программа",
+      "url": "https://api.sweb.ru/vh/partnerProgram"
+    }
+  ]
+}

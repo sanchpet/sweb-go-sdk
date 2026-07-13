@@ -1,0 +1,1312 @@
+{
+  "components": {
+    "contentDescriptors": {
+      "resultGetAvailablePackages": {
+        "description": "'id' int ID пакета\n\n'name_readable' string Название пакета\n\n'price' int Акционная цена\n\n'price2' int Обычная цена\n\n'priority' int Приоритет для отображения\n\n'available' bool Доступен или нет для заказа\n\n'domains' Домены из пакета:\n\n'name' string Закодированное имя\n\n'name_readable' string Читаемое имя\n\n'order_package_id' int Номер заказа пакета",
+        "name": "resultGetAvailablePackages",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultGetDomainInfo": {
+        "description": "'is_active_task' int Выполняется операция над доменом\n\n'autoreg' int Включена авторегистрация\n\n'is_taken' int Занят\n\n'registrar' string Регистратор\n\n'is_our' int Под нашим управлением\n\n'expired' string Дата окончания регистрации\n\n'can_prolong' int Можно продить сейчас\n\n'prolong_price' int Стоимость продления\n\n'prolong_by_bonus' bool Можно ли продлить за бонусы\n\n'prolong_confirm' null|array Информация о продлении:\n\n'domain' string Читаемое название домена\n\n'confirm' bool Выводить или нет диалог с подтверждением операции продления\n\n'price' int Стоимость продления\n\n'link' string|null URL для ссылки на страницу с дополнительной информацией\n\n'reg_price' int Стоимость регистрации\n\n'transfer_price' int Стоимость трансфера\n\n'autoprolong' string Тип автопродления\n\n'docRoot' int Домашняя директория\n\n'siteAlias' string Название сайта\n\n'bonus_available' bool Можно ли зарегистрировать за бонусы\n\n'transferLink' string Ссылка на трансфер\n\n'redirectUrl' string Адрес установленного редиректа",
+        "name": "resultGetDomainInfo",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "resultGetRedirect": {
+        "description": "возвращает переадресацию для домена (URL редиректа)",
+        "name": "resultGetRedirect",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "resultGetSubdomains": {
+        "description": "'value' string Закодированное название поддомена\n\n'name' string Читаемое название поддомена",
+        "name": "resultGetSubdomains",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultIndex": {
+        "description": "'fqdn' string Закодированное название домена\n\n'fqdn_readable' string Читаемое название домена\n\n'fqdnList' string Закодированные названия доменов из пакета доменов\n\n'fqdnReadableList' string Читаемые названия доменов из пакета доменов\n\n'docroot' string Домашняя директория\n\n'fqdn_tech' string Технический домен\n\n'fqdnTechList' string Список технических доменов для пакета доменов\n\n'is_available' int 1, если пакет доменов доступен для регистрации\n\n'in_queue' int 1, если идет операция над доменом\n\n'order_package_id' int Номер заказа для пакета доменов\n\n'subdomains' array Поддомены:\n\n'docroot' string Домашняя директория поддомена\n\n'machine' string Закодированное название поддомена\n\n'machine_readable' string Читаемое название поддомена\n\n'siteAlias' string Название сайта в ПУ\n\n'fqdn' string Полное закодированное название поддомена с доменом\n\n'fqdn_readable' string Читаемое полное название поддомена с доменом\n\n'parent_fqdn' string Закодированное название домена, совпадает с 'fqdn'\n\n'parent_fqdn_readable' string Читаемое название домена, совпадает с 'fqdn_readable'\n\n'reg_price' float Цена регистрации\n\n'bonus_available' int 1, если можно зарегистрировать за бонусы\n\n'siteAlias' string Название сайта в ПУ",
+        "name": "resultIndex",
+        "schema": {
+          "type": "array"
+        }
+      },
+      "resultInt": {
+        "description": "1 - успешно, 0 - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultMove": {
+        "description": "1 - успешно,  ExtendedResult (содержащий в data массив ошибок в формате [fqdn: string, error: string]) - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultMoveList": {
+        "description": "1 - успешно, ExtendedResult (содержащий в data массив ошибок в формате [fqdn: string, error: string]) - ошибка",
+        "name": "resultInt",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "resultPriceForRegistration": {
+        "description": "стоимость регистрации домена",
+        "name": "resultPriceForRegistration",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "resultProlongList": {
+        "description": "'code' int индентификатор\n\n'message' сообщение об успешном продлении\n\n'data' date дата отправки заявки",
+        "name": "resultProlongList",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    "examples": {
+      "arrayDomain": {
+        "description": "массив массивов: [['domain' : 'имя домена', 'prolongType' : 'тип продления ('no' - не продлевать, 'manual' - вручную клиентом, 'bonus_money' - продлевать за ДБ)']]",
+        "name": "domains",
+        "summary": "domains",
+        "value": [
+          {
+            "domain": "example.com",
+            "prolongType": "bonus_money"
+          },
+          {
+            "domain": "test.com",
+            "prolongType": "bonus_money"
+          }
+        ]
+      },
+      "arrayDomains": {
+        "description": "массив доменов: [['fqdn' : 'имя домена', 'prolongType' : 'тип продления ('no', 'manual', 'bonus_money')', 'dir' : 'домашняя директория (не обязательное поле)']]",
+        "name": "domains",
+        "summary": "domains",
+        "value": [
+          {
+            "dir": "/home/example",
+            "fqdn": "example.com",
+            "prolongType": "manual"
+          },
+          {
+            "dir": "/home/test",
+            "fqdn": "test.com",
+            "prolongType": "bonus_money"
+          }
+        ]
+      },
+      "boolIDShield": {
+        "description": "сокрытие Whois",
+        "name": "idShield",
+        "summary": "idShield",
+        "value": false
+      },
+      "boolShowPackages": {
+        "description": "выводить или нет пакеты доменов на аккаунте",
+        "name": "showPackages",
+        "summary": "showPackages",
+        "value": false
+      },
+      "intAutoReg": {
+        "description": "авторегистрация",
+        "name": "autoReg",
+        "summary": "autoReg",
+        "value": 0
+      },
+      "intDomPerson": {
+        "description": "ID доменной персоны",
+        "name": "domPerson",
+        "summary": "domPerson",
+        "value": 359687
+      },
+      "intPage": {
+        "description": "страница",
+        "name": "page",
+        "summary": "page",
+        "value": 1
+      },
+      "intPerPage": {
+        "description": "количество на странице",
+        "name": "perPage",
+        "summary": "perPage",
+        "value": 20
+      },
+      "resultGetAvailablePackages": {
+        "description": "'id' int ID пакета\n\n'name_readable' string Название пакета\n\n'price' int Акционная цена\n\n'price2' int Обычная цена\n\n'priority' int Приоритет для отображения\n\n'available' bool Доступен или нет для заказа\n\n'domains' Домены из пакета:\n\n'name' string Закодированное имя\n\n'name_readable' string Читаемое имя\n\n'order_package_id' int Номер заказа пакета",
+        "name": "resultGetAvailablePackages",
+        "summary": "список бэкендов",
+        "value": [
+          {
+            "available": true,
+            "domains": [
+              {
+                "name": "testswebinnna.ru",
+                "name_readable": "testswebinnna.ru"
+              },
+              {
+                "name": "testswebinnna.shop",
+                "name_readable": "testswebinnna.shop"
+              }
+            ],
+            "id": "3",
+            "name_readable": ".ru+.shop",
+            "order_package_id": 696,
+            "price": "249",
+            "price2": "398",
+            "priority": "20"
+          }
+        ]
+      },
+      "resultGetDomainInfo": {
+        "description": "'is_active_task' int Выполняется операция над доменом\n\n'autoreg' int Включена авторегистрация\n\n'is_taken' int Занят\n\n'registrar' string Регистратор\n\n'is_our' int Под нашим управлением\n\n'expired' string Дата окончания регистрации\n\n'can_prolong' int Можно продить сейчас\n\n'prolong_price' int Стоимость продления\n\n'prolong_by_bonus' bool Можно ли продлить за бонусы\n\n'prolong_confirm' null|array Информация о продлении:\n\n'domain' string Читаемое название домена\n\n'confirm' bool Выводить или нет диалог с подтверждением операции продления\n\n'price' int Стоимость продления\n\n'link' string|null URL для ссылки на страницу с дополнительной информацией\n\n'reg_price' int Стоимость регистрации\n\n'transfer_price' int Стоимость трансфера\n\n'autoprolong' string Тип автопродления\n\n'docRoot' int Домашняя директория\n\n'siteAlias' string Название сайта\n\n'bonus_available' bool Можно ли зарегистрировать за бонусы\n\n'transferLink' string Ссылка на трансфер\n\n'redirectUrl' string Адрес установленного редиректа",
+        "name": "resultGetDomainInfo",
+        "summary": "полная информация о домене",
+        "value": {
+          "autoprolong": "no",
+          "autoreg": 0,
+          "bonus_available": true,
+          "can_prolong": 0,
+          "docRoot": "/home/i/innamaly76",
+          "expired": "",
+          "is_active_task": 0,
+          "is_our": 0,
+          "is_taken": 0,
+          "prolong_by_bonus": true,
+          "prolong_confirm": {
+            "confirm": false,
+            "domain": "test549849.ru",
+            "link": null,
+            "price": 399
+          },
+          "prolong_price": 0,
+          "redirectUrl": null,
+          "reg_price": 199,
+          "registrar": null,
+          "siteAlias": "default",
+          "transferLink": null,
+          "transfer_price": -1
+        }
+      },
+      "resultGetRedirect": {
+        "description": "возвращает переадресацию для домена (URL редиректа)",
+        "name": "resultGetRedirect",
+        "summary": "resultGetRedirect",
+        "value": "https://testgetredirect.ru"
+      },
+      "resultGetSubdomains": {
+        "description": "'value' string Закодированное название поддомена\n\n'name' string Читаемое название поддомена",
+        "name": "resultGetSubdomains",
+        "summary": "список бэкендов",
+        "value": [
+          {
+            "name": "*.test549849.ru",
+            "value": "*.test549849.ru"
+          }
+        ]
+      },
+      "resultIndex": {
+        "description": "'fqdn' string Закодированное название домена\n\n'fqdn_readable' string Читаемое название домена\n\n'fqdnList' string Закодированные названия доменов из пакета доменов\n\n'fqdnReadableList' string Читаемые названия доменов из пакета доменов\n\n'docroot' string Домашняя директория\n\n'fqdn_tech' string Технический домен\n\n'fqdnTechList' string Список технических доменов для пакета доменов\n\n'is_available' int 1, если пакет доменов доступен для регистрации\n\n'in_queue' int 1, если идет операция над доменом\n\n'order_package_id' int Номер заказа для пакета доменов\n\n'subdomains' array Поддомены:\n\n'docroot' string Домашняя директория поддомена\n\n'machine' string Закодированное название поддомена\n\n'machine_readable' string Читаемое название поддомена\n\n'siteAlias' string Название сайта в ПУ\n\n'fqdn' string Полное закодированное название поддомена с доменом\n\n'fqdn_readable' string Читаемое полное название поддомена с доменом\n\n'parent_fqdn' string Закодированное название домена, совпадает с 'fqdn'\n\n'parent_fqdn_readable' string Читаемое название домена, совпадает с 'fqdn_readable'\n\n'reg_price' float Цена регистрации\n\n'bonus_available' int 1, если можно зарегистрировать за бонусы\n\n'siteAlias' string Название сайта в ПУ",
+        "name": "resultIndex",
+        "summary": "resultIndex",
+        "value": [
+          {
+            "bonus_available": false,
+            "docroot": "/home/i/innamaly76",
+            "fqdn": "test549849.ru",
+            "fqdn_readable": "test549849.ru",
+            "fqdn_tech": "test549849.ru.swtest.ru",
+            "reg_price": 199,
+            "siteAlias": "default",
+            "subdomains": [
+              {
+                "docroot": "/home/i/innamaly76",
+                "fqdn": "*.test549849.ru",
+                "fqdn_readable": "*.test549849.ru",
+                "machine": "*",
+                "machine_readable": "*",
+                "parent_fqdn": "test549849.ru",
+                "parent_fqdn_readable": "test549849.ru",
+                "siteAlias": "default"
+              }
+            ]
+          }
+        ]
+      },
+      "resultIntegerOne": {
+        "description": "ответ при успешно выполненной операции",
+        "name": "one",
+        "summary": "успех",
+        "value": 1
+      },
+      "resultPriceForRegistration": {
+        "description": "стоимость регистрации домена",
+        "name": "resultPriceForRegistration",
+        "summary": "resultPriceForRegistration",
+        "value": 199
+      },
+      "resultProlongList": {
+        "description": "ответ при успешно выполненной операции",
+        "name": "resultProlongList",
+        "summary": "code and message",
+        "value": {
+          "extendedResult": {
+            "code": 1,
+            "data": [],
+            "message": "Выбранные домены успешно продлены"
+          }
+        }
+      },
+      "stringDir": {
+        "description": "относительная директория сайта",
+        "name": "dir",
+        "summary": "dir",
+        "value": "/тест"
+      },
+      "stringDomain": {
+        "description": "домен",
+        "name": "domain",
+        "summary": "domain",
+        "value": "test549849.ru"
+      },
+      "stringDomains": {
+        "description": "домены",
+        "name": "domains",
+        "summary": "domains",
+        "value": "testswebinnna.ru, testswebinnna.shop"
+      },
+      "stringFilter": {
+        "description": "фильтр по имени",
+        "name": "filter",
+        "summary": "filter",
+        "value": "test"
+      },
+      "stringMachine": {
+        "description": "поддомен",
+        "name": "machine",
+        "summary": "machine",
+        "value": "test1"
+      },
+      "stringOrderDirect": {
+        "description": "направление сортировки",
+        "name": "orderDirect",
+        "summary": "orderDirect",
+        "value": "ASC"
+      },
+      "stringOrderField": {
+        "description": "тип сортировки",
+        "name": "orderField",
+        "summary": "orderField",
+        "value": "fqdn_readable"
+      },
+      "stringPayType": {
+        "description": "тип оплаты",
+        "name": "payType",
+        "summary": "payType",
+        "value": "balance"
+      },
+      "stringProlongType": {
+        "description": "тип продления ('none', 'bonus_money', 'manual')",
+        "name": "prolongType",
+        "summary": "prolongType",
+        "value": "bonus_money"
+      },
+      "stringRedirect": {
+        "description": "установка переадресации для домена",
+        "name": "setRedirectVh",
+        "summary": "setRedirectVh",
+        "value": "https://testredirect.ru"
+      },
+      "stringType": {
+        "description": "тип доменов ('all' - все домены; 'sweb' - только sweb; 'free' - свободные; 'other' - все остальные)",
+        "name": "type",
+        "summary": "type",
+        "value": "all"
+      }
+    },
+    "schemas": {
+      "Array": {
+        "type": "array"
+      },
+      "Boolean": {
+        "type": "boolean"
+      },
+      "Integer": {
+        "type": "integer"
+      },
+      "Object": {
+        "type": "object"
+      },
+      "String": {
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Документация по API Spaceweb",
+    "title": "API Spaceweb",
+    "version": "1.185"
+  },
+  "methods": [
+    {
+      "description": "Информация о доменах пользователя",
+      "examples": [
+        {
+          "name": "exampleIndex",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringOrderField"
+            },
+            {
+              "$ref": "#/components/examples/stringOrderDirect"
+            },
+            {
+              "$ref": "#/components/examples/stringType"
+            },
+            {
+              "$ref": "#/components/examples/stringFilter"
+            },
+            {
+              "$ref": "#/components/examples/intPage"
+            },
+            {
+              "$ref": "#/components/examples/intPerPage"
+            },
+            {
+              "$ref": "#/components/examples/boolShowPackages"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIndex"
+          }
+        }
+      ],
+      "links": [],
+      "name": "index",
+      "params": [
+        {
+          "description": "тип сортировки",
+          "name": "orderField",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "направление сортировки",
+          "name": "orderDirect",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "тип доменов ('all' - все домены; 'sweb' - только sweb; 'free' - свободные; 'other' - все остальные)",
+          "name": "type",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "фильтр по названию домена",
+          "name": "filter",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "страница",
+          "name": "page",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "количество на странице",
+          "name": "perPage",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "выводить или нет пакеты доменов на аккаунте",
+          "name": "showPackages",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultIndex"
+      }
+    },
+    {
+      "description": "Список поддоменов домена",
+      "examples": [
+        {
+          "name": "exampleGetSubdomains",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetSubdomains"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getSubdomains",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetSubdomains"
+      }
+    },
+    {
+      "description": "Полная информация о домене",
+      "examples": [
+        {
+          "name": "exampleGetDomainInfo",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetDomainInfo"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getDomainInfo",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetDomainInfo"
+      }
+    },
+    {
+      "description": "Предварительная проверка на возможность регистрации домена",
+      "examples": [
+        {
+          "name": "exampleRegAvailable",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            },
+            {
+              "$ref": "#/components/examples/stringPayType"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "regAvailable",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "тип оплаты",
+          "name": "payType",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Проверяет возможность регистрации пакета для доменов, если пакет доступен, то добавляет его на аккаунт и возвращает объект с order_package_id - ID по которому его можно зарегистрировать",
+      "examples": [
+        {
+          "name": "exampleRegAvailablePackages",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomains"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetAvailablePackages"
+          }
+        }
+      ],
+      "links": [],
+      "name": "getAvailablePackages",
+      "params": [
+        {
+          "description": "домены",
+          "name": "domains",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetAvailablePackages"
+      }
+    },
+    {
+      "description": "Зарегистрировать список доменов",
+      "examples": [
+        {
+          "name": "exampleRegList",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomains"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "regList",
+      "params": [
+        {
+          "description": "домены",
+          "name": "domains",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Регистрация домена на аккаунте",
+      "examples": [
+        {
+          "name": "exampleReg",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            },
+            {
+              "$ref": "#/components/examples/stringPayType"
+            },
+            {
+              "$ref": "#/components/examples/intDomPerson"
+            },
+            {
+              "$ref": "#/components/examples/stringProlongType"
+            },
+            {
+              "$ref": "#/components/examples/intAutoReg"
+            },
+            {
+              "$ref": "#/components/examples/stringDir"
+            },
+            {
+              "$ref": "#/components/examples/boolIDShield"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "reg",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "тип как будет оплачен домен ('balance' - деньги, 'bonus' - бонусы)",
+          "name": "payType",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "ID доменной персоны",
+          "name": "domPerson",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "тип продления ('none', 'bonus_money', 'manual')",
+          "name": "prolongType",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "авторегистрация",
+          "name": "autoReg",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Integer"
+          }
+        },
+        {
+          "description": "относительная директория сайта",
+          "name": "dir",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "сокрытие Whois",
+          "name": "idShield",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Boolean"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Добавление домена на аккаунт",
+      "examples": [
+        {
+          "name": "exampleMove",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            },
+            {
+              "$ref": "#/components/examples/stringProlongType"
+            },
+            {
+              "$ref": "#/components/examples/stringDir"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "удаление домена",
+          "method": "remove",
+          "name": "remove",
+          "params": {
+            "domain": "$params.domain"
+          }
+        }
+      ],
+      "name": "move",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "тип продления ('no', 'bonus_money', 'manual')",
+          "name": "prolongType",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "домашняя директория (не обязательное поле)",
+          "name": "dir",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultMove"
+      }
+    },
+    {
+      "description": "Добавление существующих доменов на аккаунт",
+      "examples": [
+        {
+          "name": "exampleMoveList",
+          "params": [
+            {
+              "$ref": "#/components/examples/arrayDomains"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "moveList",
+      "params": [
+        {
+          "description": "массив доменов: [['fqdn' : 'имя домена', 'prolongType' : 'тип продления ('no', 'manual', 'bonus_money')', 'dir' : 'домашняя директория (не обязательное поле)']]",
+          "name": "domains",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultMoveList"
+      }
+    },
+    {
+      "description": "Изменение настроек автопродления",
+      "examples": [
+        {
+          "name": "exampleChangeProlong",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            },
+            {
+              "$ref": "#/components/examples/stringProlongType"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "changeProlong",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "тип продления ('none', 'bonus_money', 'manual')",
+          "name": "prolongType",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Массовая смена типа автопродления",
+      "examples": [
+        {
+          "name": "exampleChangeProlongList",
+          "params": [
+            {
+              "$ref": "#/components/examples/arrayDomain"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "changeProlongList",
+      "params": [
+        {
+          "description": "массив массивов: [['domain' : 'имя домена', 'prolongType' : 'тип продления ('no' - не продлевать, 'manual' - вручную клиентом, 'bonus_money' - продлевать за ДБ)']]",
+          "name": "domains",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Удаление домена",
+      "examples": [
+        {
+          "name": "exampleRemove",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "добавление домена на аккаунт",
+          "method": "move",
+          "name": "move",
+          "params": {
+            "dir": "$params.dir",
+            "domain": "$params.domain",
+            "prolongType": "$params.prolongType"
+          }
+        }
+      ],
+      "name": "remove",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Массовое удаление доменов",
+      "examples": [
+        {
+          "name": "exampleRemoveList",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomains"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "removeList",
+      "params": [
+        {
+          "description": "домены",
+          "name": "domains",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Продление домена",
+      "examples": [
+        {
+          "name": "exampleRemoveList",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            },
+            {
+              "$ref": "#/components/examples/stringPayType"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "prolong",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "тип оплаты",
+          "name": "payType",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Массовое продление доменов",
+      "examples": [
+        {
+          "name": "exampleProlongList",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomains"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultProlongList"
+          }
+        }
+      ],
+      "links": [],
+      "name": "prolongList",
+      "params": [
+        {
+          "description": "домены",
+          "name": "domains",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Array"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultProlongList"
+      }
+    },
+    {
+      "description": "Можно ли сделать трансфер домена",
+      "examples": [
+        {
+          "name": "examplePriceForTrasfer",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [],
+      "name": "priceForTrasfer",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Стоимость регистрации домена",
+      "examples": [
+        {
+          "name": "examplePriceForRegistration",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultPriceForRegistration"
+          }
+        }
+      ],
+      "links": [],
+      "name": "priceForRegistration",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultPriceForRegistration"
+      }
+    },
+    {
+      "description": "Удаление поддомена",
+      "examples": [
+        {
+          "name": "exampleRemoveSubdomain",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            },
+            {
+              "$ref": "#/components/examples/stringMachine"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "добавить поддомен",
+          "method": "createSubdomain",
+          "name": "createSubdomain",
+          "params": {
+            "dir": "$params.dir",
+            "domain": "$params.domain",
+            "machine": "$params.machine"
+          }
+        }
+      ],
+      "name": "removeSubdomain",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "поддомен",
+          "name": "machine",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Добавление поддомена",
+      "examples": [
+        {
+          "name": "exampleCreateSubdomain",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            },
+            {
+              "$ref": "#/components/examples/stringMachine"
+            },
+            {
+              "$ref": "#/components/examples/stringDir"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "удалить поддомен",
+          "method": "removeSubdomain",
+          "name": "removeSubdomain",
+          "params": {
+            "domain": "$params.domain",
+            "machine": "$params.machine"
+          }
+        }
+      ],
+      "name": "createSubdomain",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "поддомен",
+          "name": "machine",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "директория сайта",
+          "name": "dir",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Установка переадресации для домена",
+      "examples": [
+        {
+          "name": "exampleSetRedirectVh",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            },
+            {
+              "$ref": "#/components/examples/stringRedirect"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultIntegerOne"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "возвращает переадресацию для домена",
+          "method": "getRedirectVh",
+          "name": "getRedirectVh",
+          "params": {
+            "domain": "$params.domain"
+          }
+        }
+      ],
+      "name": "setRedirectVh",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        },
+        {
+          "description": "URL редиректа",
+          "name": "redirect",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultInt"
+      }
+    },
+    {
+      "description": "Возвращает переадресацию для домена",
+      "examples": [
+        {
+          "name": "exampleGetRedirectVh",
+          "params": [
+            {
+              "$ref": "#/components/examples/stringDomain"
+            }
+          ],
+          "result": {
+            "$ref": "#/components/examples/resultGetRedirect"
+          }
+        }
+      ],
+      "links": [
+        {
+          "description": "установка переадресации для домена",
+          "method": "setRedirectVh",
+          "name": "setRedirectVh",
+          "params": {
+            "domain": "$params.domain",
+            "redirect": "$params.redirect"
+          }
+        }
+      ],
+      "name": "getRedirectVh",
+      "params": [
+        {
+          "description": "домен",
+          "name": "domain",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/String"
+          }
+        }
+      ],
+      "result": {
+        "$ref": "#/components/contentDescriptors/resultGetRedirect"
+      }
+    }
+  ],
+  "openrpc": "1.0.0-rc1",
+  "servers": [
+    {
+      "description": "Основные функции:\n\nинформация о доменах и поддоменах на аккаунте,\n\nдобавление и удаление доменов и поддоменов,\n\nрегистрация, продление, трансфер,\n\nинформация о стоимости регистрации, продления, трансфера",
+      "name": "Domains",
+      "summary": "Операции с доменами и поддоменами",
+      "url": "https://api.sweb.ru/domains"
+    }
+  ]
+}
