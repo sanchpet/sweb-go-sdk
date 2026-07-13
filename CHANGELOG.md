@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.1](https://github.com/sanchpet/sweb-go-sdk/compare/v0.16.0...v0.16.1) (2026-07-13)
+
+
+### Bug Fixes
+
+* **sdk:** decode single-object VH results correctly ([#82](https://github.com/sanchpet/sweb-go-sdk/issues/82)) ([43398f6](https://github.com/sanchpet/sweb-go-sdk/commit/43398f60d94d678acaaef448ebaad7a54ed24269))
+
 ## [0.16.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.15.0...v0.16.0) (2026-07-13)
 
 
