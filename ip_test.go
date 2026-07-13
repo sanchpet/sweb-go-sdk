@@ -208,6 +208,203 @@ func TestGetPtr(t *testing.T) {
 	}
 }
 
+func TestGetAllIPList(t *testing.T) {
+	var gotMethod string
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod = req.Method
+		// Two rows: an ordinary attached IP and a free protected IP whose
+		// nullable fields (name, billingId) really arrive as null; datacenter
+		// and price come as bare numbers, planId/limit as int or null.
+		_, _ = w.Write([]byte(`{"result":[` +
+			`{"ip":"203.0.113.7","name":"acct_vps_1","billingId":"acct_vps_1","datacenter":1,"gateway":"203.0.113.1","netmask":"203.0.113.0/24","isPrimary":false,"allowBeDecline":true,"canBeDecline":true,"canBeMove":true,"currentAction":null,"acceptorBillingIds":[],"price":140,"date":"11.06.2025","planId":null,"limit":null},` +
+			`{"ip":"203.0.113.44","name":null,"billingId":null,"datacenter":1,"gateway":"203.0.113.1","canBeMove":true,"currentAction":null,"acceptorBillingIds":[{"billingId":"acct_vps_1","name":"acct_vps_1"}],"netmask":"203.0.113.0/24","isPrimary":false,"allowBeDecline":true,"canBeDecline":true,"price":6000,"date":null,"planId":2,"limit":50}` +
+			`]}`))
+	})
+	list, err := c.IP.GetAllIPList(context.Background())
+	if err != nil {
+		t.Fatalf("GetAllIPList: %v", err)
+	}
+	if gotMethod != "getAllIpList" {
+		t.Errorf("method = %q, want getAllIpList", gotMethod)
+	}
+	if len(list) != 2 {
+		t.Fatalf("len = %d, want 2", len(list))
+	}
+	if list[0].IP != "203.0.113.7" || list[0].BillingID != "acct_vps_1" || list[0].Price != 140 {
+		t.Errorf("row0 = %+v, want 203.0.113.7 / acct_vps_1 / 140", list[0])
+	}
+	p := list[1]
+	if p.Name != "" || p.BillingID != "" {
+		t.Errorf("row1 nullable name/billingId = %q/%q, want empty", p.Name, p.BillingID)
+	}
+	if p.PlanID != 2 || p.Limit != 50 {
+		t.Errorf("row1 planId/limit = %d/%d, want 2/50", int64(p.PlanID), int64(p.Limit))
+	}
+	if len(p.AcceptorBillingIDs) != 1 || p.AcceptorBillingIDs[0].BillingID != "acct_vps_1" {
+		t.Errorf("row1 acceptorBillingIds = %+v, want one acct_vps_1", p.AcceptorBillingIDs)
+	}
+}
+
+func TestGetOrderInfo(t *testing.T) {
+	var gotMethod string
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod = req.Method
+		_, _ = w.Write([]byte(`{"result":{"dailyIpLimit":7,"dailyProtectedIpLimit":7,"ipOrdersLastDay":0,"protectedIpOrdersLastDay":3}}`))
+	})
+	info, err := c.IP.GetOrderInfo(context.Background())
+	if err != nil {
+		t.Fatalf("GetOrderInfo: %v", err)
+	}
+	if gotMethod != "getOrderInfo" {
+		t.Errorf("method = %q, want getOrderInfo", gotMethod)
+	}
+	if info.DailyIPLimit != 7 || info.ProtectedIPOrdersLastDay != 3 || info.IPOrdersLastDay != 0 {
+		t.Errorf("info = %+v, want dailyIpLimit 7 / protectedOrders 3 / ipOrders 0", info)
+	}
+}
+
+func TestAddProtected(t *testing.T) {
+	var gotMethod string
+	var gotParams struct {
+		BillingID string `json:"billingId"`
+		PlanIDs   []int  `json:"planIds"`
+	}
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+			Params json.RawMessage
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod = req.Method
+		_ = json.Unmarshal(req.Params, &gotParams)
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":true}`))
+	})
+	if err := c.IP.AddProtected(context.Background(), "login_vps_1", []int{2, 3}); err != nil {
+		t.Fatalf("AddProtected: %v", err)
+	}
+	if gotMethod != "addProtected" || gotParams.BillingID != "login_vps_1" || len(gotParams.PlanIDs) != 2 || gotParams.PlanIDs[0] != 2 {
+		t.Errorf("method/params = %q/%+v, want addProtected / login_vps_1,[2 3]", gotMethod, gotParams)
+	}
+}
+
+func TestRemoveProtected(t *testing.T) {
+	var gotMethod string
+	var gotParams struct {
+		IP string `json:"ip"`
+	}
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+			Params json.RawMessage
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod = req.Method
+		_ = json.Unmarshal(req.Params, &gotParams)
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":true}`))
+	})
+	if err := c.IP.RemoveProtected(context.Background(), "127.0.105.44"); err != nil {
+		t.Fatalf("RemoveProtected: %v", err)
+	}
+	if gotMethod != "removeProtected" || gotParams.IP != "127.0.105.44" {
+		t.Errorf("method/ip = %q/%q, want removeProtected/127.0.105.44", gotMethod, gotParams.IP)
+	}
+}
+
+// The protected sentinel is documented as boolean but removeProtected's result
+// $ref points at the integer resultAdd; accept integer 1 as success too.
+func TestProtectedIntegerSentinel(t *testing.T) {
+	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":1}`))
+	})
+	if err := c.IP.RemoveProtected(context.Background(), "127.0.105.44"); err != nil {
+		t.Fatalf("RemoveProtected with integer 1: %v", err)
+	}
+}
+
+func TestProtectedFailure(t *testing.T) {
+	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":false}`))
+	})
+	if err := c.IP.UpdateProtected(context.Background(), "127.0.105.44", 3); err == nil {
+		t.Fatal("UpdateProtected: want error on result false, got nil")
+	}
+}
+
+func TestUpdateProtected(t *testing.T) {
+	var gotMethod string
+	var gotParams struct {
+		IP     string `json:"ip"`
+		PlanID int    `json:"planId"`
+	}
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+			Params json.RawMessage
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod = req.Method
+		_ = json.Unmarshal(req.Params, &gotParams)
+		_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":true}`))
+	})
+	if err := c.IP.UpdateProtected(context.Background(), "127.0.105.44", 3); err != nil {
+		t.Fatalf("UpdateProtected: %v", err)
+	}
+	if gotMethod != "updateProtected" || gotParams.IP != "127.0.105.44" || gotParams.PlanID != 3 {
+		t.Errorf("method/params = %q/%+v, want updateProtected / ip,planId 3", gotMethod, gotParams)
+	}
+}
+
+func TestMoveProtected(t *testing.T) {
+	// Attach sends billingId; detach (empty) sends null.
+	for _, tc := range []struct {
+		name      string
+		billingID string
+		wantNull  bool
+	}{
+		{"attach", "login_vps_2", false},
+		{"detach", "", true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var gotMethod string
+			var rawParams json.RawMessage
+			c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+				var req struct {
+					Method string `json:"method"`
+					Params json.RawMessage
+				}
+				_ = json.NewDecoder(r.Body).Decode(&req)
+				gotMethod = req.Method
+				rawParams = req.Params
+				_, _ = w.Write([]byte(`{"jsonrpc":"2.0","result":true}`))
+			})
+			if err := c.IP.MoveProtected(context.Background(), "127.0.105.44", tc.billingID); err != nil {
+				t.Fatalf("MoveProtected: %v", err)
+			}
+			if gotMethod != "moveProtected" {
+				t.Errorf("method = %q, want moveProtected", gotMethod)
+			}
+			var p struct {
+				BillingID *string `json:"billingId"`
+			}
+			_ = json.Unmarshal(rawParams, &p)
+			if tc.wantNull && p.BillingID != nil {
+				t.Errorf("detach: billingId = %v, want null", *p.BillingID)
+			}
+			if !tc.wantNull && (p.BillingID == nil || *p.BillingID != tc.billingID) {
+				t.Errorf("attach: billingId = %v, want %q", p.BillingID, tc.billingID)
+			}
+		})
+	}
+}
+
 func TestWaitForLocalIP(t *testing.T) {
 	var calls int
 	c := serve(t, func(w http.ResponseWriter, _ *http.Request) {
