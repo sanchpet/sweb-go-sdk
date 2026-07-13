@@ -4,19 +4,19 @@ How many JSON-RPC methods of each API object the SDK implements, measured live f
 
 Detection is a heuristic: a spec method counts as implemented when its name appears as a Go string literal in an SDK file that references the object's endpoint const. See `api-spec/coverage/main.go` for the method and its false-positive/negative caveats.
 
-**Overall: 68/277 methods (24%) across 29 objects.**
+**Overall: 138/277 methods (49%) across 29 objects.**
 
 | Object | Covered | Missing methods |
 | --- | --- | --- |
-| `/balancer` | 0/6 (0%) | `create`, `edit`, `getAvailableConfig`, `index`, `isCreateEnable`, `remove` |
-| `/dbaas` | 0/11 (0%) | `createInstance`, `deleteDatabase`, `editInstance`, `getAvailableConfig`, `getConstructorPlanId`, `getFirstOrderInfo`, `index`, `removeFirst`, `removeInstance`, `setUpgradeAgree`, `validateUsers` |
+| `/balancer` | 6/6 (100%) | — |
+| `/dbaas` | 11/11 (100%) | — |
 | `/domains` | 21/21 (100%) | — |
 | `/domains/bonus` | 0/3 (0%) | `buy`, `getList`, `index` |
 | `/domains/dns` | 7/7 (100%) | — |
 | `/domains/persons` | 0/4 (0%) | `createFizIp`, `createJur`, `getinfo`, `index` |
-| `/monitoring` | 0/4 (0%) | `change`, `disable`, `enable`, `plans` |
-| `/monitoring/checks` | 0/16 (0%) | `activate`, `activateList`, `create`, `deactivate`, `deactivateList`, `edit`, `getFullCheckInfo`, `getInfo`, `getIntervals`, `getKeywordModes`, `getPorts`, `getTypes`, `history`, `index`, `remove`, `removeList` |
-| `/monitoring/contacts` | 0/15 (0%) | `addContact`, `addEmail`, `addPhone`, `addTelegram`, `deleteContact`, `deleteContacts`, `editContact`, `editEmail`, `editPhone`, `editTelegram`, `getAllContacts`, `index`, `isVerified`, `requestTelegramVerifyCode`, `verifyContact` |
+| `/monitoring` | 4/4 (100%) | — |
+| `/monitoring/checks` | 16/16 (100%) | — |
+| `/monitoring/contacts` | 15/15 (100%) | — |
 | `/pay` | 0/10 (0%) | `changeDeferment`, `getActiveReserves`, `getBalance`, `getPayRecommendations`, `getRecommendationTotalCost`, `getRemainsDate`, `getRemainsDays`, `getUpcomingPaymentsVh`, `index`, `isAutopaymentEnable` |
 | `/sites` | 0/8 (0%) | `add`, `changeBackEnd`, `changeDomainSite`, `del`, `edit`, `getBackEndsList`, `getSiteInfo`, `index` |
 | `/tariff` | 0/2 (0%) | `index`, `serverInfo` |
@@ -31,9 +31,9 @@ Detection is a heuristic: a spec method counts as implemented when its name appe
 | `/vh/ssl` | 0/8 (0%) | `download`, `editAutoprolong`, `getOrderList`, `getProlongInfo`, `index`, `installLetsEncrypt`, `prolongCertificate`, `removeCertificate` |
 | `/vh/utils` | 0/2 (0%) | `sshOff`, `sshOn` |
 | `/vh/utils/diskUsage` | 0/5 (0%) | `changeEmail`, `getEmail`, `getTasksInfo`, `index`, `startTask` |
-| `/vps` | 15/20 (75%) | `createEnable`, `createFirst`, `getCurrentAction`, `load`, `removeFirst` |
+| `/vps` | 20/20 (100%) | — |
 | `/vps/backup` | 9/9 (100%) | — |
 | `/vps/ip` | 2/2 (100%) | — |
-| `/vps/ip` | 8/14 (57%) | `addProtected`, `getAllIpList`, `getOrderInfo`, `moveProtected`, `removeProtected`, `updateProtected` |
+| `/vps/ip` | 14/14 (100%) | — |
 | `/vps/remoteBackup` | 6/6 (100%) | — |
-| `/vps/ssl` | 0/7 (0%) | `download`, `editAutoprolong`, `getOrderList`, `getProlongInfo`, `index`, `orderSubmit`, `removeCertificate` |
+| `/vps/ssl` | 7/7 (100%) | — |

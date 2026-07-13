@@ -4,17 +4,26 @@ A Go client for the SpaceWeb (sweb.ru) hosting API (JSON-RPC 2.0 over HTTPS).
 It is the shared foundation for the `sweb` CLI and a future Terraform provider —
 so the **public interface is a contract**: keep it stable and well-typed.
 
-## Architecture (boundary discipline)
+## Architecture (per-service packages, ADR-0019)
 
-- `client.go` — `Client`, functional options, and the private `call()` transport
-  (JSON-RPC envelope, Bearer auth, `{result|error}` decoding, non-200 mapping).
-  HTTP/auth/retry are **internal**; consumers never see them.
-- `vps.go`, `config.go`, `ip.go`, `backup.go`, `remotebackup.go`, `dns.go`,
-  `auth.go` — typed operations grouped by service (`Client.VPS.*`, `Client.IP.*`,
-  `Client.Backup.*`, `Client.DNS.*`, `Client.CreateToken`). One file per service;
-  a service is a small struct hanging off `Client` with methods that call `call()`.
-- `flex.go` — `FlexInt` / `FlexFloat` (see conventions).
-- `errors.go` — `*Error` (JSON-RPC error object / non-200).
+- `internal/transport` — `transport.Client`, functional `Option`s, and `Call`
+  (JSON-RPC envelope, Bearer auth with transparent token refresh, `{result|error}`
+  decoding, non-200 mapping, the `getToken` exchange). HTTP/auth/retry are
+  **internal/** — compiler-enforced unimportable by outside consumers.
+- One package per service — `vps`, `ip`, `backup`, `remotebackup`, `dns`,
+  `domains`, `balancer`, `dbaas`, `ssl`, `monitoring` (+ `monitoring/checks`,
+  `monitoring/contacts`). Each carries its own local vocabulary (`vps.Service`,
+  `balancer.Config`, `dns.Record`) with no cross-service name collision; a
+  `Service{ t *transport.Client }` whose methods call `s.t.Call(ctx, <ep>, …)`.
+  `New(t)` constructs one over the shared transport.
+- `sweb.go` — the root **facade**: `New()` wires the service clients over one
+  transport and exposes them as fields (`Client.VPS`, `Client.IP`, …), preserving
+  every call site; it re-exports the options (`sweb.WithToken` = `transport.WithToken`)
+  and delegates `Client.CreateToken`.
+- `flex` — `flex.Int` / `flex.Float` (see conventions), a public leaf.
+- `apierr` — `*apierr.Error` (JSON-RPC error object / non-200), a public leaf.
+- Dependency direction is acyclic: `sweb → {services, transport}`;
+  `services → {transport, flex, apierr}`; `transport → {flex, apierr}`.
 - **stdlib only.** CLI/UX concerns (Cobra, Viper, Charm) belong in the *CLI* repo,
   never here — the SDK stays dependency-light and importable.
 
@@ -22,14 +31,14 @@ so the **public interface is a contract**: keep it stable and well-typed.
 
 - **Numbers arrive polymorphic.** SpaceWeb quotes numeric fields inconsistently
   (bare `1`, quoted `"1024"`, or `null`) and even returns money as `int`-or-`float`.
-  Decode every numeric API field through **`FlexInt` / `FlexFloat`**, never a bare
+  Decode every numeric API field through **`flex.Int` / `flex.Float`**, never a bare
   `int`/`float64` — a strict type panics on real payloads. Same for shape drift:
   a field documented as an array can arrive as a bare object when populated
   (`local_ip`), so tolerant `UnmarshalJSON` over strict typing.
 - **Mutating actions answer `1`/`0`.** Action methods (`rename`, `changePlan`,
   `powerOn`/`powerOff`/`reboot`, `addLocal`, …) return `1` on success and `0` on
-  failure — decode into `FlexInt` and treat non-`1` as an error. Group siblings
-  behind a private helper (`VPS.powerAction`, `IP.localAction`). **Sentinels are
+  failure — decode into `flex.Int` and treat non-`1` as an error. Group siblings
+  behind a private helper (`vps.powerAction`, `ip.localAction`). **Sentinels are
   not uniform even within one endpoint:** on `/domains/dns`, `editMx` answers
   integer `1` but `editSrv`/`editNS`/`editTxt`/`editMain` answer boolean `true`
   (hence the split `DNS.editOne`/`DNS.editBool` helpers). Confirm the sentinel per
