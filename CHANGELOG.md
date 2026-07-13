@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.16.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.15.0...v0.16.0) (2026-07-13)
+
+
+### Features
+
+* **bonus:** add domain-bonus service ([#74](https://github.com/sanchpet/sweb-go-sdk/issues/74)) ([fd4e66f](https://github.com/sanchpet/sweb-go-sdk/commit/fd4e66fe053afbaca3f0a7a5fba5e0fd3df4a923))
+* **cron:** add shared-hosting crontab service ([#63](https://github.com/sanchpet/sweb-go-sdk/issues/63)) ([19cc276](https://github.com/sanchpet/sweb-go-sdk/commit/19cc27618f824e60d1006beee9d165c93433aaf8))
+* **ddg:** add DDoS-Guard service ([#75](https://github.com/sanchpet/sweb-go-sdk/issues/75)) ([b8021db](https://github.com/sanchpet/sweb-go-sdk/commit/b8021dbaa96c999c9d90dda535fbb769aaa9d9b1))
+* **diskusage:** add disk-usage service ([#70](https://github.com/sanchpet/sweb-go-sdk/issues/70)) ([071656d](https://github.com/sanchpet/sweb-go-sdk/commit/071656dd4143652c48bb0a309935c1af5d3c346f))
+* **hosting:** add shared-hosting database service ([#68](https://github.com/sanchpet/sweb-go-sdk/issues/68)) ([1f9540c](https://github.com/sanchpet/sweb-go-sdk/commit/1f9540cdc09624366bca830b9289174b078b412c))
+* **hostingload:** add shared-hosting load service ([#72](https://github.com/sanchpet/sweb-go-sdk/issues/72)) ([751579a](https://github.com/sanchpet/sweb-go-sdk/commit/751579ac07450f4ab6656367a6ba7353f9893d30))
+* **mail:** add shared-hosting mail service ([#69](https://github.com/sanchpet/sweb-go-sdk/issues/69)) ([d943858](https://github.com/sanchpet/sweb-go-sdk/commit/d943858743cba0acdb03c71e77618c39c86f4802))
+* **partner:** add partner-program service ([#79](https://github.com/sanchpet/sweb-go-sdk/issues/79)) ([adba7d1](https://github.com/sanchpet/sweb-go-sdk/commit/adba7d115d5afc313a9a1d8a9ebc201df76c510c))
+* **pay:** add billing/pay service ([#78](https://github.com/sanchpet/sweb-go-sdk/issues/78)) ([706efeb](https://github.com/sanchpet/sweb-go-sdk/commit/706efeb4d04a7124b6df635a869300c498af9b3c))
+* **persons:** add domain-registrant persons service ([#77](https://github.com/sanchpet/sweb-go-sdk/issues/77)) ([5dadfab](https://github.com/sanchpet/sweb-go-sdk/commit/5dadfabf76fab72133a0439a480a04482c89a790))
+* **referral:** add referral-program service ([#76](https://github.com/sanchpet/sweb-go-sdk/issues/76)) ([157d73b](https://github.com/sanchpet/sweb-go-sdk/commit/157d73b823a9f437dca3a8ae84a21927815ef140))
+* **sites:** add shared-hosting website service ([#65](https://github.com/sanchpet/sweb-go-sdk/issues/65)) ([0d0b536](https://github.com/sanchpet/sweb-go-sdk/commit/0d0b5366f6500c8bf2d5f0be7777e484947d1059))
+* **ssh:** add shared-hosting SSH-toggle service ([#71](https://github.com/sanchpet/sweb-go-sdk/issues/71)) ([ccd190e](https://github.com/sanchpet/sweb-go-sdk/commit/ccd190e041c7c04d00c3b1d0b8018a52ae553e92))
+* **sweb:** wire M2/M3/M4 services into the facade ([#80](https://github.com/sanchpet/sweb-go-sdk/issues/80)) ([c087028](https://github.com/sanchpet/sweb-go-sdk/commit/c087028a59472da53813c832b3cb0ed16055faa1))
+* **tariff:** add tariff/server-info service ([#73](https://github.com/sanchpet/sweb-go-sdk/issues/73)) ([c6123ee](https://github.com/sanchpet/sweb-go-sdk/commit/c6123ee3b69ac368130cd7f4bb07666eecc0173e))
+* **vhbackup:** add shared-hosting account backup service ([#67](https://github.com/sanchpet/sweb-go-sdk/issues/67)) ([36bae1c](https://github.com/sanchpet/sweb-go-sdk/commit/36bae1c1a10ef1e609fbffb3a34105faa2c70e4a))
+* **vhssl:** add shared-hosting SSL service ([#64](https://github.com/sanchpet/sweb-go-sdk/issues/64)) ([bd94652](https://github.com/sanchpet/sweb-go-sdk/commit/bd94652ec1526723a2efc276937083a87ccb809d))
+
 ## [0.15.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.14.1...v0.15.0) (2026-07-13)
 
 
