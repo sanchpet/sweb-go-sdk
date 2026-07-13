@@ -332,6 +332,112 @@ func (s *VPSService) GetFirstOrderInfo(ctx context.Context) (*FirstOrderInfo, er
 	return &out[0].Result, nil
 }
 
+// GetCurrentAction returns the VPS's current async operation (method
+// "getCurrentAction") — the same value carried per-node as VPS.CurrentAction,
+// but as a cheap single-VPS query useful for polling a resize/provision from a
+// provider. Read-only. The result is a bare string ("" / "none" once idle, e.g.
+// "start" / "Modify" while an action runs).
+func (s *VPSService) GetCurrentAction(ctx context.Context, billingID string) (string, error) {
+	var out string
+	if err := s.c.call(ctx, vpsEndpoint, "getCurrentAction", map[string]string{"billingId": billingID}, &out); err != nil {
+		return "", err
+	}
+	return out, nil
+}
+
+// CreateEnable reports whether ordering a VPS is currently available for the
+// account (method "createEnable") — the precondition check the panel runs before
+// the first-order flow. Read-only: it neither creates nor bills. The API answers
+// 1 (available) or 0 (not available); a JSON-RPC error surfaces as *Error.
+func (s *VPSService) CreateEnable(ctx context.Context) (bool, error) {
+	var out FlexInt
+	if err := s.c.call(ctx, vpsEndpoint, "createEnable", nil, &out); err != nil {
+		return false, err
+	}
+	return out == 1, nil
+}
+
+// CreateFirstRequest holds the parameters for CreateFirst (method
+// "createFirst"). Only DistributiveID and VPSPlanID are required; the rest are
+// omitted when zero-valued. Resolve the numeric IDs via AvailableConfig.
+type CreateFirstRequest struct {
+	DistributiveID      int    `json:"distributiveId"`
+	VPSPlanID           int    `json:"vpsPlanId"`
+	Datacenter          int    `json:"datacenter,omitempty"`
+	Alias               string `json:"alias,omitempty"`
+	SSHKey              string `json:"sshKey,omitempty"`
+	SSHKeyName          string `json:"sshKeyName,omitempty"`
+	PrivateIP           bool   `json:"privateIp,omitempty"`
+	Period              int    `json:"period,omitempty"` // 1 or 12 months
+	StartTestPeriod     bool   `json:"startTestPeriod,omitempty"`
+	MonitoringPlanID    int    `json:"monitoringPlanId,omitempty"`
+	MonitoringContactID int    `json:"monitoringContactId,omitempty"`
+	IPCount             int    `json:"ipCount,omitempty"` // first order: 0 or 1
+	ProtectedIPs        []int  `json:"protectedIps,omitempty"`
+}
+
+// CreateFirst places the account's promotional first VPS order (method
+// "createFirst"). Like Create it provisions a NEW, billed VPS (with the
+// first-order pricing / trial-period options), so the result shape is left raw:
+// it mutates and bills and was not exercised during the Evidence phase. The docs
+// describe the result as the new service's billingId string ("login_vps_N");
+// type it once a real response is recorded. Undo with RemoveFirst while the order
+// is still unpaid.
+func (s *VPSService) CreateFirst(ctx context.Context, req CreateFirstRequest) (json.RawMessage, error) {
+	var out json.RawMessage
+	err := s.c.call(ctx, vpsEndpoint, "createFirst", req, &out)
+	return out, err
+}
+
+// RemoveFirst cancels the account's first VPS order (method "removeFirst") —
+// available only while that order is still unpaid and the service has not
+// started. Takes no parameters (it targets the account's single first order).
+// This is destructive; the result shape is left raw pending a recorded response.
+// The docs describe a 1/0 result.
+func (s *VPSService) RemoveFirst(ctx context.Context) (json.RawMessage, error) {
+	var out json.RawMessage
+	err := s.c.call(ctx, vpsEndpoint, "removeFirst", nil, &out)
+	return out, err
+}
+
+// LoadGraph is the result of Load (method "load"): a rendered resource-usage
+// chart returned inline as base64. Shape reconciled against the spec's recorded
+// example — note the OpenRPC result schema nominally declares "array" but the
+// example is this object, so the object shape is authoritative.
+type LoadGraph struct {
+	MIMEType string            `json:"mimetype"` // e.g. "image/png;base64"
+	Metadata []json.RawMessage `json:"metadata"` // shape unobserved beyond empty []
+	Content  string            `json:"content"`  // base64-encoded image
+}
+
+// LoadType selects which resource-usage series Load renders.
+type LoadType string
+
+// The load series accepted by Load (the API's "type" parameter).
+const (
+	LoadCPU    LoadType = "cpu"
+	LoadHDDOps LoadType = "hdd_ops"
+	LoadNet    LoadType = "net"
+)
+
+// Load renders a VPS resource-usage graph as a base64 image (method "load").
+// billingID is the service id; loadType is the series (LoadCPU/LoadHDDOps/
+// LoadNet); from and to bound the window (dd-mm-yyyy, e.g. "08-03-2023"); width
+// is the graph width in pixels. Read-only.
+func (s *VPSService) Load(ctx context.Context, billingID string, loadType LoadType, from, to string, width int) (*LoadGraph, error) {
+	var out LoadGraph
+	if err := s.c.call(ctx, vpsEndpoint, "load", map[string]any{
+		"billingId": billingID,
+		"type":      string(loadType),
+		"from":      from,
+		"to":        to,
+		"width":     width,
+	}, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // WaitForIdle polls the VPS until its current_action is empty. SpaceWeb runs a
 // resize / provisioning as a SEQUENCE of async actions (e.g. Modify → ExtIpAdd —
 // an IP re-issue runs even when no extra IP was ordered), and is_running stays 1

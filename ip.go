@@ -190,6 +190,121 @@ func (s *IPService) Move(ctx context.Context, ip, billingID string) error {
 	return nil
 }
 
+// AllIPEntry is one row of the account-wide IP list (method "getAllIpList"):
+// every IP on the account, attached or free, ordinary or anti-DDoS protected.
+type AllIPEntry struct {
+	IP                 string        `json:"ip"`
+	Name               string        `json:"name"`       // string|null: VPS name, absent when the IP is unbound
+	BillingID          string        `json:"billingId"`  // string|null: owning VPS service, absent when unbound
+	Datacenter         FlexInt       `json:"datacenter"` // datacenter id
+	Gateway            string        `json:"gateway"`
+	Netmask            string        `json:"netmask"`
+	IsPrimary          bool          `json:"isPrimary"`          // false for additional IPs
+	AllowBeDecline     bool          `json:"allowBeDecline"`     // is "decline IP" shown
+	CanBeDecline       bool          `json:"canBeDecline"`       // is "decline IP" usable
+	CanBeMove          bool          `json:"canBeMove"`          // is "move" usable
+	CurrentAction      string        `json:"currentAction"`      // string|null: same value as vps/index current_action
+	AcceptorBillingIDs []AcceptorVPS `json:"acceptorBillingIds"` // VPSes this IP may be moved to
+	Price              FlexInt       `json:"price"`              // may be 0 when the IP is included in the plan
+	Date               string        `json:"date"`               // string|null: service end date, "01.07.2022"
+	PlanID             FlexInt       `json:"planId"`             // int|null: protected-IP plan id (0 when ordinary)
+	Limit              FlexInt       `json:"limit"`              // int|null: protected-IP channel limit, Mbit (0 when ordinary)
+}
+
+// AcceptorVPS names a VPS an IP can be moved onto (getAllIpList
+// acceptorBillingIds element).
+type AcceptorVPS struct {
+	BillingID string `json:"billingId"`
+	Name      string `json:"name"`
+}
+
+// GetAllIPList returns every IP on the account (method "getAllIpList"): attached
+// or free, ordinary or protected. Read-only, no VPS scoping.
+func (s *IPService) GetAllIPList(ctx context.Context) ([]AllIPEntry, error) {
+	var out []AllIPEntry
+	if err := s.c.call(ctx, ipEndpoint, "getAllIpList", nil, &out); err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// OrderInfo is the account's IP-ordering quota (method "getOrderInfo"): how many
+// IPs were ordered in the last 24h against the daily cap, ordinary and protected.
+type OrderInfo struct {
+	IPOrdersLastDay          FlexInt `json:"ipOrdersLastDay"`
+	DailyIPLimit             FlexInt `json:"dailyIpLimit"`
+	ProtectedIPOrdersLastDay FlexInt `json:"protectedIpOrdersLastDay"`
+	DailyProtectedIPLimit    FlexInt `json:"dailyProtectedIpLimit"`
+}
+
+// GetOrderInfo returns the account IP-ordering limits and usage (method
+// "getOrderInfo"). Read-only.
+//
+// The OpenRPC contentDescriptor types the result as "integer", but its own
+// example (and the field list) is the {ipOrdersLastDay, dailyIpLimit, …} object
+// decoded here — the object is authoritative.
+func (s *IPService) GetOrderInfo(ctx context.Context) (*OrderInfo, error) {
+	var out OrderInfo
+	if err := s.c.call(ctx, ipEndpoint, "getOrderInfo", nil, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// AddProtected orders anti-DDoS protected IPs for a VPS, one per plan id in
+// planIds (method "addProtected"). This BILLS. Read the assigned addresses back
+// via Info once they settle. Boolean-true success sentinel.
+func (s *IPService) AddProtected(ctx context.Context, billingID string, planIDs []int) error {
+	return s.protectedAction(ctx, "addProtected", map[string]any{
+		"billingId": billingID,
+		"planIds":   planIDs,
+	})
+}
+
+// RemoveProtected releases a protected IP (method "removeProtected"). Boolean-
+// true success sentinel.
+func (s *IPService) RemoveProtected(ctx context.Context, ip string) error {
+	return s.protectedAction(ctx, "removeProtected", map[string]any{"ip": ip})
+}
+
+// UpdateProtected changes a protected IP's plan/channel tariff (method
+// "updateProtected"). Boolean-true success sentinel.
+func (s *IPService) UpdateProtected(ctx context.Context, ip string, planID int) error {
+	return s.protectedAction(ctx, "updateProtected", map[string]any{
+		"ip":     ip,
+		"planId": planID,
+	})
+}
+
+// MoveProtected attaches a protected IP to a VPS, or detaches it when billingID
+// is empty (method "moveProtected"; the API takes billingId=null to detach).
+// Boolean-true success sentinel.
+func (s *IPService) MoveProtected(ctx context.Context, ip, billingID string) error {
+	params := map[string]any{"ip": ip, "billingId": nil}
+	if billingID != "" {
+		params["billingId"] = billingID
+	}
+	return s.protectedAction(ctx, "moveProtected", params)
+}
+
+// protectedAction runs a protected-IP mutation. The spec documents a boolean
+// success sentinel (true) for these, but removeProtected's result $ref points at
+// the integer resultAdd (1/0) — a doc inconsistency — and none is observed live,
+// so accept either boolean true or integer 1. A bad-parameters failure surfaces
+// as a JSON-RPC error via call; a decoded non-true/1 is defensive.
+func (s *IPService) protectedAction(ctx context.Context, method string, params map[string]any) error {
+	var raw json.RawMessage
+	if err := s.c.call(ctx, ipEndpoint, method, params, &raw); err != nil {
+		return err
+	}
+	switch b := bytes.TrimSpace(raw); {
+	case bytes.Equal(b, []byte("true")), bytes.Equal(b, []byte("1")):
+		return nil
+	default:
+		return fmt.Errorf("sweb: %s returned %s, want true or 1", method, b)
+	}
+}
+
 // GetPtr returns the PTR (reverse-DNS) record for an IP (method "getPtr").
 // Read-only. Tolerates the record arriving as a bare string or a {"ptr": …}
 // object.
