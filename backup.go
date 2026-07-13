@@ -50,6 +50,20 @@ func (s *BackupService) Create(ctx context.Context, billingID string) error {
 	return nil
 }
 
+// UpdateIndex refreshes the server-side list of a VPS's local backups (method
+// "updateIndex") so a subsequent List reflects newly created/removed backups.
+// Action 1/0 result.
+func (s *BackupService) UpdateIndex(ctx context.Context, billingID string) error {
+	var out FlexInt
+	if err := s.c.call(ctx, backupEndpoint, "updateIndex", map[string]string{"billingId": billingID}, &out); err != nil {
+		return err
+	}
+	if out != 1 {
+		return fmt.Errorf("sweb: backup updateIndex returned %d, want 1 (0 = failure)", int64(out))
+	}
+	return nil
+}
+
 // Restore restores a VPS from a local backup (method "restore"). DESTRUCTIVE —
 // overwrites the current disk. name is a Backup.Name from List. Action 1/0.
 func (s *BackupService) Restore(ctx context.Context, billingID, name string) error {
