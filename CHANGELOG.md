@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.15.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.14.1...v0.15.0) (2026-07-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* import paths and standalone type references change (sweb.FlexInt -> flex.Int, sweb.BalancerConfig -> balancer.Config, the transport moves under internal/, etc.). Call sites and facade fields (client.VPS.*, sweb.New, sweb.WithToken) are preserved.
+
+### Features
+
+* **backup:** add updateIndex ([#48](https://github.com/sanchpet/sweb-go-sdk/issues/48)) ([aba558b](https://github.com/sanchpet/sweb-go-sdk/commit/aba558bfb1806adf9adad461f8b382aa4b5edb17))
+* **balancer:** add load-balancer service ([#57](https://github.com/sanchpet/sweb-go-sdk/issues/57)) ([a78c8cb](https://github.com/sanchpet/sweb-go-sdk/commit/a78c8cbc0e9f3c74a28c1a426c03fa941be3e727)), closes [#53](https://github.com/sanchpet/sweb-go-sdk/issues/53)
+* **dbaas:** add managed-database service ([#58](https://github.com/sanchpet/sweb-go-sdk/issues/58)) ([fb70d00](https://github.com/sanchpet/sweb-go-sdk/commit/fb70d001762939336c0fa92f092640a0f65fd56a))
+* **ip:** complete VPS IP protected-IP methods ([#51](https://github.com/sanchpet/sweb-go-sdk/issues/51)) ([887d5dc](https://github.com/sanchpet/sweb-go-sdk/commit/887d5dca0340b6b4be002c185dfeb7cdbea1aa85))
+* **monitoring:** add monitoring, checks, and contacts services ([#60](https://github.com/sanchpet/sweb-go-sdk/issues/60)) ([8aa6cf6](https://github.com/sanchpet/sweb-go-sdk/commit/8aa6cf616db8b14b5597aaaa65dadbb9efbe6474))
+* **ssl:** add VPS SSL-certificate service ([#59](https://github.com/sanchpet/sweb-go-sdk/issues/59)) ([0fab162](https://github.com/sanchpet/sweb-go-sdk/commit/0fab162121c1dedcb5af81236bfdd342d064f253))
+* **vps:** complete VPS core methods ([#50](https://github.com/sanchpet/sweb-go-sdk/issues/50)) ([9016673](https://github.com/sanchpet/sweb-go-sdk/commit/9016673431df6ce6e96025f134561ff22b700954))
+
+
+### Code Refactoring
+
+* per-service packages (ADR-0019) ([#61](https://github.com/sanchpet/sweb-go-sdk/issues/61)) ([cc1137c](https://github.com/sanchpet/sweb-go-sdk/commit/cc1137c5fae00a032097b0a32b5d6b45e486ab9a))
+
 ## [0.14.1](https://github.com/sanchpet/sweb-go-sdk/compare/v0.14.0...v0.14.1) (2026-07-12)
 
 
