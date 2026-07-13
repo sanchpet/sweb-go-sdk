@@ -4,33 +4,33 @@ How many JSON-RPC methods of each API object the SDK implements, measured live f
 
 Detection is a heuristic: a spec method counts as implemented when its name appears as a Go string literal in an SDK file that references the object's endpoint const. See `api-spec/coverage/main.go` for the method and its false-positive/negative caveats.
 
-**Overall: 138/277 methods (49%) across 29 objects.**
+**Overall: 277/277 methods (100%) across 29 objects.**
 
 | Object | Covered | Missing methods |
 | --- | --- | --- |
 | `/balancer` | 6/6 (100%) | — |
 | `/dbaas` | 11/11 (100%) | — |
 | `/domains` | 21/21 (100%) | — |
-| `/domains/bonus` | 0/3 (0%) | `buy`, `getList`, `index` |
+| `/domains/bonus` | 3/3 (100%) | — |
 | `/domains/dns` | 7/7 (100%) | — |
-| `/domains/persons` | 0/4 (0%) | `createFizIp`, `createJur`, `getinfo`, `index` |
+| `/domains/persons` | 4/4 (100%) | — |
 | `/monitoring` | 4/4 (100%) | — |
 | `/monitoring/checks` | 16/16 (100%) | — |
 | `/monitoring/contacts` | 15/15 (100%) | — |
-| `/pay` | 0/10 (0%) | `changeDeferment`, `getActiveReserves`, `getBalance`, `getPayRecommendations`, `getRecommendationTotalCost`, `getRemainsDate`, `getRemainsDays`, `getUpcomingPaymentsVh`, `index`, `isAutopaymentEnable` |
-| `/sites` | 0/8 (0%) | `add`, `changeBackEnd`, `changeDomainSite`, `del`, `edit`, `getBackEndsList`, `getSiteInfo`, `index` |
-| `/tariff` | 0/2 (0%) | `index`, `serverInfo` |
-| `/vh/backup` | 0/9 (0%) | `downloadFile`, `getList`, `getListFiles`, `getListMysql`, `makeAccountCopy`, `receiveFiles`, `receiveMysql`, `restoreFiles`, `restoreMysql` |
-| `/vh/cron` | 0/4 (0%) | `addTask`, `editTask`, `getTasks`, `removeTask` |
-| `/vh/ddg` | 0/7 (0%) | `countAllDomains`, `disable`, `enable`, `enableInfo`, `getPrice`, `index`, `priceWidget` |
-| `/vh/hosting` | 0/14 (0%) | `databaseEditComment`, `databaseGetList`, `databaseMysqlAccessCreate`, `databaseMysqlAccessDelete`, `databaseMysqlAccessList`, `databaseMysqlChangePass`, `databaseMysqlCreate`, `databaseMysqlDelete`, `databaseMysqlImport`, `databaseMysqlMakeCopy`, `databasePgsqlChangePass`, `databasePgsqlCreate`, `databasePgsqlDelete`, `getPmaUser` |
-| `/vh/load` | 0/2 (0%) | `getLoadTable`, `index` |
-| `/vh/mail` | 0/37 (0%) | `addDeliveryAddress`, `addForwardingEmail`, `addToBlacklist`, `addToWhitelist`, `changeAutoDiscover`, `changeAutoreply`, `changeDeletingAfterForwarding`, `changeDomainSpf`, `changeMailboxPassword`, `changeMailboxSpf`, `changeMailsCollector`, `changeSenderVerify`, `confirmMailsCollectorEmail`, `createMbox`, `deleteMails`, `disableDkim`, `dropDeliveryAddress`, `dropFromBlacklist`, `dropFromWhitelist`, `dropMbox`, `enableDkim`, `getAutoreply`, `getBlacklist`, `getDeliveryAddressesList`, `getDeliveryInfo`, `getDomainsList`, `getForwardingEmailsList`, `getMailQuota`, `getMailboxesList`, `getMailsCollector`, `getWhitelist`, `isEnabledDeletingAfterForwarding`, `removeForwardingEmail`, `removeMailsCollector`, `sendRequisitesToEmail`, `updateAntispamState`, `updateComment` |
-| `/vh/partnerProgram` | 0/20 (0%) | `checkLogin`, `createOrderVh`, `createOrderVip`, `createOrderVps`, `fillPartnerRequisites`, `getAdvertMaterials`, `getLinkStatistics`, `getPartnerClientCard`, `getPartnerClientLogEvents`, `getPartnerClientLogFinance`, `getPartnerClientsList`, `getRequisitesWithdrawal`, `getStatistic`, `getTypesAdvertMaterials`, `savePartnerClientComment`, `sendWithdrawalOrder`, `standardPlans`, `startPartnership`, `vipPlans`, `vpsOsConfig` |
-| `/vh/referralProgram` | 0/4 (0%) | `addReferralSite`, `confirmReferralSite`, `index`, `removeReferralSite` |
-| `/vh/ssl` | 0/8 (0%) | `download`, `editAutoprolong`, `getOrderList`, `getProlongInfo`, `index`, `installLetsEncrypt`, `prolongCertificate`, `removeCertificate` |
-| `/vh/utils` | 0/2 (0%) | `sshOff`, `sshOn` |
-| `/vh/utils/diskUsage` | 0/5 (0%) | `changeEmail`, `getEmail`, `getTasksInfo`, `index`, `startTask` |
+| `/pay` | 10/10 (100%) | — |
+| `/sites` | 8/8 (100%) | — |
+| `/tariff` | 2/2 (100%) | — |
+| `/vh/backup` | 9/9 (100%) | — |
+| `/vh/cron` | 4/4 (100%) | — |
+| `/vh/ddg` | 7/7 (100%) | — |
+| `/vh/hosting` | 14/14 (100%) | — |
+| `/vh/load` | 2/2 (100%) | — |
+| `/vh/mail` | 37/37 (100%) | — |
+| `/vh/partnerProgram` | 20/20 (100%) | — |
+| `/vh/referralProgram` | 4/4 (100%) | — |
+| `/vh/ssl` | 8/8 (100%) | — |
+| `/vh/utils` | 2/2 (100%) | — |
+| `/vh/utils/diskUsage` | 5/5 (100%) | — |
 | `/vps` | 20/20 (100%) | — |
 | `/vps/backup` | 9/9 (100%) | — |
 | `/vps/ip` | 2/2 (100%) | — |
