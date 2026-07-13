@@ -10,12 +10,17 @@ so the **public interface is a contract**: keep it stable and well-typed.
   (JSON-RPC envelope, Bearer auth with transparent token refresh, `{result|error}`
   decoding, non-200 mapping, the `getToken` exchange). HTTP/auth/retry are
   **internal/** — compiler-enforced unimportable by outside consumers.
-- One package per service — `vps`, `ip`, `backup`, `remotebackup`, `dns`,
-  `domains`, `balancer`, `dbaas`, `ssl`, `monitoring` (+ `monitoring/checks`,
-  `monitoring/contacts`). Each carries its own local vocabulary (`vps.Service`,
-  `balancer.Config`, `dns.Record`) with no cross-service name collision; a
-  `Service{ t *transport.Client }` whose methods call `s.t.Call(ctx, <ep>, …)`.
-  `New(t)` constructs one over the shared transport.
+- One package per service, mirroring the API's object tree. VPS/cloud: `vps`,
+  `ip`, `backup`, `remotebackup`, `balancer`, `dbaas`, `ssl`, `monitoring`
+  (+ `monitoring/checks`, `monitoring/contacts`). Domains: `dns`, `domains`
+  (+ `domains/persons`, `domains/bonus`). Shared hosting (`vh/`): `vh/mail`,
+  `vh/hosting`, `vh/ssl`, `vh/backup`, `vh/cron`, `vh/ddg`, `vh/load`, `vh/ssh`,
+  `vh/diskusage`, `vh/partner`, `vh/referral`, plus `sites`, `tariff`. Billing:
+  `pay`. Each carries its own local vocabulary (`vps.Service`, `balancer.Config`,
+  `dns.Record`) with no cross-service name collision; a `Service{ t *transport.Client }`
+  whose methods call `s.t.Call(ctx, <ep>, …)`. `New(t)` constructs one over the
+  shared transport. The facade aliases the two `vh/` packages whose names collide
+  with a VPS sibling (`vh/backup`→`vhbackup`, `vh/ssl`→`vhssl`).
 - `sweb.go` — the root **facade**: `New()` wires the service clients over one
   transport and exposes them as fields (`Client.VPS`, `Client.IP`, …), preserving
   every call site; it re-exports the options (`sweb.WithToken` = `transport.WithToken`)
