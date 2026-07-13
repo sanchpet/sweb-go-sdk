@@ -11,7 +11,7 @@ import (
 )
 
 func TestPersonsList(t *testing.T) {
-	// index wraps the contacts in a single-element array under {props_filled, persons};
+	// index returns a bare object {props_filled, persons};
 	// resident/used/valid arrive as bare integers.
 	var gotMethod string
 	s := serve(t, func(w http.ResponseWriter, r *http.Request) {
@@ -20,14 +20,14 @@ func TestPersonsList(t *testing.T) {
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod = req.Method
-		_, _ = w.Write([]byte(`{"result":[{"props_filled":1,"persons":[
+		_, _ = w.Write([]byte(`{"result":{"props_filled":1,"persons":[
 			{"id":367684,"name":"Иванов Иван Иванович","resident":0,
 			 "str":"[SWEB-FIZ-III-2168] Иванов Иван Иванович","sweb_handle":"SWEB-FIZ-III-2168",
 			 "type":"f","used":0,"valid":1},
 			{"id":368972,"name":"ООО Ромашка","resident":0,
 			 "str":"[SWEB-ORG-R-1424] ООО Ромашка","sweb_handle":"SWEB-ORG-R-1424",
 			 "type":"u","used":0,"valid":1}
-		]}]}`))
+		]}}`))
 	})
 	list, propsFilled, err := s.List(context.Background())
 	if err != nil {
@@ -55,9 +55,9 @@ func TestPersonsList(t *testing.T) {
 }
 
 func TestPersonsListEmpty(t *testing.T) {
-	// An empty array result must not panic and must report no contacts.
+	// A bare object with an empty persons list must report no contacts.
 	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(`{"result":[]}`))
+		_, _ = w.Write([]byte(`{"result":{"props_filled":0,"persons":[]}}`))
 	})
 	list, propsFilled, err := s.List(context.Background())
 	if err != nil {
@@ -69,7 +69,7 @@ func TestPersonsListEmpty(t *testing.T) {
 }
 
 func TestPersonsInfo(t *testing.T) {
-	// getinfo wraps the record in a single-element array; phones/emails arrive as
+	// getinfo returns a bare object; phones/emails arrive as
 	// arrays despite the doc typing them string; inn is null → "".
 	var gotMethod string
 	var gotID int
@@ -82,14 +82,14 @@ func TestPersonsInfo(t *testing.T) {
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod, gotID = req.Method, req.Params.ID
-		_, _ = w.Write([]byte(`{"result":[{
+		_, _ = w.Write([]byte(`{"result":{
 			"name":"Иванов Иван Иванович","nameTrans":"Ivanov Ivan Ivanovich",
 			"resident":false,"phones":["+7 999 9999999"],"emails":["test@sweb.ru"],
 			"inn":null,"type":"f","used":0,
 			"postIndex":"197376","postCity":"Санкт-Петербург","postAddress":"наб. р. Карповки, д. 5, корп. 3",
 			"birthdate":"1990-01-01","passSeries":"4502","passNum":"987432",
 			"passDate":"2010-01-01","passOrg":"ОВД района Южное Бутово города Москвы"
-		}]}`))
+		}}`))
 	})
 	info, err := s.Info(context.Background(), 367684)
 	if err != nil {
@@ -125,7 +125,7 @@ func TestPersonsInfoScalarPhones(t *testing.T) {
 	// The apidoc types phones/emails as scalar strings; StringOrList must also
 	// accept that shape, wrapping it in a one-element slice.
 	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(`{"result":[{"phones":"+7 999 9999999","emails":""}]}`))
+		_, _ = w.Write([]byte(`{"result":{"phones":"+7 999 9999999","emails":""}}`))
 	})
 	info, err := s.Info(context.Background(), 1)
 	if err != nil {
@@ -136,19 +136,6 @@ func TestPersonsInfoScalarPhones(t *testing.T) {
 	}
 	if len(info.Emails) != 0 {
 		t.Errorf("empty-string emails = %v, want nil", info.Emails)
-	}
-}
-
-func TestPersonsInfoEmpty(t *testing.T) {
-	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(`{"result":[]}`))
-	})
-	info, err := s.Info(context.Background(), 1)
-	if err != nil {
-		t.Fatalf("Info: %v", err)
-	}
-	if info != nil {
-		t.Errorf("Info on empty result = %+v, want nil", info)
 	}
 }
 

@@ -11,9 +11,9 @@ import (
 )
 
 func TestTariffIndex(t *testing.T) {
-	// index wraps a single record in a one-element array; info numbers arrive
-	// bare, real counters arrive quoted, and quota is a locale comma-decimal
-	// string ("0,00") kept unparsed.
+	// index returns a bare {info, real} object; info numbers arrive bare, real
+	// counters arrive quoted, and quota is a locale comma-decimal string
+	// ("0,00") kept unparsed.
 	var gotMethod string
 	s := serve(t, func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -21,7 +21,7 @@ func TestTariffIndex(t *testing.T) {
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod = req.Method
-		_, _ = w.Write([]byte(`{"result":[{
+		_, _ = w.Write([]byte(`{"result":{
 			"info":{"category":"standart","duration":12,"mail_quota":0,"mysql":512,
 				"name":"Ракета","plan_id":7112,"postgresql":512,"price":339,
 				"price_12":3348,"price_6":0,"quota":10000,"site":10},
@@ -29,7 +29,7 @@ func TestTariffIndex(t *testing.T) {
 				"noHosting":0,"postgresql":"0","prolongChangeDisable":false,
 				"prolongDuration":12,"prolongPrice":3348,"quota":"0,00",
 				"realDuration":1,"realPrice":339,"site":"1"}
-		}]}`))
+		}}`))
 	})
 	tf, err := s.Index(context.Background())
 	if err != nil {
@@ -59,23 +59,23 @@ func TestTariffIndex(t *testing.T) {
 }
 
 func TestTariffIndexEmpty(t *testing.T) {
-	// An empty array unwraps to a nil tariff, not a panic.
+	// A bare empty object decodes to a zero Tariff, not a panic.
 	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(`{"result":[]}`))
+		_, _ = w.Write([]byte(`{"result":{}}`))
 	})
 	tf, err := s.Index(context.Background())
 	if err != nil {
 		t.Fatalf("Index: %v", err)
 	}
-	if tf != nil {
-		t.Errorf("Index on empty array = %+v, want nil", tf)
+	if tf == nil || tf.Info.Name != "" {
+		t.Errorf("Index on empty object = %+v, want zero Tariff", tf)
 	}
 }
 
 func TestTariffServerInfo(t *testing.T) {
-	// serverInfo wraps a single record in a one-element array; backend drifts
-	// from the spec's "string" to an array of backends, port arrives quoted,
-	// and absent stacks (python/ruby) are empty strings.
+	// serverInfo returns a bare object; backend drifts from the spec's "string"
+	// to an array of backends, port arrives quoted, and absent stacks
+	// (python/ruby) are empty strings.
 	var gotMethod string
 	s := serve(t, func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -83,14 +83,14 @@ func TestTariffServerInfo(t *testing.T) {
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod = req.Method
-		_, _ = w.Write([]byte(`{"result":[{
+		_, _ = w.Write([]byte(`{"result":{
 			"apache":"2.2.29","ip":"203.0.113.7","mysql":"5.7.27","name":"VH293",
 			"os":"Linux 3.10","perl":"5.20.2","python":"","ruby":"",
 			"backend":[
 				{"descr":"Apache 2.4 + PHP 8.1 opcache","id":23,"php_info":"https://vh293.example.ru/phpinfo.php81","port":"8093","release_version":"3.0gamma","type":"php8.1"},
 				{"descr":"Apache 2.2 + PHP 5.3 (legacy)","id":2,"php_info":"https://vh293.example.ru/phpinfo.php53","port":"8081","type":"php5.3"}
 			]
-		}]}`))
+		}}`))
 	})
 	si, err := s.ServerInfo(context.Background())
 	if err != nil {
@@ -120,15 +120,16 @@ func TestTariffServerInfo(t *testing.T) {
 }
 
 func TestTariffServerInfoEmpty(t *testing.T) {
+	// A bare empty object decodes to a zero ServerInfo, not a panic.
 	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(`{"result":[]}`))
+		_, _ = w.Write([]byte(`{"result":{}}`))
 	})
 	si, err := s.ServerInfo(context.Background())
 	if err != nil {
 		t.Fatalf("ServerInfo: %v", err)
 	}
-	if si != nil {
-		t.Errorf("ServerInfo on empty array = %+v, want nil", si)
+	if si == nil || si.Name != "" {
+		t.Errorf("ServerInfo on empty object = %+v, want zero ServerInfo", si)
 	}
 }
 

@@ -21,9 +21,9 @@ func TestSSLList(t *testing.T) {
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod = req.Method
 		_ = json.Unmarshal(req.Params, &gotParams)
-		// index wraps {list, filterInfo} in a one-element array. id arrives quoted
+		// index returns a bare {list, filterInfo} object. id arrives quoted
 		// and ip populated ("sni"), exercising flex.Int and the VH-only IP field.
-		_, _ = w.Write([]byte(`{"result":[{"filterInfo":{"orderDirect":"desc","orderField":"id","page":1,"perPage":20,"totalCount":6},"list":[{"id":"466893","status":"issued","ip":"sni","domain":"mysite.ru","name":"Let's Encrypt","valid_to":"2023-01-23","prolong_available":0,"autoprolong":true,"autoprolongAllowed":false,"autoprolongAddition":{"full_name":"GlobalSign AlphaSSL на 1 год","id":"35","name":"GlobalSign AlphaSSL","price":1900}}]}]}`))
+		_, _ = w.Write([]byte(`{"result":{"filterInfo":{"orderDirect":"desc","orderField":"id","page":1,"perPage":20,"totalCount":6},"list":[{"id":"466893","status":"issued","ip":"sni","domain":"mysite.ru","name":"Let's Encrypt","valid_to":"2023-01-23","prolong_available":0,"autoprolong":true,"autoprolongAllowed":false,"autoprolongAddition":{"full_name":"GlobalSign AlphaSSL на 1 год","id":"35","name":"GlobalSign AlphaSSL","price":1900}}]}}`))
 	})
 	got, err := s.List(context.Background(), &ListOptions{Page: 1, PerPage: 20, OrderField: "id", OrderDirect: "desc"})
 	if err != nil {
@@ -51,15 +51,19 @@ func TestSSLList(t *testing.T) {
 }
 
 func TestSSLListEmpty(t *testing.T) {
+	// No certificates: the bare object carries an empty list and a zero totalCount.
 	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(`{"result":[]}`))
+		_, _ = w.Write([]byte(`{"result":{"list":[],"filterInfo":{"page":1,"perPage":20,"orderField":"id","orderDirect":"desc","totalCount":0}}}`))
 	})
 	got, err := s.List(context.Background(), nil)
 	if err != nil {
 		t.Fatalf("List: %v", err)
 	}
-	if got != nil {
-		t.Errorf("list = %+v, want nil for empty result", got)
+	if got == nil || len(got.List) != 0 {
+		t.Errorf("list = %+v, want empty list for no certificates", got)
+	}
+	if got.FilterInfo.TotalCount != 0 {
+		t.Errorf("totalCount = %v, want 0", got.FilterInfo.TotalCount)
 	}
 }
 

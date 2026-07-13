@@ -83,9 +83,8 @@ func (s *Service) Periods(ctx context.Context) ([]Period, error) {
 // its default). loadType filters by kind ("cpu" or "mysql"); "" omits it (the
 // spec's example passes the string "null"), returning all kinds.
 //
-// Doc-vs-reality gap: the spec types the result as a bare array, but it is a
-// single-element array wrapping one Table. LoadTable unwraps that element; an
-// empty response yields the zero Table.
+// Doc-vs-reality gap: the spec types the result as a bare array, but the live
+// API returns a bare Table object. LoadTable decodes it directly.
 func (s *Service) LoadTable(ctx context.Context, year, month int, loadType string) (Table, error) {
 	params := map[string]any{}
 	if year != 0 {
@@ -98,12 +97,9 @@ func (s *Service) LoadTable(ctx context.Context, year, month int, loadType strin
 		params["type"] = loadType
 	}
 
-	var out []Table
+	var out Table
 	if err := s.t.Call(ctx, loadEndpoint, "getLoadTable", params, &out); err != nil {
 		return Table{}, err
 	}
-	if len(out) == 0 {
-		return Table{}, nil
-	}
-	return out[0], nil
+	return out, nil
 }

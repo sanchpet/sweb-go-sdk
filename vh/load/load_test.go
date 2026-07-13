@@ -44,9 +44,9 @@ func TestLoadPeriods(t *testing.T) {
 }
 
 func TestLoadTable(t *testing.T) {
-	// getLoadTable returns a single-element array wrapping one Table; cpu arrives
-	// quoted ("0.00") and mysql bare (0), and csv is an object (not the string[]
-	// the spec's content descriptor claims).
+	// getLoadTable returns a bare Table object; cpu arrives quoted ("0.00") and
+	// mysql bare (0), and csv is an object (not the string[] the spec's content
+	// descriptor claims).
 	var gotMethod string
 	var gotParams struct {
 		Year  int    `json:"year"`
@@ -61,7 +61,7 @@ func TestLoadTable(t *testing.T) {
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod = req.Method
 		_ = json.Unmarshal(req.Params, &gotParams)
-		_, _ = w.Write([]byte(`{"result":[{
+		_, _ = w.Write([]byte(`{"result":{
 			"csv":{
 				"content":"MjAyMy0wNi0wMTswLjAwCg==",
 				"metadata":[],
@@ -74,7 +74,7 @@ func TestLoadTable(t *testing.T) {
 				{"cpu":"0.00","date":"2023-06-01","mysql":0},
 				{"cpu":"1.50","date":"2023-06-02","mysql":3}
 			]
-		}]}`))
+		}}`))
 	})
 	tbl, err := s.LoadTable(context.Background(), 2023, 6, "cpu")
 	if err != nil {
@@ -118,7 +118,7 @@ func TestLoadTableOmitsEmptyParams(t *testing.T) {
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		params = req.Params
-		_, _ = w.Write([]byte(`{"result":[]}`))
+		_, _ = w.Write([]byte(`{"result":{}}`))
 	})
 	tbl, err := s.LoadTable(context.Background(), 0, 0, "")
 	if err != nil {

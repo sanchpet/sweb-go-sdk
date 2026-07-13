@@ -11,12 +11,12 @@ import (
 )
 
 func TestPayIndex(t *testing.T) {
-	// index is a single-element array wrapping the account; balance is nested
-	// under "balance" and blockInfo is an object (doc-vs-reality, both handled).
+	// index returns a bare account object; balance is nested under "balance"
+	// and blockInfo is an object (doc-vs-reality, both handled).
 	var gotMethod string
 	s := serve(t, func(w http.ResponseWriter, r *http.Request) {
 		gotMethod = decodeMethod(r)
-		_, _ = w.Write([]byte(`{"result":[{
+		_, _ = w.Write([]byte(`{"result":{
 			"auto_payment_enable":0,"isAutopaymentEnable":1,"domainBonuses":7,
 			"status":"active","blockedMoney":36033,"edgeDate":"2024-08-30",
 			"blockInfo":{"days":2274,"days_date":"25.04.2032","days_word":"дня"},
@@ -24,7 +24,7 @@ func TestPayIndex(t *testing.T) {
 			"balance":{"real_balance":11886,"bonus_balance":0,"cloud_balance":11886,
 				"other_balance":11886,"cloud_balance_view":11886,"other_balance_view":0,
 				"credit_balance":0,"type":1,"vat_balance":{"2":"11886.0000"}}
-		}]}`))
+		}}`))
 	})
 	acc, err := s.Index(context.Background())
 	if err != nil {
@@ -51,8 +51,9 @@ func TestPayIndex(t *testing.T) {
 }
 
 func TestPayIndexEmpty(t *testing.T) {
+	// A bare empty object decodes to a zero Account, not a panic.
 	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(`{"result":[]}`))
+		_, _ = w.Write([]byte(`{"result":{}}`))
 	})
 	acc, err := s.Index(context.Background())
 	if err != nil {
@@ -103,13 +104,13 @@ func TestPayGetPayRecommendations(t *testing.T) {
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod, gotAddBalance = req.Method, req.Params.AddBalanceRecommendations
-		_, _ = w.Write([]byte(`{"result":[{
+		_, _ = w.Write([]byte(`{"result":{
 			"recommended_for_pay":[{"id":1,"name":"Домен test32132.ru (1 год)","date":"не зарегистрирован","cost":175}],
 			"recommended_for_pay_balance":[],
 			"exist_domain_bonus":0,"total_frp_balance":2800,
 			"tariff_domain_bonus":0,"tariff_domain_bonus_tld":0,
 			"domain_bonuses_by_tld":{"any":0}
-		}]}`))
+		}}`))
 	})
 	rec, err := s.GetPayRecommendations(context.Background(), true)
 	if err != nil {
@@ -247,17 +248,17 @@ func TestPayGetRemainsDays(t *testing.T) {
 }
 
 func TestPayGetBalance(t *testing.T) {
-	// getBalance is a single-element array wrapping the balance; money arrives
-	// int-or-float and vat_balance is quoted.
+	// getBalance returns a bare balance object; money arrives int-or-float and
+	// vat_balance is a string→string map.
 	var gotMethod string
 	s := serve(t, func(w http.ResponseWriter, r *http.Request) {
 		gotMethod = decodeMethod(r)
-		_, _ = w.Write([]byte(`{"result":[{
+		_, _ = w.Write([]byte(`{"result":{
 			"real_balance":1544,"bonus_balance":0,"cloud_balance":1492,"other_balance":52,
 			"cloud_balance_view":1492,"other_balance_view":52,"credit_balance":0,
 			"type":1,"multiple_balance_enabled":true,
 			"vat_balance":{"4":"1492.0000","5":"52.0000"}
-		}]}`))
+		}}`))
 	})
 	bal, err := s.GetBalance(context.Background())
 	if err != nil {

@@ -75,7 +75,7 @@ type FilterInfo struct {
 }
 
 // CertificateList is the index result: the account's certificates plus the
-// pagination/sort echo. The API wraps it in a one-element array; List unwraps it.
+// pagination/sort echo. The API returns it as a bare object.
 type CertificateList struct {
 	List       []Certificate `json:"list"`
 	FilterInfo FilterInfo    `json:"filterInfo"`
@@ -97,13 +97,13 @@ type listParams struct {
 	OrderDirect string `json:"orderDirect,omitempty"`
 }
 
-// List returns the account's SSL certificates ("index"). The API wraps the result
-// in a one-element array; this unwraps it (nil if empty). Read-only.
+// List returns the account's SSL certificates ("index"). The API returns a bare
+// CertificateList object; this decodes it directly. Read-only.
 func (s *Service) List(ctx context.Context, opts *ListOptions) (*CertificateList, error) {
 	if opts == nil {
 		opts = &ListOptions{}
 	}
-	var out []CertificateList
+	var out CertificateList
 	if err := s.t.Call(ctx, sslEndpoint, "index", listParams{
 		Page:        opts.Page,
 		PerPage:     opts.PerPage,
@@ -112,10 +112,7 @@ func (s *Service) List(ctx context.Context, opts *ListOptions) (*CertificateList
 	}, &out); err != nil {
 		return nil, err
 	}
-	if len(out) == 0 {
-		return nil, nil
-	}
-	return &out[0], nil
+	return &out, nil
 }
 
 // OrderOption is one certificate product available for order ("getOrderList").
