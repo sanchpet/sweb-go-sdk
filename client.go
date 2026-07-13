@@ -60,6 +60,12 @@ type Client struct {
 	DBaaS *DBaaSService
 	// SSL groups VPS SSL-certificate operations (endpoint /vps/ssl).
 	SSL *SSLService
+	// Monitoring groups monitoring-tariff operations (endpoint /monitoring).
+	Monitoring *MonitoringService
+	// MonitoringChecks groups monitoring-check operations (endpoint /monitoring/checks).
+	MonitoringChecks *MonitoringChecksService
+	// MonitoringContacts groups monitoring-contact operations (endpoint /monitoring/contacts).
+	MonitoringContacts *MonitoringContactsService
 }
 
 // Option configures a Client.
@@ -106,6 +112,9 @@ func New(opts ...Option) *Client {
 	c.Balancer = &BalancerService{c: c}
 	c.DBaaS = &DBaaSService{c: c}
 	c.SSL = &SSLService{c: c}
+	c.Monitoring = &MonitoringService{c: c}
+	c.MonitoringChecks = &MonitoringChecksService{c: c}
+	c.MonitoringContacts = &MonitoringContactsService{c: c}
 	return c
 }
 
