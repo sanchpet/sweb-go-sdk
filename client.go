@@ -56,6 +56,8 @@ type Client struct {
 	Domains *DomainsService
 	// Balancer groups load-balancer operations (endpoint /balancer).
 	Balancer *BalancerService
+	// DBaaS groups managed-database operations (endpoint /dbaas).
+	DBaaS *DBaaSService
 }
 
 // Option configures a Client.
@@ -100,6 +102,7 @@ func New(opts ...Option) *Client {
 	c.DNS = &DNSService{c: c}
 	c.Domains = &DomainsService{c: c}
 	c.Balancer = &BalancerService{c: c}
+	c.DBaaS = &DBaaSService{c: c}
 	return c
 }
 
