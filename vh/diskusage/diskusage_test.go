@@ -11,8 +11,8 @@ import (
 )
 
 func TestDiskUsageList(t *testing.T) {
-	// index returns an array of per-backend breakdowns; numeric fields arrive
-	// polymorphic (bare and quoted) and decode through flex.Float/flex.Int.
+	// index returns a bare Usage object; numeric fields arrive polymorphic
+	// (bare and quoted) and decode through flex.Float/flex.Int.
 	var gotMethod string
 	s := serve(t, func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -20,10 +20,10 @@ func TestDiskUsageList(t *testing.T) {
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod = req.Method
-		_, _ = w.Write([]byte(`{"result":[{
+		_, _ = w.Write([]byte(`{"result":{
 			"tariffQuota":5000,"realQuota":"1","dbQuota":0,
-			"mailQuota":0,"filesQuota":1,"filesNum":36
-		}]}`))
+			"mailQuota":0,"filesQuota":1,"filesNum":36,"subscription":null
+		}}`))
 	})
 	list, err := s.List(context.Background())
 	if err != nil {

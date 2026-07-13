@@ -89,18 +89,14 @@ type Account struct {
 
 // Index returns the account's billing snapshot (method "index"). Read-only.
 //
-// Doc-vs-reality: the spec types the result as an array, but it is a
-// single-element array wrapping the account object; this unwraps it (returns a
-// zero Account if the array is empty).
+// Doc-vs-reality: the spec types the result as an array, but the live API
+// returns a bare account object; this decodes it directly.
 func (s *Service) Index(ctx context.Context) (*Account, error) {
-	var out []Account
+	var out Account
 	if err := s.t.Call(ctx, payEndpoint, "index", nil, &out); err != nil {
 		return nil, err
 	}
-	if len(out) == 0 {
-		return &Account{}, nil
-	}
-	return &out[0], nil
+	return &out, nil
 }
 
 // IsAutopaymentEnable reports whether autopayment is enabled on the account
@@ -139,19 +135,15 @@ type Recommendations struct {
 // "getPayRecommendations"). Read-only. addBalanceRecommendations toggles
 // whether balance top-up recommendations are included.
 //
-// Doc-vs-reality: the spec types the result as an array, but the recorded
-// example is a single-element array wrapping the recommendation bundle; this
-// unwraps it (returns a zero Recommendations if empty).
+// Doc-vs-reality: the spec types the result as an array, but the live API
+// returns a bare recommendation-bundle object; this decodes it directly.
 func (s *Service) GetPayRecommendations(ctx context.Context, addBalanceRecommendations bool) (*Recommendations, error) {
 	params := map[string]any{"addBalanceRecommendations": addBalanceRecommendations}
-	var out []Recommendations
+	var out Recommendations
 	if err := s.t.Call(ctx, payEndpoint, "getPayRecommendations", params, &out); err != nil {
 		return nil, err
 	}
-	if len(out) == 0 {
-		return &Recommendations{}, nil
-	}
-	return &out[0], nil
+	return &out, nil
 }
 
 // GetRecommendationTotalCost returns the full amount recommended for payment
@@ -258,18 +250,14 @@ func (s *Service) GetRemainsDays(ctx context.Context) (flex.Int, error) {
 // GetBalance returns the account balance broken down by pocket (method
 // "getBalance"). Read-only.
 //
-// Doc-vs-reality: the spec types the result as an array, but the recorded
-// example is a single-element array wrapping the balance object; this unwraps
-// it (returns a zero Balance if empty).
+// Doc-vs-reality: the spec types the result as an array, but the live API
+// returns a bare balance object; this decodes it directly.
 func (s *Service) GetBalance(ctx context.Context) (*Balance, error) {
-	var out []Balance
+	var out Balance
 	if err := s.t.Call(ctx, payEndpoint, "getBalance", nil, &out); err != nil {
 		return nil, err
 	}
-	if len(out) == 0 {
-		return &Balance{}, nil
-	}
-	return &out[0], nil
+	return &out, nil
 }
 
 // ReserveInfo is the detail block of a blocked-funds reserve: the title and,

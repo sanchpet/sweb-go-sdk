@@ -21,7 +21,7 @@ func New(t *transport.Client) *Service { return &Service{t: t} }
 
 // Tariff is the current-tariff record returned by Index (method "index"): the
 // billed plan (Info) alongside the resources really in use (Usage). The API
-// wraps a single such record in a one-element array; Index unwraps it.
+// returns it as a bare object.
 type Tariff struct {
 	Info  Info  `json:"info"`
 	Usage Usage `json:"real"`
@@ -95,29 +95,23 @@ type Backend struct {
 }
 
 // Index returns the account's current tariff and real resource usage (method
-// "index"). Read-only. The API wraps the single record in a one-element array;
-// this unwraps it, returning nil when the array is empty.
+// "index"). Read-only. The API returns a bare Tariff object; this decodes it
+// directly.
 func (s *Service) Index(ctx context.Context) (*Tariff, error) {
-	var out []Tariff
+	var out Tariff
 	if err := s.t.Call(ctx, tariffEndpoint, "index", nil, &out); err != nil {
 		return nil, err
 	}
-	if len(out) == 0 {
-		return nil, nil
-	}
-	return &out[0], nil
+	return &out, nil
 }
 
 // ServerInfo returns information about the node the account is hosted on (method
-// "serverInfo"). Read-only. The API wraps the single record in a one-element
-// array; this unwraps it, returning nil when the array is empty.
+// "serverInfo"). Read-only. The API returns a bare ServerInfo object; this
+// decodes it directly.
 func (s *Service) ServerInfo(ctx context.Context) (*ServerInfo, error) {
-	var out []ServerInfo
+	var out ServerInfo
 	if err := s.t.Call(ctx, tariffEndpoint, "serverInfo", nil, &out); err != nil {
 		return nil, err
 	}
-	if len(out) == 0 {
-		return nil, nil
-	}
-	return &out[0], nil
+	return &out, nil
 }

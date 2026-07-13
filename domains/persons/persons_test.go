@@ -11,7 +11,7 @@ import (
 )
 
 func TestPersonsList(t *testing.T) {
-	// index wraps the contacts in a single-element array under {props_filled, persons};
+	// index returns a bare object {props_filled, persons};
 	// resident/used/valid arrive as bare integers.
 	var gotMethod string
 	s := serve(t, func(w http.ResponseWriter, r *http.Request) {
@@ -20,14 +20,14 @@ func TestPersonsList(t *testing.T) {
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod = req.Method
-		_, _ = w.Write([]byte(`{"result":[{"props_filled":1,"persons":[
+		_, _ = w.Write([]byte(`{"result":{"props_filled":1,"persons":[
 			{"id":367684,"name":"Иванов Иван Иванович","resident":0,
 			 "str":"[SWEB-FIZ-III-2168] Иванов Иван Иванович","sweb_handle":"SWEB-FIZ-III-2168",
 			 "type":"f","used":0,"valid":1},
 			{"id":368972,"name":"ООО Ромашка","resident":0,
 			 "str":"[SWEB-ORG-R-1424] ООО Ромашка","sweb_handle":"SWEB-ORG-R-1424",
 			 "type":"u","used":0,"valid":1}
-		]}]}`))
+		]}}`))
 	})
 	list, propsFilled, err := s.List(context.Background())
 	if err != nil {
@@ -55,9 +55,9 @@ func TestPersonsList(t *testing.T) {
 }
 
 func TestPersonsListEmpty(t *testing.T) {
-	// An empty array result must not panic and must report no contacts.
+	// A bare object with an empty persons list must report no contacts.
 	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(`{"result":[]}`))
+		_, _ = w.Write([]byte(`{"result":{"props_filled":0,"persons":[]}}`))
 	})
 	list, propsFilled, err := s.List(context.Background())
 	if err != nil {

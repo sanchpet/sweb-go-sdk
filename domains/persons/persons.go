@@ -51,8 +51,8 @@ type Person struct {
 	Valid      flex.Int `json:"valid"`       // 1 if the contact's details are valid
 }
 
-// personsIndex is the keyed wrapper the "index" method returns: the contacts live
-// under "persons" (with a sibling "props_filled") inside a single-element array,
+// personsIndex is the keyed wrapper the "index" method returns: the contacts
+// live under "persons" (with a sibling "props_filled") in a bare object,
 // despite the spec typing the result as a bare array.
 type personsIndex struct {
 	PropsFilled flex.Int `json:"props_filled"` // 1 if the account's requisites are filled
@@ -62,17 +62,14 @@ type personsIndex struct {
 // List returns the account's registrant contacts ("index"). Read-only. Also
 // reports props_filled (whether the account's own requisites are complete).
 //
-// The API wraps the result in a single-element array [{"props_filled":…,
-// "persons":[…]}]; this unwraps it. propsFilled is true when props_filled == 1.
+// The API returns a bare object {"props_filled":…, "persons":[…]}; this decodes
+// it directly. propsFilled is true when props_filled == 1.
 func (s *Service) List(ctx context.Context) (persons []Person, propsFilled bool, err error) {
-	var out []personsIndex
+	var out personsIndex
 	if err := s.t.Call(ctx, personsEndpoint, "index", nil, &out); err != nil {
 		return nil, false, err
 	}
-	if len(out) == 0 {
-		return nil, false, nil
-	}
-	return out[0].Persons, out[0].PropsFilled == 1, nil
+	return out.Persons, out.PropsFilled == 1, nil
 }
 
 // Info is the full record for one registrant contact ("getinfo"). One struct

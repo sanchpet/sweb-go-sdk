@@ -22,20 +22,22 @@ type Service struct{ t *transport.Client }
 // New builds a Service over the shared transport.
 func New(t *transport.Client) *Service { return &Service{t: t} }
 
-// Usage is one backend's disk-usage breakdown as returned by List (method
+// Usage is the account's disk-usage breakdown as returned by List (method
 // "index"). All quota figures are megabytes.
 //
-// Types are reconciled against the spec's recorded example: the quota fields are
+// Types are reconciled against the recorded live response: the quota fields are
 // documented "float" and file counts "int", but SpaceWeb quotes numerics
 // inconsistently, so every field decodes through flex.Float/flex.Int rather than
-// a bare float64/int.
+// a bare float64/int. Subscription is null in observed responses; kept raw as
+// its populated shape is unrecorded.
 type Usage struct {
-	TariffQuota flex.Float `json:"tariffQuota"` // plan quota, MB
-	RealQuota   flex.Float `json:"realQuota"`   // actual usage, MB
-	DBQuota     flex.Float `json:"dbQuota"`     // databases, MB
-	MailQuota   flex.Float `json:"mailQuota"`   // mail, MB
-	FilesQuota  flex.Float `json:"filesQuota"`  // files, MB
-	FilesNum    flex.Int   `json:"filesNum"`    // number of files
+	TariffQuota  flex.Float      `json:"tariffQuota"` // plan quota, MB
+	RealQuota    flex.Float      `json:"realQuota"`   // actual usage, MB
+	DBQuota      flex.Float      `json:"dbQuota"`     // databases, MB
+	MailQuota    flex.Float      `json:"mailQuota"`   // mail, MB
+	FilesQuota   flex.Float      `json:"filesQuota"`  // files, MB
+	FilesNum     flex.Int        `json:"filesNum"`    // number of files
+	Subscription json.RawMessage `json:"subscription"`
 }
 
 // TasksInfo is the disk-usage scan-task state as returned by TasksInfo (method
@@ -48,13 +50,17 @@ type TasksInfo struct {
 	LastDoneTaskDate string   `json:"lastDoneTaskDate"` // "2006-01-02 15:04:05"
 }
 
-// List returns the per-backend disk-usage breakdown (method "index"). Read-only.
+// List returns the account's disk-usage breakdown (method "index"). Read-only.
+//
+// Doc-vs-reality: the spec types the result as an array, but the live API
+// returns a single bare Usage object; this decodes it and wraps it in a
+// one-element slice so the exported signature stays a slice.
 func (s *Service) List(ctx context.Context) ([]Usage, error) {
-	var out []Usage
+	var out Usage
 	if err := s.t.Call(ctx, diskUsageEndpoint, "index", nil, &out); err != nil {
 		return nil, err
 	}
-	return out, nil
+	return []Usage{out}, nil
 }
 
 // TasksInfo returns the disk-usage scan-task state (method "getTasksInfo"):
