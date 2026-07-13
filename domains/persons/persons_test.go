@@ -69,7 +69,7 @@ func TestPersonsListEmpty(t *testing.T) {
 }
 
 func TestPersonsInfo(t *testing.T) {
-	// getinfo wraps the record in a single-element array; phones/emails arrive as
+	// getinfo returns a bare object; phones/emails arrive as
 	// arrays despite the doc typing them string; inn is null → "".
 	var gotMethod string
 	var gotID int
@@ -82,14 +82,14 @@ func TestPersonsInfo(t *testing.T) {
 		}
 		_ = json.NewDecoder(r.Body).Decode(&req)
 		gotMethod, gotID = req.Method, req.Params.ID
-		_, _ = w.Write([]byte(`{"result":[{
+		_, _ = w.Write([]byte(`{"result":{
 			"name":"Иванов Иван Иванович","nameTrans":"Ivanov Ivan Ivanovich",
 			"resident":false,"phones":["+7 999 9999999"],"emails":["test@sweb.ru"],
 			"inn":null,"type":"f","used":0,
 			"postIndex":"197376","postCity":"Санкт-Петербург","postAddress":"наб. р. Карповки, д. 5, корп. 3",
 			"birthdate":"1990-01-01","passSeries":"4502","passNum":"987432",
 			"passDate":"2010-01-01","passOrg":"ОВД района Южное Бутово города Москвы"
-		}]}`))
+		}}`))
 	})
 	info, err := s.Info(context.Background(), 367684)
 	if err != nil {
@@ -125,7 +125,7 @@ func TestPersonsInfoScalarPhones(t *testing.T) {
 	// The apidoc types phones/emails as scalar strings; StringOrList must also
 	// accept that shape, wrapping it in a one-element slice.
 	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(`{"result":[{"phones":"+7 999 9999999","emails":""}]}`))
+		_, _ = w.Write([]byte(`{"result":{"phones":"+7 999 9999999","emails":""}}`))
 	})
 	info, err := s.Info(context.Background(), 1)
 	if err != nil {
@@ -136,19 +136,6 @@ func TestPersonsInfoScalarPhones(t *testing.T) {
 	}
 	if len(info.Emails) != 0 {
 		t.Errorf("empty-string emails = %v, want nil", info.Emails)
-	}
-}
-
-func TestPersonsInfoEmpty(t *testing.T) {
-	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
-		_, _ = w.Write([]byte(`{"result":[]}`))
-	})
-	info, err := s.Info(context.Background(), 1)
-	if err != nil {
-		t.Fatalf("Info: %v", err)
-	}
-	if info != nil {
-		t.Errorf("Info on empty result = %+v, want nil", info)
 	}
 }
 

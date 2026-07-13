@@ -139,17 +139,14 @@ func (s *StringOrList) UnmarshalJSON(b []byte) error {
 
 // Info returns the full record for one registrant contact ("getinfo"). Read-only.
 //
-// The API wraps the record in a single-element array [{…}]; this unwraps it and
-// returns nil for an empty result.
+// The API returns the record as a bare object (verified live), so decode it
+// directly.
 func (s *Service) Info(ctx context.Context, id int) (*Info, error) {
-	var out []Info
+	var out Info
 	if err := s.t.Call(ctx, personsEndpoint, "getinfo", map[string]any{"id": id}, &out); err != nil {
 		return nil, err
 	}
-	if len(out) == 0 {
-		return nil, nil
-	}
-	return &out[0], nil
+	return &out, nil
 }
 
 // FizIPOptions parameterizes CreateFizIP (an individual or sole proprietor).
