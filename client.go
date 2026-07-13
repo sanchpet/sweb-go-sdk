@@ -54,6 +54,8 @@ type Client struct {
 	DNS *DNSService
 	// Domains groups domain/subdomain operations (endpoint /domains).
 	Domains *DomainsService
+	// SSL groups VPS SSL-certificate operations (endpoint /vps/ssl).
+	SSL *SSLService
 }
 
 // Option configures a Client.
@@ -97,6 +99,7 @@ func New(opts ...Option) *Client {
 	c.RemoteBackup = &RemoteBackupService{c: c}
 	c.DNS = &DNSService{c: c}
 	c.Domains = &DomainsService{c: c}
+	c.SSL = &SSLService{c: c}
 	return c
 }
 
