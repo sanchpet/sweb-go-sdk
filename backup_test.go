@@ -38,6 +38,27 @@ func TestBackupCreate(t *testing.T) {
 	}
 }
 
+func TestBackupUpdateIndex(t *testing.T) {
+	var gotMethod, gotBillingID string
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+			Params struct {
+				BillingID string `json:"billingId"`
+			} `json:"params"`
+		}
+		_ = json.NewDecoder(r.Body).Decode(&req)
+		gotMethod, gotBillingID = req.Method, req.Params.BillingID
+		_, _ = w.Write([]byte(`{"result":1}`))
+	})
+	if err := c.Backup.UpdateIndex(context.Background(), "login_vps_1"); err != nil {
+		t.Fatalf("UpdateIndex: %v", err)
+	}
+	if gotMethod != "updateIndex" || gotBillingID != "login_vps_1" {
+		t.Errorf("method/billingId = %q/%q, want updateIndex/login_vps_1", gotMethod, gotBillingID)
+	}
+}
+
 func TestBackupNameActions(t *testing.T) {
 	for _, tc := range []struct {
 		name   string
