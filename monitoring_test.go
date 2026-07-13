@@ -93,7 +93,7 @@ func TestChecksIndex(t *testing.T) {
 	c, method, params := capture(t, `{"filterInfo":{"page":1,"perPage":2,"totalCount":1},`+
 		`"list":[{"disabled":false,"id":"339","lastResult":true,"name":"sweb.ru","status":true,`+
 		`"tsDeltaResult":null,"tsLastResult":null,"type":"1"}]}`)
-	got, err := c.MonitoringChecks.Index(context.Background(), &ListOptions{Page: 1, PerPage: 2})
+	got, err := c.MonitoringChecks.Index(context.Background(), &CheckListOptions{Page: 1, PerPage: 2})
 	if err != nil {
 		t.Fatalf("Index: %v", err)
 	}

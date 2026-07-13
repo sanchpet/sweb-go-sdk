@@ -47,13 +47,13 @@ type CheckList struct {
 	FilterInfo FilterInfo `json:"filterInfo"`
 }
 
-// ListOptions carries optional pagination for the list methods.
-type ListOptions struct {
+// CheckListOptions carries optional pagination for the list methods.
+type CheckListOptions struct {
 	Page    int
 	PerPage int
 }
 
-func (o *ListOptions) params() map[string]any {
+func (o *CheckListOptions) params() map[string]any {
 	p := map[string]any{}
 	if o == nil {
 		return p
@@ -68,7 +68,7 @@ func (o *ListOptions) params() map[string]any {
 }
 
 // Index lists the account's monitoring checks (method "index"). Read-only.
-func (s *MonitoringChecksService) Index(ctx context.Context, opts *ListOptions) (*CheckList, error) {
+func (s *MonitoringChecksService) Index(ctx context.Context, opts *CheckListOptions) (*CheckList, error) {
 	var out CheckList
 	if err := s.c.call(ctx, monitoringChecksEndpoint, "index", opts.params(), &out); err != nil {
 		return nil, err
