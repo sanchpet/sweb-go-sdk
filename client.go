@@ -58,6 +58,8 @@ type Client struct {
 	Balancer *BalancerService
 	// DBaaS groups managed-database operations (endpoint /dbaas).
 	DBaaS *DBaaSService
+	// SSL groups VPS SSL-certificate operations (endpoint /vps/ssl).
+	SSL *SSLService
 }
 
 // Option configures a Client.
@@ -103,6 +105,7 @@ func New(opts ...Option) *Client {
 	c.Domains = &DomainsService{c: c}
 	c.Balancer = &BalancerService{c: c}
 	c.DBaaS = &DBaaSService{c: c}
+	c.SSL = &SSLService{c: c}
 	return c
 }
 
