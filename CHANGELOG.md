@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.2](https://github.com/sanchpet/sweb-go-sdk/compare/v0.16.1...v0.16.2) (2026-07-14)
+
+
+### Bug Fixes
+
+* decode empty balancer list and cloud-ssl list against live shapes ([#84](https://github.com/sanchpet/sweb-go-sdk/issues/84)) ([502ea5f](https://github.com/sanchpet/sweb-go-sdk/commit/502ea5f85e7d4fe3bef880bc7b9bf485af976697))
+
 ## [0.16.1](https://github.com/sanchpet/sweb-go-sdk/compare/v0.16.0...v0.16.1) (2026-07-13)
 
 
