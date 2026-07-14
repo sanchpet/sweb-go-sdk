@@ -97,7 +97,7 @@ func (s *Service) List(ctx context.Context, opts *ListOptions) (*CertificateList
 	if opts == nil {
 		opts = &ListOptions{}
 	}
-	var out []CertificateList
+	var out CertificateList
 	if err := s.t.Call(ctx, sslEndpoint, "index", listParams{
 		Page:        opts.Page,
 		PerPage:     opts.PerPage,
@@ -106,10 +106,7 @@ func (s *Service) List(ctx context.Context, opts *ListOptions) (*CertificateList
 	}, &out); err != nil {
 		return nil, err
 	}
-	if len(out) == 0 {
-		return nil, nil
-	}
-	return &out[0], nil
+	return &out, nil
 }
 
 // OrderOption is one certificate product available for order ("getOrderList").
