@@ -4,6 +4,7 @@
 package balancer
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -102,6 +103,18 @@ type Description struct {
 // live under "ips" despite the spec typing the result as a bare array.
 type balancerIndex struct {
 	IPs []Balancer `json:"ips"`
+}
+
+// UnmarshalJSON tolerates the endpoint's dual shape reconciled against the live
+// API: a populated index is the object {"ips":[…]}, but an account with no
+// balancers answers with a bare (empty) array. A JSON array means no balancers.
+func (b *balancerIndex) UnmarshalJSON(data []byte) error {
+	if trimmed := bytes.TrimSpace(data); len(trimmed) > 0 && trimmed[0] == '[' {
+		b.IPs = nil
+		return nil
+	}
+	type alias balancerIndex
+	return json.Unmarshal(data, (*alias)(b))
 }
 
 // List returns the account's load balancers (method "index"). Read-only. The API

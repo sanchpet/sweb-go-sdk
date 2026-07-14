@@ -54,6 +54,22 @@ func TestBalancerList(t *testing.T) {
 	}
 }
 
+// TestBalancerListEmpty reconciles the dual index shape against the live API: an
+// account with no balancers answers with a bare empty array (not {"ips":[]}),
+// which must decode to an empty list rather than a type error.
+func TestBalancerListEmpty(t *testing.T) {
+	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = w.Write([]byte(`{"result":[]}`))
+	})
+	list, err := s.List(context.Background())
+	if err != nil {
+		t.Fatalf("List: %v", err)
+	}
+	if len(list) != 0 {
+		t.Errorf("list = %+v, want empty for an account with no balancers", list)
+	}
+}
+
 func TestBalancerIsCreateEnable(t *testing.T) {
 	for _, tc := range []struct {
 		body string
