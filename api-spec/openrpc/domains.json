@@ -798,7 +798,7 @@
       "name": "moveList",
       "params": [
         {
-          "description": "массив доменов: [['fqdn' : 'имя домена', 'prolongType' : 'тип продления ('no', 'manual', 'bonus_money')', 'dir' : 'домашняя директория (не обязательное поле)']]",
+          "description": "массив доменов: [['fqdn' : 'имя домена в punycode', 'prolongType' : 'тип продления ('no', 'manual', 'bonus_money')', 'dir' : 'домашняя директория (не обязательное поле)']]",
           "name": "domains",
           "required": true,
           "schema": {
