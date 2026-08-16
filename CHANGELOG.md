@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.4](https://github.com/sanchpet/sweb-go-sdk/compare/v0.16.3...v0.16.4) (2026-08-16)
+
+
+### Bug Fixes
+
+* stop re-exchanging credentials the API has rejected ([#95](https://github.com/sanchpet/sweb-go-sdk/issues/95)) ([32e9920](https://github.com/sanchpet/sweb-go-sdk/commit/32e99205e87706ef9cbf029e362ed0dc9a51b576)), closes [#94](https://github.com/sanchpet/sweb-go-sdk/issues/94)
+
 ## [0.16.3](https://github.com/sanchpet/sweb-go-sdk/compare/v0.16.2...v0.16.3) (2026-08-16)
 
 
