@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.3](https://github.com/sanchpet/sweb-go-sdk/compare/v0.16.2...v0.16.3) (2026-08-16)
+
+
+### Bug Fixes
+
+* collapse concurrent token refresh into a single login ([#89](https://github.com/sanchpet/sweb-go-sdk/issues/89)) ([7b3f865](https://github.com/sanchpet/sweb-go-sdk/commit/7b3f865c4452744b41f4effda7d4fdefcab8697e))
+
 ## [0.16.2](https://github.com/sanchpet/sweb-go-sdk/compare/v0.16.1...v0.16.2) (2026-07-14)
 
 
