@@ -74,7 +74,11 @@ pre-commit install && pre-commit run -a
 - Commits: small and focused; end every commit with `Signed-off-by:` (`--signoff`)
   and, since this is a personal repo, an `Assisted-By: Claude <noreply@anthropic.com>`
   trailer (the owner authors, Claude assists — not `Co-Authored-By`).
-- **Branch + PR**; do not self-merge — merging is the owner's call.
+- **Branch + PR**. Merging on green CI is delegated to the agent in this repo
+  (granted 2026-08-16) — merge and report, don't ask per PR. Green CI is
+  necessary, not sufficient: raise anything whose risk sits outside what the
+  pipeline checks (a public-interface break, a live-API behaviour change) instead
+  of merging it.
 - **Conventional Commits + release-please (BLOCKING):** commit / PR-title format is
   `<type>[scope]: <desc>` (`feat`→minor, `fix`→patch, `!` or `BREAKING CHANGE`→major).
   PRs are squash-merged, so the **PR title is the release commit** — CI enforces its
