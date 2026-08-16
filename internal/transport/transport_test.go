@@ -110,6 +110,71 @@ func TestColdStartMintsOneTokenUnderConcurrency(t *testing.T) {
 	}
 }
 
+// A rejected login must be exchanged once and no more. SpaceWeb answers
+// password auth on a 2FA-protected account with -32500, and no amount of
+// retrying will satisfy it — but each attempt sends the owner another login
+// code. Observed live: one plan over a DNS zone spent 29 of them.
+func TestRejectedCredentialsAreExchangedOnce(t *testing.T) {
+	var mu sync.Mutex
+	var tokenCalls int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+		}
+		body, _ := io.ReadAll(r.Body)
+		_ = json.Unmarshal(body, &req)
+
+		switch req.Method {
+		case "getToken":
+			mu.Lock()
+			tokenCalls++
+			mu.Unlock()
+			time.Sleep(20 * time.Millisecond)
+			_, _ = w.Write([]byte(`{"error":{"code":-32500,"message":"Необходимо ввести код двухфакторной аутентификации","data":[]}}`))
+		case "index":
+			t.Error("index reached the API without a token")
+		}
+	}))
+	t.Cleanup(srv.Close)
+
+	c := New(
+		WithBaseURL(srv.URL), WithHTTPClient(srv.Client()),
+		WithCredentials("user", "pass"),
+	)
+
+	const callers = 8
+	var wg sync.WaitGroup
+	errs := make([]error, callers)
+	for i := range callers {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			var out []json.RawMessage
+			errs[i] = c.Call(context.Background(), "/vps", "index", nil, &out)
+		}()
+	}
+	wg.Wait()
+
+	if tokenCalls != 1 {
+		t.Errorf("getToken calls = %d, want 1 (a rejection is not retried)", tokenCalls)
+	}
+	for i, err := range errs {
+		var apiErr *apierr.Error
+		if !errors.As(err, &apiErr) || apiErr.Code != -32500 {
+			t.Errorf("caller %d: err = %v, want the -32500 rejection", i, err)
+		}
+	}
+
+	// A later caller, arriving after the herd has dispersed, must not try again.
+	var out []json.RawMessage
+	if err := c.Call(context.Background(), "/vps", "index", nil, &out); err == nil {
+		t.Error("late Call succeeded, want the cached rejection")
+	}
+	if tokenCalls != 1 {
+		t.Errorf("getToken calls after a late Call = %d, want 1", tokenCalls)
+	}
+}
+
 func TestGetToken(t *testing.T) {
 	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/notAuthorized/" || r.Method != http.MethodPost {
