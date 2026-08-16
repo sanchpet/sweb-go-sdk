@@ -156,14 +156,14 @@
         }
       },
       "resultGetBlacklist": {
-        "description": "'list' array список адресов\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во не странице\n\n'totalCount' int общее кол-во",
+        "description": "'list' array список адресов\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во на странице\n\n'totalCount' int общее кол-во",
         "name": "resultGetWhitelist",
         "schema": {
           "type": "object"
         }
       },
       "resultGetDeliveryAddressesList": {
-        "description": "'list' array список адресов рассылки\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во не странице\n\n'totalCount' int общее кол-во",
+        "description": "'list' array список адресов рассылки\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во на странице\n\n'totalCount' int общее кол-во",
         "name": "resultGetDeliveryAddressesList",
         "schema": {
           "type": "array"
@@ -177,7 +177,7 @@
         }
       },
       "resultGetDomainsList": {
-        "description": "'list' array список доменов:\n\n'fqdn_readable' string домен\n\n'mailboxesCnt' int кол-во ящиков\n\n'spf' int SPF фильтрация (1 - включена, 0 - выключена)\n\n'quota' int размер, MB\n\n'senderVerify' int проверка существования адреса отправителя (1 - включена, 0 - выключена)\n\n'autoDiscover' int автонастройка почтовых программ (1 - включена, 0 - выключена)\n\n'emailCollector' string|null email сборщик писем\n\n'dkim' string добавление цифровой подписи при отправке писем (on - включено, off - выключено)\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во не странице\n\n'orderField' int поле сортировки\n\n'orderDirect' string тип сортировки ('asc', 'desc')\n\n'totalCount' int общее кол-во",
+        "description": "'list' array список доменов:\n\n'fqdn_readable' string домен\n\n'mailboxesCnt' int кол-во ящиков\n\n'spf' int SPF фильтрация (1 - включена, 0 - выключена)\n\n'quota' int размер, MB\n\n'senderVerify' int проверка существования адреса отправителя (1 - включена, 0 - выключена)\n\n'autoDiscover' int автонастройка почтовых программ (1 - включена, 0 - выключена)\n\n'emailCollector' string|null email сборщик писем\n\n'dkim' string добавление цифровой подписи при отправке писем (on - включено, off - выключено)\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во на странице\n\n'orderField' int поле сортировки\n\n'orderDirect' string тип сортировки ('asc', 'desc')\n\n'totalCount' int общее кол-во",
         "name": "resultGetDomainsList",
         "schema": {
           "type": "object"
@@ -198,7 +198,7 @@
         }
       },
       "resultGetMailboxesList": {
-        "description": "'list' array список доменов:\n\n'mbox' string название\n\n'spf' int SPF фильтрация (1 - включена, 0 - выключена)\n\n'quota' int размер, MB\n\n'purpose' string назначение\n\n'antispam' int настройка антиспам-фильтра (5 - жесткий, 8 - средний, 10 - мягкий, 0 - выключен)\n\n'comment' string комментарий\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во не странице\n\n'orderField' int поле сортировки\n\n'orderDirect' string тип сортировки ('asc', 'desc')\n\n'totalCount' int общее кол-во",
+        "description": "'list' array список доменов:\n\n'mbox' string название\n\n'spf' int SPF фильтрация (1 - включена, 0 - выключена)\n\n'quota' int размер, MB\n\n'purpose' string назначение\n\n'antispam' int настройка антиспам-фильтра (5 - жесткий, 8 - средний, 10 - мягкий, 0 - выключен)\n\n'comment' string комментарий\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во на странице\n\n'orderField' int поле сортировки\n\n'orderDirect' string тип сортировки ('asc', 'desc')\n\n'totalCount' int общее кол-во",
         "name": "resultGetMailboxesList",
         "schema": {
           "type": "object"
@@ -212,7 +212,7 @@
         }
       },
       "resultGetWhitelist": {
-        "description": "'list' array список адресов\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во не странице\n\n'totalCount' int общее кол-во",
+        "description": "'list' array список адресов\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во на странице\n\n'totalCount' int общее кол-во",
         "name": "resultGetWhitelist",
         "schema": {
           "type": "object"
@@ -465,7 +465,7 @@
         "value": "тест"
       },
       "resultGetBlacklist": {
-        "description": "'list' array список адресов\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во не странице\n\n'totalCount' int общее кол-во",
+        "description": "'list' array список адресов\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во на странице\n\n'totalCount' int общее кол-во",
         "name": "resultGetBlacklist",
         "summary": "resultGetBlacklist",
         "value": {
@@ -510,7 +510,7 @@
         }
       },
       "resultGetDomainsList": {
-        "description": "'list' array список доменов:\n\n'fqdn_readable' string домен\n\n'mailboxesCnt' int кол-во ящиков\n\n'spf' int SPF фильтрация (1 - включена, 0 - выключена)\n\n'quota' int размер, MB\n\n'senderVerify' int проверка существования адреса отправителя (1 - включена, 0 - выключена)\n\n'autoDiscover' int автонастройка почтовых программ (1 - включена, 0 - выключена)\n\n'emailCollector' string|null email сборщик писем\n\n'dkim' string добавление цифровой подписи при отправке писем (on - включено, off - выключено)\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во не странице\n\n'orderField' int поле сортировки\n\n'orderDirect' string тип сортировки ('asc', 'desc')\n\n'totalCount' int общее кол-во",
+        "description": "'list' array список доменов:\n\n'fqdn_readable' string домен\n\n'mailboxesCnt' int кол-во ящиков\n\n'spf' int SPF фильтрация (1 - включена, 0 - выключена)\n\n'quota' int размер, MB\n\n'senderVerify' int проверка существования адреса отправителя (1 - включена, 0 - выключена)\n\n'autoDiscover' int автонастройка почтовых программ (1 - включена, 0 - выключена)\n\n'emailCollector' string|null email сборщик писем\n\n'dkim' string добавление цифровой подписи при отправке писем (on - включено, off - выключено)\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во на странице\n\n'orderField' int поле сортировки\n\n'orderDirect' string тип сортировки ('asc', 'desc')\n\n'totalCount' int общее кол-во",
         "name": "resultGetDomainsListsultEdit",
         "summary": "resultGetDomainsList",
         "value": {
@@ -550,7 +550,7 @@
         "value": 1
       },
       "resultGetMailboxesList": {
-        "description": "'list' array список доменов:\n\n'mbox' string название\n\n'spf' int SPF фильтрация (1 - включена, 0 - выключена)\n\n'quota' int размер, MB\n\n'purpose' string назначение\n\n'antispam' int настройка антиспам-фильтра (5 - жесткий, 8 - средний, 10 - мягкий, 0 - выключен)\n\n'comment' string комментарий\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во не странице\n\n'orderField' int поле сортировки\n\n'orderDirect' string тип сортировки ('asc', 'desc')\n\n'totalCount' int общее кол-во",
+        "description": "'list' array список доменов:\n\n'mbox' string название\n\n'spf' int SPF фильтрация (1 - включена, 0 - выключена)\n\n'quota' int размер, MB\n\n'purpose' string назначение\n\n'antispam' int настройка антиспам-фильтра (5 - жесткий, 8 - средний, 10 - мягкий, 0 - выключен)\n\n'comment' string комментарий\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во на странице\n\n'orderField' int поле сортировки\n\n'orderDirect' string тип сортировки ('asc', 'desc')\n\n'totalCount' int общее кол-во",
         "name": "resultGetMailboxesList",
         "summary": "resultGetMailboxesList",
         "value": {
@@ -596,7 +596,7 @@
         "value": "test@gmail.com"
       },
       "resultGetWhitelist": {
-        "description": "'list' array список адресов\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во не странице\n\n'totalCount' int общее кол-во",
+        "description": "'list' array список адресов\n\n'filterInfo' array информация о странице:\n\n'page' int текущая страница\n\n'limit' int кол-во на странице\n\n'totalCount' int общее кол-во",
         "name": "resultGetWhitelist",
         "summary": "resultGetWhitelist",
         "value": {
@@ -767,7 +767,7 @@
           }
         },
         {
-          "description": "кол-во записей на странице",
+          "description": "кол-во записей на странице (максимум 20)",
           "name": "limit",
           "required": false,
           "schema": {
@@ -826,7 +826,7 @@
       "name": "getMailboxesList",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -924,7 +924,7 @@
       "name": "createMbox",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1035,7 +1035,7 @@
       "name": "dropMbox",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1080,7 +1080,7 @@
       "name": "updateAntispamState",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1133,7 +1133,7 @@
       "name": "updateComment",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1183,7 +1183,7 @@
       "name": "getAutoreply",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1228,7 +1228,7 @@
       "name": "changeAutoreply",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1281,7 +1281,7 @@
       "name": "changeMailboxSpf",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1331,7 +1331,7 @@
       "name": "changeDomainSpf",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1373,7 +1373,7 @@
       "name": "getForwardingEmailsList",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1418,7 +1418,7 @@
       "name": "addForwardingEmail",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1471,7 +1471,7 @@
       "name": "removeForwardingEmail",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1521,7 +1521,7 @@
       "name": "isEnabledDeletingAfterForwarding",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1566,7 +1566,7 @@
       "name": "changeDeletingAfterForwarding",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1622,7 +1622,7 @@
       "name": "getDeliveryAddressesList",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1680,7 +1680,7 @@
       "name": "getDeliveryInfo",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1725,7 +1725,7 @@
       "name": "addDeliveryAddress",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1778,7 +1778,7 @@
       "name": "dropDeliveryAddress",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1825,7 +1825,7 @@
       "name": "getMailsCollector",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1859,7 +1859,7 @@
       "name": "changeMailsCollector",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1867,7 +1867,7 @@
           }
         },
         {
-          "description": "email адрес сборщика писем",
+          "description": "email адрес сборщика писем в punycode",
           "name": "email",
           "required": true,
           "schema": {
@@ -1898,7 +1898,7 @@
       "name": "removeMailsCollector",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1932,7 +1932,7 @@
       "name": "confirmMailsCollectorEmail",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -1974,7 +1974,7 @@
       "name": "changeSenderVerify",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2016,7 +2016,7 @@
       "name": "changeAutoDiscover",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2061,7 +2061,7 @@
       "name": "deleteMails",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2114,7 +2114,7 @@
       "name": "changeMailboxPassword",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2170,7 +2170,7 @@
       "name": "getWhitelist",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2234,7 +2234,7 @@
       "name": "getBlacklist",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2298,7 +2298,7 @@
       "name": "addToWhitelist",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2362,7 +2362,7 @@
       "name": "addToBlacklist",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2423,7 +2423,7 @@
       "name": "dropFromWhitelist",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2476,7 +2476,7 @@
       "name": "dropFromBlacklist",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2523,7 +2523,7 @@
       "name": "enableDkim",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
@@ -2554,7 +2554,7 @@
       "name": "disableDkim",
       "params": [
         {
-          "description": "название домена",
+          "description": "название домена в punycode",
           "name": "domain",
           "required": true,
           "schema": {
