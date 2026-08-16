@@ -7,7 +7,9 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"sync"
 	"testing"
+	"time"
 
 	"github.com/sanchpet/sweb-go-sdk/apierr"
 )
@@ -55,6 +57,56 @@ func TestAutoRefreshOnSessionExpired(t *testing.T) {
 	}
 	if refreshed != "fresh-token" || c.Token() != "fresh-token" {
 		t.Errorf("refresh: callback=%q token=%q, want fresh-token", refreshed, c.Token())
+	}
+}
+
+// A cold client shared by concurrent callers must mint exactly one token: every
+// getToken is a password login, and SpaceWeb notifies the account owner of each
+// one, so a herd here reaches the user as a burst of unrequested login codes.
+func TestColdStartMintsOneTokenUnderConcurrency(t *testing.T) {
+	var mu sync.Mutex
+	var tokenCalls int
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Method string `json:"method"`
+		}
+		body, _ := io.ReadAll(r.Body)
+		_ = json.Unmarshal(body, &req)
+
+		switch req.Method {
+		case "getToken":
+			mu.Lock()
+			tokenCalls++
+			mu.Unlock()
+			time.Sleep(20 * time.Millisecond) // widen the window a real login already has
+			_, _ = w.Write([]byte(`{"result":"fresh-token"}`))
+		case "index":
+			_, _ = w.Write([]byte(`{"result":[]}`))
+		}
+	}))
+	t.Cleanup(srv.Close)
+
+	c := New(
+		WithBaseURL(srv.URL), WithHTTPClient(srv.Client()),
+		WithCredentials("user", "pass"),
+	)
+
+	const callers = 8
+	var wg sync.WaitGroup
+	for range callers {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			var out []json.RawMessage
+			if err := c.Call(context.Background(), "/vps", "index", nil, &out); err != nil {
+				t.Errorf("Call: %v", err)
+			}
+		}()
+	}
+	wg.Wait()
+
+	if tokenCalls != 1 {
+		t.Errorf("getToken calls = %d, want 1 (%d concurrent callers must share one login)", tokenCalls, callers)
 	}
 }
 
