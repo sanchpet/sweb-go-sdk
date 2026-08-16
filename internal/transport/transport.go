@@ -37,6 +37,10 @@ type Client struct {
 	httpClient *http.Client
 	idSeq      atomic.Int64
 
+	// authMu serializes token acquisition so concurrent callers collapse into a
+	// single getToken. It is held across the network call; mu is not.
+	authMu sync.Mutex
+
 	mu        sync.Mutex
 	token     string
 	login     string
@@ -116,17 +120,19 @@ type rpcResponse struct {
 // session expired it refreshes the token and retries once. Service packages
 // dispatch every operation through it as s.t.Call(ctx, endpoint, method, params, &out).
 func (c *Client) Call(ctx context.Context, endpoint, method string, params, out any) error {
-	if c.Token() == "" && c.canRefresh() {
-		if err := c.refreshToken(ctx); err != nil {
+	used := c.Token()
+	if used == "" && c.canRefresh() {
+		if err := c.refreshToken(ctx, used); err != nil {
 			return err
 		}
+		used = c.Token()
 	}
 
 	err := c.doCall(ctx, endpoint, method, params, out)
 
 	var apiErr *apierr.Error
 	if errors.As(err, &apiErr) && apiErr.Code == sessionExpiredCode && c.canRefresh() {
-		if rerr := c.refreshToken(ctx); rerr != nil {
+		if rerr := c.refreshToken(ctx, used); rerr != nil {
 			return err // keep the original error if re-auth fails
 		}
 		return c.doCall(ctx, endpoint, method, params, out)
@@ -135,11 +141,20 @@ func (c *Client) Call(ctx context.Context, endpoint, method string, params, out 
 }
 
 // refreshToken exchanges the stored credentials for a fresh token and notifies
-// the onRefresh callback.
-func (c *Client) refreshToken(ctx context.Context) error {
+// the onRefresh callback. stale is the token the caller found unusable; if
+// another caller has already replaced it the exchange is skipped, because every
+// getToken is a password login that SpaceWeb reports to the account owner — a
+// herd of them reaches the user as a burst of unrequested login codes.
+func (c *Client) refreshToken(ctx context.Context, stale string) error {
+	c.authMu.Lock()
+	defer c.authMu.Unlock()
+
 	c.mu.Lock()
-	login, password := c.login, c.password
+	current, login, password := c.token, c.login, c.password
 	c.mu.Unlock()
+	if current != stale {
+		return nil
+	}
 
 	tok, err := c.GetToken(ctx, login, password)
 	if err != nil {
