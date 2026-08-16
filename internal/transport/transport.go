@@ -46,6 +46,11 @@ type Client struct {
 	login     string
 	password  string
 	onRefresh func(string)
+	// authRejected holds an API-level rejection of the credentials (wrong
+	// password, 2FA demanded). Every caller after it fails with the same error
+	// without another exchange: the account cannot change mid-process, so a
+	// retry only bills the owner another login notification.
+	authRejected error
 }
 
 // Option configures a Client.
@@ -144,20 +149,32 @@ func (c *Client) Call(ctx context.Context, endpoint, method string, params, out 
 // the onRefresh callback. stale is the token the caller found unusable; if
 // another caller has already replaced it the exchange is skipped, because every
 // getToken is a password login that SpaceWeb reports to the account owner — a
-// herd of them reaches the user as a burst of unrequested login codes.
+// herd of them reaches the user as a burst of unrequested login codes. Once the
+// API has rejected the credentials outright, every later caller fails with that
+// same error and no further exchange is attempted.
 func (c *Client) refreshToken(ctx context.Context, stale string) error {
 	c.authMu.Lock()
 	defer c.authMu.Unlock()
 
 	c.mu.Lock()
 	current, login, password := c.token, c.login, c.password
+	rejected := c.authRejected
 	c.mu.Unlock()
+	if rejected != nil {
+		return rejected
+	}
 	if current != stale {
 		return nil
 	}
 
 	tok, err := c.GetToken(ctx, login, password)
 	if err != nil {
+		var apiErr *apierr.Error
+		if errors.As(err, &apiErr) {
+			c.mu.Lock()
+			c.authRejected = err
+			c.mu.Unlock()
+		}
 		return err
 	}
 
