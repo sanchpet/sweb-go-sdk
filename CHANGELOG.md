@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.17.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.16.4...v0.17.0) (2026-09-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* pay.Balance.VATBalance is now map[string]flex.Float, was map[string]string.
+
+### Bug Fixes
+
+* decode vat_balance as numbers as well as strings ([#101](https://github.com/sanchpet/sweb-go-sdk/issues/101)) ([ceb2f23](https://github.com/sanchpet/sweb-go-sdk/commit/ceb2f23e7add897788997dd7b973a598e5212f29))
+
 ## [0.16.4](https://github.com/sanchpet/sweb-go-sdk/compare/v0.16.3...v0.16.4) (2026-08-16)
 
 
