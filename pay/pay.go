@@ -27,7 +27,7 @@ func New(t *transport.Client) *Service { return &Service{t: t} }
 // and the balance portion of "index"). Every monetary field decodes through
 // flex.Float: the API quotes these int-or-float ("1492.0000", 1492, or a bare
 // 1544) inconsistently across accounts. VATBalance is a map keyed by VAT-type
-// id to a (string-quoted) amount, present only in multiple-balance mode.
+// id to an amount, present only in multiple-balance mode.
 type Balance struct {
 	RealBalance            flex.Float `json:"real_balance"`  // real money
 	BonusBalance           flex.Float `json:"bonus_balance"` // bonus money
@@ -40,10 +40,12 @@ type Balance struct {
 	CreditOtherBalance     flex.Float `json:"credit_other_balance"` // debt on other services
 	Type                   flex.Int   `json:"type"`                 // billing type
 	MultipleBalanceEnabled bool       `json:"multiple_balance_enabled"`
-	// VATBalance maps VAT-type id → amount (quoted, e.g. "1492.0000"); the
-	// getBalance example carries it though the descriptor omits it. Amounts stay
-	// strings: they are per-VAT sub-balances the caller rarely arithmetics on.
-	VATBalance map[string]string `json:"vat_balance,omitempty"`
+	// VATBalance maps VAT-type id → amount; the getBalance example carries it
+	// though the descriptor omits it. The amounts are as polymorphic as the rest
+	// of the money here — quoted ("1492.0000") on some accounts, bare numbers
+	// (0, 4141.3535) on an account with several VAT types — so they decode
+	// through flex.Float like every other monetary field.
+	VATBalance map[string]flex.Float `json:"vat_balance,omitempty"`
 }
 
 // Deferment is the payment-deferment state carried in the index result:
