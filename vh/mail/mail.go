@@ -1,8 +1,9 @@
 // Package mail groups SpaceWeb shared-hosting email operations (endpoint
 // /vh/mail): the account's mail domains and mailboxes, mailbox lifecycle
 // (create/drop/password/comment/antispam), autoreply and SPF toggles,
-// forwarding and delivery (mailing) lists, the domain-level mail collector,
-// per-mailbox white/black lists, and domain DKIM/SenderVerify/AutoDiscover.
+// mailbox purpose, forwarding and delivery (mailing) lists, the domain-level
+// mail collector, per-mailbox white/black lists, and domain DKIM/SenderVerify/
+// AutoDiscover.
 // All calls dispatch through the shared transport.
 package mail
 
@@ -17,9 +18,20 @@ import (
 
 const mailEndpoint = "/vh/mail"
 
+// Mailbox purposes — the values of Mailbox.Purpose and the modes
+// ChangeMailboxPurpose moves a mailbox between. Per the API docs the purpose is
+// what actually puts a mailbox in forwarding mode; registering an address with
+// AddForwardingEmail is not enough on its own.
+const (
+	PurposeMail       = "mail"       // ordinary mailbox, delivered locally
+	PurposeForwarding = "forwarding" // forwards to the addresses in ForwardingEmailsList
+	PurposeDelivery   = "delivery"   // mailing list, fans out to DeliveryAddressesList
+)
+
 // Service groups shared-hosting email operations (endpoint /vh/mail):
-// domains/mailboxes, mailbox lifecycle, autoreply/SPF, forwarding and delivery
-// lists, the mail collector, white/black lists, and domain DKIM/SenderVerify.
+// domains/mailboxes, mailbox lifecycle, autoreply/SPF, mailbox purpose,
+// forwarding and delivery lists, the mail collector, white/black lists, and
+// domain DKIM/SenderVerify.
 type Service struct{ t *transport.Client }
 
 // New builds a Service over the shared transport.
@@ -95,9 +107,9 @@ type DomainsList struct {
 // 8 medium, 10 soft, 0 off); numeric fields decode through flex.Int.
 type Mailbox struct {
 	Mbox     string   `json:"mbox"`
-	SPF      flex.Int `json:"spf"`   // 1 on, 0 off
-	Quota    flex.Int `json:"quota"` // MB
-	Purpose  string   `json:"purpose"`
+	SPF      flex.Int `json:"spf"`      // 1 on, 0 off
+	Quota    flex.Int `json:"quota"`    // MB
+	Purpose  string   `json:"purpose"`  // "mail"|"forwarding"|"delivery", see the Purpose* consts
 	Antispam flex.Int `json:"antispam"` // 5|8|10|0
 	Comment  string   `json:"comment"`
 }
@@ -372,6 +384,10 @@ func (s *Service) ChangeDomainSpf(ctx context.Context, domain string, on bool) e
 
 // AddForwardingEmail adds a forwarding address to a mailbox (method
 // "addForwardingEmail"). MUTATING. Sentinel 1 result.
+//
+// This is half of the flow: registering an address does not start forwarding.
+// The mailbox also has to be put in PurposeForwarding via ChangeMailboxPurpose,
+// which the API documents as a prerequisite of this method.
 func (s *Service) AddForwardingEmail(ctx context.Context, domain, mbox, email string) error {
 	return s.sentinelAction(ctx, "addForwardingEmail", map[string]any{"domain": domain, "mbox": mbox, "email": email})
 }
@@ -387,6 +403,26 @@ func (s *Service) RemoveForwardingEmail(ctx context.Context, domain, mbox, email
 // MUTATING. Sentinel 1 result.
 func (s *Service) ChangeDeletingAfterForwarding(ctx context.Context, domain, mbox string, on bool) error {
 	return s.sentinelAction(ctx, "changeDeletingAfterForwarding", map[string]any{"domain": domain, "mbox": mbox, "turnOn": on})
+}
+
+// Mailbox purpose (mutating) ------------------------------------------------
+
+// ChangeMailboxPurpose switches a mailbox between the mail, forwarding and
+// delivery purposes (method "changeMailboxPurpose"). MUTATING. Sentinel 1 result.
+// Both the target and the current purpose are sent, as the API requires; read
+// the current one from Mailbox.Purpose (MailboxesList). Values are the Purpose*
+// consts.
+//
+// This is the step that completes forwarding: AddForwardingEmail only registers
+// an address, and mail keeps being delivered locally until the mailbox is moved
+// to PurposeForwarding.
+func (s *Service) ChangeMailboxPurpose(ctx context.Context, domain, mbox, purpose, currentPurpose string) error {
+	return s.sentinelAction(ctx, "changeMailboxPurpose", map[string]any{
+		"domain":         domain,
+		"mbox":           mbox,
+		"purpose":        purpose,
+		"currentPurpose": currentPurpose,
+	})
 }
 
 // Delivery (mailing) lists (mutating) ---------------------------------------

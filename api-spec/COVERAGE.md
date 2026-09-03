@@ -4,7 +4,7 @@ How many JSON-RPC methods of each API object the SDK implements, measured live f
 
 Detection is a heuristic: a spec method counts as implemented when its name appears as a Go string literal in an SDK file that references the object's endpoint const. See `api-spec/coverage/main.go` for the method and its false-positive/negative caveats.
 
-**Overall: 278/279 methods (99%) across 29 objects.**
+**Overall: 279/279 methods (100%) across 29 objects.**
 
 | Object | Covered | Missing methods |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ Detection is a heuristic: a spec method counts as implemented when its name appe
 | `/vh/ddg` | 7/7 (100%) | — |
 | `/vh/hosting` | 14/14 (100%) | — |
 | `/vh/load` | 2/2 (100%) | — |
-| `/vh/mail` | 38/39 (97%) | `changeMailboxPurpose` |
+| `/vh/mail` | 39/39 (100%) | — |
 | `/vh/partnerProgram` | 20/20 (100%) | — |
 | `/vh/referralProgram` | 4/4 (100%) | — |
 | `/vh/ssl` | 8/8 (100%) | — |

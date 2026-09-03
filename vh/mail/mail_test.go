@@ -406,6 +406,27 @@ func TestMailChangeDeletingAfterForwarding(t *testing.T) {
 	})
 }
 
+// --- Mailbox purpose -------------------------------------------------------
+
+// The expected params are spelled as literals, not as the Purpose* consts, so
+// the test also pins the constants to the tokens the API validates — a typo in
+// one of them fails at the server, not at compile time.
+func TestMailChangeMailboxPurpose(t *testing.T) {
+	assertSentinel(t, "changeMailboxPurpose", map[string]any{
+		"domain": "test.ru", "mbox": "box",
+		"purpose": "forwarding", "currentPurpose": "mail",
+	}, func(s *Service) error {
+		return s.ChangeMailboxPurpose(context.Background(), "test.ru", "box", PurposeForwarding, PurposeMail)
+	})
+}
+
+func TestMailChangeMailboxPurposeDelivery(t *testing.T) {
+	assertSentinel(t, "changeMailboxPurpose", map[string]any{"purpose": "delivery", "currentPurpose": "forwarding"},
+		func(s *Service) error {
+			return s.ChangeMailboxPurpose(context.Background(), "test.ru", "box", PurposeDelivery, PurposeForwarding)
+		})
+}
+
 // --- Delivery (mailing) lists ----------------------------------------------
 
 func TestMailAddDeliveryAddress(t *testing.T) {
