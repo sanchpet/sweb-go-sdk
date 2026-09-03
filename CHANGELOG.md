@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.17.0...v0.18.0) (2026-09-03)
+
+
+### Features
+
+* **mail:** bind changeMailboxPurpose ([#105](https://github.com/sanchpet/sweb-go-sdk/issues/105)) ([2323aea](https://github.com/sanchpet/sweb-go-sdk/commit/2323aea2ccb939040369848d24db5d4d92667f7e))
+
 ## [0.17.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.16.4...v0.17.0) (2026-09-03)
 
 
