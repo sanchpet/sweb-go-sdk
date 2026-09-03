@@ -68,7 +68,8 @@ type List struct {
 
 // ListOptions are the optional inputs to List. Page starts at 1; Limit is the
 // page size. Both are omitted from the request when zero so the API applies its
-// defaults.
+// defaults. Limit is passed through unchanged; the live API accepts 100 and
+// echoes it back in FilterInfo.
 type ListOptions struct {
 	Page  int
 	Limit int

@@ -42,9 +42,14 @@ type FilterInfo struct {
 // methods. A zero field is omitted from the request so the server default
 // applies; Page is 1-based. Not every list honours every field — getDomainsList
 // and getMailboxesList sort (OrderBy/OrderDirect), the address lists only page.
+//
+// Limit is passed through unchanged. An upstream doc revision once capped it at
+// 20 and the next one dropped the sentence again, so the SDK enforces nothing:
+// against the live API a limit of 100 is accepted and echoed back in
+// FilterInfo, and omitting it yields a server default of 20.
 type ListOptions struct {
 	Page        int    // page number (1-based); 0 = server default
-	Limit       int    // rows per page; 0 = server default
+	Limit       int    // rows per page; 0 = server default (20), passed through as given
 	OrderBy     int    // sort field index; sortable lists only
 	OrderDirect string // "asc"|"desc"; sortable lists only
 }
