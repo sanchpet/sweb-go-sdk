@@ -45,7 +45,7 @@ func TestPayIndex(t *testing.T) {
 	if acc.Deferment.Show || acc.Deferment.Value != 0 {
 		t.Errorf("deferment = %+v, want show false / value 0", acc.Deferment)
 	}
-	if acc.Balance.VATBalance["2"] != "11886.0000" {
+	if acc.Balance.VATBalance["2"] != 11886 {
 		t.Errorf("vat_balance = %+v, want [2]=11886.0000", acc.Balance.VATBalance)
 	}
 }
@@ -249,7 +249,7 @@ func TestPayGetRemainsDays(t *testing.T) {
 
 func TestPayGetBalance(t *testing.T) {
 	// getBalance returns a bare balance object; money arrives int-or-float and
-	// vat_balance is a string→string map.
+	// vat_balance is keyed by VAT-type id.
 	var gotMethod string
 	s := serve(t, func(w http.ResponseWriter, r *http.Request) {
 		gotMethod = decodeMethod(r)
@@ -273,7 +273,7 @@ func TestPayGetBalance(t *testing.T) {
 	if !bal.MultipleBalanceEnabled || bal.Type != 1 {
 		t.Errorf("flags = %+v, want multiple true / type 1", bal)
 	}
-	if bal.VATBalance["4"] != "1492.0000" {
+	if bal.VATBalance["4"] != 1492 {
 		t.Errorf("vat_balance = %+v, want [4]=1492.0000", bal.VATBalance)
 	}
 }
@@ -306,6 +306,30 @@ func TestPayGetActiveReserves(t *testing.T) {
 	}
 	if list[1].Charge != 3120 || list[1].Type != "other" || list[1].Info.EndDate != "" {
 		t.Errorf("reserve 1 = %+v, want charge 3120 / other / empty endDate", list[1])
+	}
+}
+
+func TestPayGetBalanceNumericVATBalance(t *testing.T) {
+	// An account with several VAT types returns vat_balance as bare JSON
+	// numbers rather than the quoted strings a single-VAT account returns
+	// (sanchpet/sweb#87). Both shapes must decode.
+	s := serve(t, func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = w.Write([]byte(`{"result":{
+			"real_balance":4141.3535,"bonus_balance":0,"cloud_balance":4141.3535,
+			"other_balance":0,"credit_balance":0,"type":1,
+			"multiple_balance_enabled":true,
+			"vat_balance":{"2":0,"4":4141.3535}
+		}}`))
+	})
+	bal, err := s.GetBalance(context.Background())
+	if err != nil {
+		t.Fatalf("GetBalance: %v", err)
+	}
+	if len(bal.VATBalance) != 2 {
+		t.Fatalf("vat_balance = %+v, want two entries", bal.VATBalance)
+	}
+	if bal.VATBalance["2"] != 0 || bal.VATBalance["4"] != 4141.3535 {
+		t.Errorf("vat_balance = %+v, want [2]=0 / [4]=4141.3535", bal.VATBalance)
 	}
 }
 
