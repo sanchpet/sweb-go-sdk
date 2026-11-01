@@ -71,9 +71,7 @@ pre-commit install && pre-commit run -a
 ## Conventions
 
 - **English** for all repo artifacts (code, comments, docs, commits, PRs).
-- Commits: small and focused; end every commit with `Signed-off-by:` (`--signoff`)
-  and, since this is a personal repo, an `Assisted-By: Claude <noreply@anthropic.com>`
-  trailer (the owner authors, Claude assists — not `Co-Authored-By`).
+- Commits: small and focused; end every commit with `Signed-off-by:` (`--signoff`).
 - **Branch + PR.** Who may merge is not stated here — it depends on the
   contributor, and this file cannot know which one is reading it.
 - **Conventional Commits + release-please (BLOCKING):** commit / PR-title format is
