@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.1](https://github.com/sanchpet/sweb-go-sdk/compare/v0.18.0...v0.18.1) (2026-11-12)
+
+
+### Bug Fixes
+
+* decode live getAvailableConfig, pay index and recommendations ([#117](https://github.com/sanchpet/sweb-go-sdk/issues/117)) ([9750e7e](https://github.com/sanchpet/sweb-go-sdk/commit/9750e7e5557c227fb7476308735d3783703fb662))
+
 ## [0.18.0](https://github.com/sanchpet/sweb-go-sdk/compare/v0.17.0...v0.18.0) (2026-09-03)
 
 
