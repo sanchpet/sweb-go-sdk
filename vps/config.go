@@ -1,6 +1,10 @@
 package vps
 
-import "context"
+import (
+	"context"
+
+	"github.com/sanchpet/sweb-go-sdk/flex"
+)
 
 // AvailableConfig is the catalog of selectable options for creating a VPS
 // (method "getAvailableConfig"). Shapes confirmed against a real response.
@@ -40,12 +44,12 @@ type OSOption struct {
 
 // OSPanel maps a distributive/OS to the plans and minimum resources it needs.
 type OSPanel struct {
-	Distributive     string `json:"distributive"`
-	OS               string `json:"os"`
-	Panel            string `json:"panel"`
-	AvailablePlanIDs []int  `json:"availablePlanIds"`
-	MinRAM           int    `json:"minRam"`
-	MinStorage       int    `json:"minStorage"`
+	Distributive     string     `json:"distributive"`
+	OS               string     `json:"os"`
+	Panel            string     `json:"panel"`
+	AvailablePlanIDs []int      `json:"availablePlanIds"`
+	MinRAM           int        `json:"minRam"`
+	MinStorage       flex.Float `json:"minStorage"` // spec says int; live sends 19.53125 too
 }
 
 // Datacenter is a location a VPS can be placed in.

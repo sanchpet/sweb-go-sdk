@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/sanchpet/sweb-go-sdk/internal/transport"
@@ -61,6 +63,22 @@ func TestPayIndexEmpty(t *testing.T) {
 	}
 	if acc == nil || acc.Status != "" {
 		t.Errorf("empty index = %+v, want zero Account", acc)
+	}
+}
+
+func TestPayIndexNoBlockInfo(t *testing.T) {
+	// Recorded live (issue #116): with nothing pending, blockInfo arrives as an
+	// empty array instead of an object.
+	s := fixtureServer(t, "index_unblocked.json")
+	acc, err := s.Index(context.Background())
+	if err != nil {
+		t.Fatalf("Index: %v", err)
+	}
+	if acc.BlockInfo != (BlockInfo{}) {
+		t.Errorf("blockInfo = %+v, want zero", acc.BlockInfo)
+	}
+	if acc.AutoPaymentEnable != 1 || acc.Balance.RealBalance != 1500.5 || acc.Balance.VATBalance["4"] != 1500.5321 {
+		t.Errorf("account = %+v, want autopayment 1 / real 1500.5 / vat[4] 1500.5321", acc)
 	}
 }
 
@@ -122,8 +140,21 @@ func TestPayGetPayRecommendations(t *testing.T) {
 	if len(rec.RecommendedForPay) != 1 || rec.RecommendedForPay[0].Cost != 175 || rec.RecommendedForPay[0].ID != 1 {
 		t.Errorf("recommended = %+v, want one id 1 / cost 175", rec.RecommendedForPay)
 	}
-	if rec.TotalFRPBalance != 2800 || rec.DomainBonusesByTLD["any"] != 0 {
-		t.Errorf("bundle = %+v, want total 2800 / any 0", rec)
+	if rec.TotalFRPBalance != 2800 || rec.DomainBonusesByTLD["any"] != 0 || rec.TariffDomainBonusTLD != "0" {
+		t.Errorf("bundle = %+v, want total 2800 / any 0 / tld \"0\"", rec)
+	}
+}
+
+func TestPayGetPayRecommendationsAnyTLD(t *testing.T) {
+	// Recorded live (issue #116): tariff_domain_bonus_tld is the zone name
+	// "any", not the int the spec documents.
+	s := fixtureServer(t, "recommendations_any_tld.json")
+	rec, err := s.GetPayRecommendations(context.Background(), true)
+	if err != nil {
+		t.Fatalf("GetPayRecommendations: %v", err)
+	}
+	if rec.TariffDomainBonusTLD != "any" || len(rec.RecommendedForPay) != 0 {
+		t.Errorf("bundle = %+v, want tariff_domain_bonus_tld any / no recommendations", rec)
 	}
 }
 
@@ -340,6 +371,16 @@ func decodeMethod(r *http.Request) string {
 	}
 	_ = json.NewDecoder(r.Body).Decode(&req)
 	return req.Method
+}
+
+// fixtureServer serves the bytes of testdata/<file> for any request.
+func fixtureServer(t *testing.T, file string) *Service {
+	t.Helper()
+	body, err := os.ReadFile(filepath.Join("testdata", file))
+	if err != nil {
+		t.Fatalf("read fixture: %v", err)
+	}
+	return serve(t, func(w http.ResponseWriter, _ *http.Request) { _, _ = w.Write(body) })
 }
 
 // serve spins up a mock JSON-RPC server for h and returns a pay.Service backed

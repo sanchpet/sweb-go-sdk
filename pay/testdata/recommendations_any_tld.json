@@ -1,0 +1,16 @@
+{
+  "jsonrpc": "2.0",
+  "version": "1.0",
+  "id": 1,
+  "result": {
+    "recommended_for_pay": [],
+    "recommended_for_pay_balance": [],
+    "exist_domain_bonus": 0,
+    "total_frp_balance": 0,
+    "tariff_domain_bonus": 0,
+    "tariff_domain_bonus_tld": "any",
+    "domain_bonuses_by_tld": {
+      "any": 0
+    }
+  }
+}

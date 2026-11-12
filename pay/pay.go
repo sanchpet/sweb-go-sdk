@@ -7,6 +7,7 @@
 package pay
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -59,12 +60,22 @@ type Deferment struct {
 //
 // Doc-vs-reality: the spec's index descriptor types blockInfo as a string
 // ("Причина блокировки"), but the recorded example returns an object with the
-// days remaining. Typed against the observed object; fields are omitempty so an
-// empty/absent value decodes cleanly.
+// days remaining. Typed against the observed object; with nothing pending the
+// live API sends an empty array instead, which decodes to the zero value.
 type BlockInfo struct {
 	Days     flex.Int `json:"days,omitempty"`
 	DaysDate string   `json:"days_date,omitempty"`
 	DaysWord string   `json:"days_word,omitempty"`
+}
+
+// UnmarshalJSON accepts the object form and the empty array.
+func (bi *BlockInfo) UnmarshalJSON(b []byte) error {
+	if bytes.Equal(bytes.TrimSpace(b), []byte("[]")) {
+		*bi = BlockInfo{}
+		return nil
+	}
+	type plain BlockInfo
+	return json.Unmarshal(b, (*plain)(bi))
 }
 
 // Account is the full billing snapshot the "index" method returns: the nested
@@ -128,9 +139,29 @@ type Recommendations struct {
 	ExistDomainBonus         flex.Int         `json:"exist_domain_bonus"`
 	TotalFRPBalance          flex.Float       `json:"total_frp_balance"` // real balance
 	TariffDomainBonus        flex.Int         `json:"tariff_domain_bonus"`
-	TariffDomainBonusTLD     flex.Int         `json:"tariff_domain_bonus_tld"`
+	TariffDomainBonusTLD     TLD              `json:"tariff_domain_bonus_tld"`
 	// DomainBonusesByTLD maps a TLD → bonus count; the example carries {"any":0}.
 	DomainBonusesByTLD map[string]flex.Int `json:"domain_bonuses_by_tld,omitempty"`
+}
+
+// TLD is a domain zone name; "any" covers every zone. The spec types
+// tariff_domain_bonus_tld as int (example 0), but the live API sends the zone
+// name, so a string decodes as-is and a bare number as its literal text.
+type TLD string
+
+// UnmarshalJSON accepts a JSON string, a number, or null.
+func (t *TLD) UnmarshalJSON(b []byte) error {
+	var s string
+	if err := json.Unmarshal(b, &s); err == nil {
+		*t = TLD(s)
+		return nil
+	}
+	var n json.Number
+	if err := json.Unmarshal(b, &n); err != nil {
+		return fmt.Errorf("sweb: decode pay.TLD from %s: %w", b, err)
+	}
+	*t = TLD(n)
+	return nil
 }
 
 // GetPayRecommendations returns the payment recommendations (method
