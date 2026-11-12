@@ -1,0 +1,92 @@
+{
+  "jsonrpc": "2.0",
+  "version": "1.0",
+  "id": 1,
+  "result": {
+    "vpsPlans": [
+      {
+        "id": 216,
+        "name": "Облако Промо",
+        "price_per_month": 321,
+        "category": "nvme",
+        "cpu_cores": "1",
+        "ram": "1024",
+        "disk_type": "NVMe",
+        "volume_disk": "10 ГБ",
+        "datacenters": [
+          1
+        ],
+        "sold_out": true
+      },
+      {
+        "id": 220,
+        "name": "Облако Лайт",
+        "price_per_month": 526,
+        "category": "nvme",
+        "cpu_cores": "2",
+        "ram": "1024",
+        "disk_type": "NVMe",
+        "volume_disk": "15 ГБ",
+        "datacenters": [
+          1
+        ],
+        "sold_out": false
+      }
+    ],
+    "selectOs": [
+      {
+        "id": "39",
+        "name": "ubuntu-26-04",
+        "version": "26.04 LTS",
+        "os_distribution_id": "174",
+        "plan_id": "220"
+      },
+      {
+        "id": "41",
+        "name": "almalinux-10",
+        "version": "AlmaLinux 10",
+        "os_distribution_id": "176",
+        "plan_id": "224"
+      }
+    ],
+    "osPanel": [
+      {
+        "distributive": "76",
+        "os": "25",
+        "panel": "14",
+        "availablePlanIds": [
+          216,
+          220
+        ],
+        "minRam": 0,
+        "minStorage": 20
+      },
+      {
+        "distributive": "137",
+        "os": "34",
+        "panel": "11",
+        "availablePlanIds": [
+          216,
+          220
+        ],
+        "minRam": 4,
+        "minStorage": 19.53125
+      }
+    ],
+    "datacenters": [
+      {
+        "id": "1",
+        "name": "spb",
+        "location": "Санкт-Петербург",
+        "site_name": "Дата-центр в СПБ"
+      }
+    ],
+    "categories": [
+      {
+        "id": "1",
+        "slug": "nvme",
+        "name": "Быстрые (на NVMe)"
+      }
+    ]
+  }
+}

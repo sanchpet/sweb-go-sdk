@@ -622,6 +622,19 @@ func TestAvailableConfig(t *testing.T) {
 	}
 }
 
+func TestAvailableConfigFractionalMinStorage(t *testing.T) {
+	// Recorded live (issue #116): one osPanel row carries minStorage 19.53125.
+	s := fixtureServer(t, "available_config_fractional.json")
+
+	cfg, err := s.AvailableConfig(context.Background())
+	if err != nil {
+		t.Fatalf("AvailableConfig: %v", err)
+	}
+	if len(cfg.OSPanel) != 2 || cfg.OSPanel[0].MinStorage != 20 || cfg.OSPanel[1].MinStorage != 19.53125 {
+		t.Errorf("osPanel = %+v, want minStorage 20 / 19.53125", cfg.OSPanel)
+	}
+}
+
 func TestGetFirstOrderInfo(t *testing.T) {
 	s := fixtureServer(t, "first_order_info.json")
 
