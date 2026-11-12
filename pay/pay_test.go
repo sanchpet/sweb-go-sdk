@@ -140,8 +140,21 @@ func TestPayGetPayRecommendations(t *testing.T) {
 	if len(rec.RecommendedForPay) != 1 || rec.RecommendedForPay[0].Cost != 175 || rec.RecommendedForPay[0].ID != 1 {
 		t.Errorf("recommended = %+v, want one id 1 / cost 175", rec.RecommendedForPay)
 	}
-	if rec.TotalFRPBalance != 2800 || rec.DomainBonusesByTLD["any"] != 0 {
-		t.Errorf("bundle = %+v, want total 2800 / any 0", rec)
+	if rec.TotalFRPBalance != 2800 || rec.DomainBonusesByTLD["any"] != 0 || rec.TariffDomainBonusTLD != "0" {
+		t.Errorf("bundle = %+v, want total 2800 / any 0 / tld \"0\"", rec)
+	}
+}
+
+func TestPayGetPayRecommendationsAnyTLD(t *testing.T) {
+	// Recorded live (issue #116): tariff_domain_bonus_tld is the zone name
+	// "any", not the int the spec documents.
+	s := fixtureServer(t, "recommendations_any_tld.json")
+	rec, err := s.GetPayRecommendations(context.Background(), true)
+	if err != nil {
+		t.Fatalf("GetPayRecommendations: %v", err)
+	}
+	if rec.TariffDomainBonusTLD != "any" || len(rec.RecommendedForPay) != 0 {
+		t.Errorf("bundle = %+v, want tariff_domain_bonus_tld any / no recommendations", rec)
 	}
 }
 
