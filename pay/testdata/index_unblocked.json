@@ -1,0 +1,38 @@
+{
+  "jsonrpc": "2.0",
+  "version": "1.0",
+  "id": 1,
+  "result": {
+    "balance": {
+      "real_balance": 1500.5,
+      "real_balance_billing_only": 1500.5321,
+      "bonus_balance": 0,
+      "vat_balance": {
+        "2": 0,
+        "4": 1500.5321
+      },
+      "credit_balance": 0,
+      "credit_other_balance": 0,
+      "credit_cloud_balance": 0,
+      "type": 2,
+      "multiple_balance_enabled": true,
+      "cloud_balance": 1500.5321,
+      "other_balance": 0,
+      "cloud_balance_view": 1500.5,
+      "other_balance_view": 0
+    },
+    "min_sum": 0,
+    "auto_payment_enable": 1,
+    "isAutopaymentEnable": 0,
+    "domainBonuses": 0,
+    "status": "",
+    "blockInfo": [],
+    "blockedMoney": 0,
+    "deferment": {
+      "show": false,
+      "value": 0
+    },
+    "edgeDate": "2024-01-01",
+    "cloudLocksDetails": []
+  }
+}

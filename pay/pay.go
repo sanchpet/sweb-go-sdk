@@ -7,6 +7,7 @@
 package pay
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -59,12 +60,22 @@ type Deferment struct {
 //
 // Doc-vs-reality: the spec's index descriptor types blockInfo as a string
 // ("Причина блокировки"), but the recorded example returns an object with the
-// days remaining. Typed against the observed object; fields are omitempty so an
-// empty/absent value decodes cleanly.
+// days remaining. Typed against the observed object; with nothing pending the
+// live API sends an empty array instead, which decodes to the zero value.
 type BlockInfo struct {
 	Days     flex.Int `json:"days,omitempty"`
 	DaysDate string   `json:"days_date,omitempty"`
 	DaysWord string   `json:"days_word,omitempty"`
+}
+
+// UnmarshalJSON accepts the object form and the empty array.
+func (bi *BlockInfo) UnmarshalJSON(b []byte) error {
+	if bytes.Equal(bytes.TrimSpace(b), []byte("[]")) {
+		*bi = BlockInfo{}
+		return nil
+	}
+	type plain BlockInfo
+	return json.Unmarshal(b, (*plain)(bi))
 }
 
 // Account is the full billing snapshot the "index" method returns: the nested
